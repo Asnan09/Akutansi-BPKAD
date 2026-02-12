@@ -6,6 +6,7 @@ import DocumentTable from "../components/document/DocumentTable";
 import EditModal from "../components/document/EditModal";
 import Toast from "../components/ui/Toast";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
+<<<<<<< HEAD
 import { getDocuments, Document } from "../services/api"; // <-- DIUBAH
 
 // Sample data DIHAPUS
@@ -21,6 +22,13 @@ export default function Dashboard() {
   const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]); // <-- DIUBAH: Mulai dengan array kosong
   const [loading, setLoading] = useState<boolean>(true); // <-- BARU: State untuk loading
   
+=======
+import { Document, ToastState } from "../types";
+import { initialDocuments } from "../data/mockDocuments";
+import { useDocumentFilters } from "../hooks/useDocumentFilters";
+
+export default function Dashboard() {
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
   const [selectedDocuments, setSelectedDocuments] = useState<Set<number | string>>(new Set());
   const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
@@ -48,6 +56,7 @@ export default function Dashboard() {
     setToast({ show: true, message, type });
   };
 
+<<<<<<< HEAD
   // Fungsi parseIndonesianDate dan applyFilters tidak diubah, tetap di sini
   const parseIndonesianDate = (dateStr: string): Date => {
     const months: { [key: string]: number } = {
@@ -135,6 +144,18 @@ export default function Dashboard() {
     setSelectedDocuments(new Set());
     showToast("Filter telah direset", "info");
   };
+=======
+  const {
+    documents,
+    setDocuments,
+    filteredDocuments,
+    setFilteredDocuments,
+    handleSearch,
+    handleDateRangeFilter,
+    handleCategoryFilter,
+    handleRefresh
+  } = useDocumentFilters(initialDocuments, showToast);
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
 
   const handleSelectDocument = (id: number | string) => {
     const newSelected = new Set(selectedDocuments);
@@ -157,7 +178,18 @@ export default function Dashboard() {
 
     const handleView = (id: number | string) => {
     const doc = documents.find((d) => d.id === id);
+<<<<<<< HEAD
     showToast(`Melihat ${doc?.name || "dokumen"}... (fungsi preview belum diimplementasikan)`, "info");
+=======
+
+    if (doc?.file) {
+      const url = URL.createObjectURL(doc.file);
+      window.open(url, '_blank');
+      showToast(`Membuka ${doc.name}...`, "info");
+    } else {
+      showToast(`Preview tidak tersedia untuk ${doc?.name || "dokumen"}`, "warning");
+    }
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
   };
 
   const handleEdit = (id: number | string) => {
@@ -173,6 +205,10 @@ export default function Dashboard() {
     const updatedDocuments = documents.map((doc) =>
       doc.id === id ? { ...doc, ...updatedData } : doc
     );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
     setDocuments(updatedDocuments);
     setFilteredDocuments(applyFilters(updatedDocuments)); // Re-apply filters
     showToast("Dokumen berhasil diperbarui (secara lokal)!", "success");
@@ -202,7 +238,48 @@ export default function Dashboard() {
   };
 
   const handleDownloadSelected = () => {
+<<<<<<< HEAD
     showToast(`Mengunduh ${selectedDocuments.size} dokumen... (fungsi download belum diimplementasikan)`, "info");
+=======
+    if (selectedDocuments.size === 0) {
+      showToast("Tidak ada dokumen yang dipilih", "warning");
+      return;
+    }
+
+    const selectedDocs = documents.filter((doc) => selectedDocuments.has(doc.id));
+
+    selectedDocs.forEach((doc, index) => {
+      setTimeout(() => {
+        if (doc.file) {
+          // Download file asli jika ada
+          const url = URL.createObjectURL(doc.file);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${doc.name}.${doc.format.toLowerCase()}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        } else {
+          // Buat file dummy untuk demo
+          const dummyContent = `Dokumen: ${doc.name}\nFormat: ${doc.format}\nTanggal: ${doc.date}\nKategori: ${doc.category}`;
+          const blob = new Blob([dummyContent], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${doc.name}.txt`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+      }, index * 500); // Delay 500ms antar download
+    });
+
+    showToast(`Mengunduh ${selectedDocuments.size} dokumen...`, "success");
+    setSelectedDocuments(new Set()); // Clear selection after download
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
   };
 
   const confirmDelete = () => {
@@ -232,10 +309,20 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
+<<<<<<< HEAD
       <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+=======
+
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-fadeIn">
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
         <Header title="Dashboard" />
         <main className="flex-1 p-4 lg:p-8">
+<<<<<<< HEAD
           <div className="mb-6 lg:mb-8 animate-[slideDown_0.6s_ease-out]">
+=======
+          {/* Page Title */}
+          <div className="mb-6 lg:mb-8 animate-slideDown">
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
             <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
               Dashboard Dokumen
             </h1>
@@ -246,7 +333,11 @@ export default function Dashboard() {
 
           {/* Action Bar for Selected Documents */}
           {selectedDocuments.size > 0 && (
+<<<<<<< HEAD
              <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl flex justify-between items-center animate-[slideDown_0.3s_ease-out]">
+=======
+            <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl flex justify-between items-center animate-slideDown">
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
               <span className="text-orange-700 font-semibold text-sm lg:text-base">
                 {selectedDocuments.size} dokumen dipilih
               </span>
@@ -272,8 +363,14 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+<<<<<<< HEAD
           
           <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
+=======
+
+          {/* Filter Section */}
+          <div className="mb-6 lg:mb-8 animate-slideUp animate-delay-100">
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
             <FilterBar
               onSearch={handleSearch}
               onDateRangeChange={handleDateRangeFilter}
@@ -282,6 +379,7 @@ export default function Dashboard() {
             />
           </div>
 
+<<<<<<< HEAD
           <div className="animate-[slideUp_0.6s_ease-out_0.2s_both]">
             {/* --- BARU: Tampilkan loading indicator --- */}
             {loading ? (
@@ -300,6 +398,20 @@ export default function Dashboard() {
                 onSelectAll={handleSelectAll}
               />
             )}
+=======
+          {/* Document Table */}
+          <div className="animate-slideUp animate-delay-200">
+            <DocumentTable
+              documents={filteredDocuments}
+              totalDocuments={documents.length}
+              selectedDocuments={selectedDocuments}
+              onView={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onSelectDocument={handleSelectDocument}
+              onSelectAll={handleSelectAll}
+            />
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
           </div>
         </main>
       </div>
@@ -329,12 +441,15 @@ export default function Dashboard() {
         onCancel={cancelDelete}
         type="danger"
       />
+<<<<<<< HEAD
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
+=======
+>>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
     </div>
   );
 }
