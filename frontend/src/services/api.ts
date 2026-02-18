@@ -1,17 +1,8 @@
 import axios from "axios";
+import { Document } from "../types";
 
 // Impor ikon dipindahkan dari file service ini.
 // Komponen yang menampilkan data akan bertanggung jawab untuk menampilkan ikon.
-
-/**
- * Mendefinisikan tipe data untuk dokumen agar kode lebih aman (type-safe).
- */
-export interface Document {
-  id: number;
-  name: string;
-  size: string;
-  date: string;
-}
 
 /**
  * Mendefinisikan tipe data untuk respons login yang berhasil.
@@ -33,7 +24,20 @@ const apiClient = axios.create({
 export const getDocuments = async (): Promise<Document[]> => {
   try {
     const response = await apiClient.get("/documents");
-    return response.data;
+
+    if (!Array.isArray(response.data)) {
+      return [];
+    }
+
+    return response.data.map((item: Partial<Document>, index: number) => ({
+      id: item.id ?? index,
+      name: item.name ?? "Dokumen Tanpa Nama",
+      format: item.format ?? "PDF",
+      size: item.size ?? "-",
+      date: item.date ?? "1 Januari 1970",
+      category: item.category,
+      file: item.file ?? null,
+    }));
   } catch (error) {
     console.error("Terjadi kesalahan saat mengambil data dokumen:", error);
     // Di aplikasi nyata, Anda akan menangani error ini dengan lebih baik
@@ -48,7 +52,10 @@ export const getDocuments = async (): Promise<Document[]> => {
  * @param password Kata sandi pengguna.
  * @returns Promise yang resolve dengan data LoginResponse.
  */
-export const login = async (username, password): Promise<LoginResponse> => {
+export const login = async (
+  username: string,
+  password: string,
+): Promise<LoginResponse> => {
   try {
     const response = await apiClient.post("/auth/login", {
       username,
