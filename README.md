@@ -2,10 +2,10 @@
 
 ## Overview
 
-Sistem manajemen dokumen akuntansi untuk BPKAD, terdiri dari dua bagian utama:
+Sistem manajemen dokumen akuntansi BPKAD divisi akuntansi, terdiri dari dua bagian utama:
 
-- **Backend**: Node.js, Express, TypeScript
 - **Frontend**: React, Vite, TypeScript, TailwindCSS
+- **Backend**: Node.js, Express, TypeScript
 
 ## Instalasi Cepat
 
@@ -27,8 +27,8 @@ npm run dev
 
 ## Struktur Folder
 
-- backend/ : API & server
 - frontend/ : UI aplikasi
+- backend/ : API & server
 - akuntansi_bpkad.sql : Contoh/struktur database
 
 ## Pengembangan
