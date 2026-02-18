@@ -103,6 +103,7 @@ export default function Toast({
           {message}
         </p>
         <button
+          title="Close"
           onClick={onClose}
           className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
         >
