@@ -79,6 +79,7 @@ export default function FilterBar({
           </label>
           <input
             type="date"
+            title="Start Date"
             value={startDate}
             onChange={(e) => handleStartDateChange(e.target.value)}
             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition"
@@ -92,6 +93,7 @@ export default function FilterBar({
           </label>
           <input
             type="date"
+            title="End Date"
             value={endDate}
             onChange={(e) => handleEndDateChange(e.target.value)}
             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition"
@@ -106,6 +108,7 @@ export default function FilterBar({
           <div className="relative">
             <select
               value={category}
+              title="Category"
               onChange={(e) => handleCategoryChange(e.target.value)}
               className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition appearance-none cursor-pointer"
             >
