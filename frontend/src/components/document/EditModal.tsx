@@ -127,6 +127,7 @@ export default function EditModal({
               <button
                 onClick={onClose}
                 className="text-white hover:text-gray-200 transition-colors duration-200"
+                title="Tutup"
               >
                 <svg
                   className="w-6 h-6"

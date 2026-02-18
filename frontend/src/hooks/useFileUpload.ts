@@ -132,6 +132,12 @@ export function useFileUpload(
     fileInputRef.current?.click();
   };
 
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setFormData((prev) => ({ ...prev, name: "" }));
+    showToast("File dihapus", "info");
+  };
+
   return {
     fileInputRef,
     formData,
@@ -148,5 +154,6 @@ export function useFileUpload(
     handleSubmit,
     handleCancel,
     handleClickUploadArea,
+    handleRemoveFile,
   };
 }

@@ -48,6 +48,7 @@ export default function DocumentRow({
         <div className="flex items-center justify-center">
           <input
             type="checkbox"
+            title="Checkbox Column"
             checked={isSelected}
             onChange={() => onSelect(doc.id)}
             className="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer transition-all"

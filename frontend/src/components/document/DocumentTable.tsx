@@ -124,6 +124,7 @@ export default function DocumentTable({
               <th className="text-center py-4 px-2 font-semibold w-12">
                 <input
                   type="checkbox"
+                  title="Pilih Semua"
                   checked={allSelected}
                   ref={(input) => {
                     if (input) {
@@ -183,6 +184,7 @@ export default function DocumentTable({
                 <div className="flex items-start gap-3 flex-1">
                   <input
                     type="checkbox"
+                    title="Pilih Dokumen"
                     checked={selectedDocuments.has(doc.id)}
                     onChange={() => onSelectDocument(doc.id)}
                     className="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer mt-0.5"
