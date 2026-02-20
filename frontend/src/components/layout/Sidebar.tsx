@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import homeIcon from "../../assets/icons/home.svg";
-import documentIcon from "../../assets/icons/document.svg";
+import documentIcon from "../../assets/icons/upload.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 
 export default function Sidebar() {

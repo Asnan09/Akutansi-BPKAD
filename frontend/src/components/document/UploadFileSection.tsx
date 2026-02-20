@@ -119,10 +119,10 @@ export default function UploadFileSection({
               />
             </div>
             <p className="text-base font-bold text-gray-800 mb-2">
-              Klik untuk mengunggah atau seret & lepas
+              Klik untuk mengunggah 
             </p>
             <p className="text-sm text-gray-600">
-              PDF, DOCX, XLSX, atau PPTX (Maks. 10MB)
+              PDF (Maks. 10MB)
             </p>
           </div>
         )}
