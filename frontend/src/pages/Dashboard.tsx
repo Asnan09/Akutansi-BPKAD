@@ -81,6 +81,7 @@ export default function Dashboard() {
       </div>
 
       <EditModal
+        key={editingDocument?.id ?? "no-document"}
         isOpen={editingDocument !== null}
         document={editingDocument}
         onClose={() => setEditingDocument(null)}
