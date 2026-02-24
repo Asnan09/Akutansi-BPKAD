@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import profileIcon from "../../assets/icons/profile.svg";
 
@@ -11,35 +11,43 @@ interface DecodedToken {
   role: string;
 }
 
-export default function Header({ title }: HeaderProps) {
-  const [username, setUsername] = useState("");
-  const [role, setRole] = useState("");
+interface UserInfo {
+  username: string;
+  role: string;
+}
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken: DecodedToken = jwtDecode(token);
-      setUsername(decodedToken.username);
-      setRole(decodedToken.role);
-    }
-  }, []);
+function getUserInfoFromToken(): UserInfo {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    return { username: "", role: "" };
+  }
+
+  try {
+    const decodedToken: DecodedToken = jwtDecode(token);
+    return {
+      username: decodedToken.username ?? "",
+      role: decodedToken.role ?? "",
+    };
+  } catch {
+    return { username: "", role: "" };
+  }
+}
+
+export default function Header({ title }: HeaderProps) {
+  const [{ username, role }] = useState<UserInfo>(() => getUserInfoFromToken());
 
   return (
-    <header className="h-16 lg:h-20 bg-white flex items-center justify-between lg:justify-end px-4 lg:px-8 shadow-sm">
-      {/* Mobile Title - Hidden on desktop */}
-      {title && (
-        <h1 className="text-lg font-bold text-gray-800 lg:hidden">{title}</h1>
-      )}
+    <header className="h-16 lg:h-20 bg-white flex items-center justify-between px-4 lg:px-8 shadow-sm">
 
+      <div className="text-2xl font-bold text-gray-800">{title}</div>
       {/* Profile Section */}
       <div className="flex items-center gap-3">
         <div className="text-right">
-          <p className="text-xs lg:text-sm font-semibold text-gray-800">
+          <p className="text-xs lg:text-sm font-semibold capitalize text-gray-800">
             {username}
           </p>
-          <p className="text-[10px] lg:text-xs text-gray-500">
-            {role}
-          </p>
+          <p className="text-[10px] lg:text-xs text-gray-500">{role}</p>
         </div>
         <div className="relative">
           <img
