@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
-import Toast from "../components/ui/Toast";
+import Toast from "../components/layout/ui/Toast";
 import UploadDocumentInfoSection from "../components/document/UploadDocumentInfoSection";
 import UploadFileSection from "../components/document/UploadFileSection";
 import UploadFormActions from "../components/document/UploadFormActions";
@@ -44,16 +44,6 @@ export default function UploadDocument() {
         <Header title="Unggah Dokumen" />
 
         <main className="flex-1 p-4 lg:p-8">
-          {/* Page Title */}
-          <div className="mb-6 lg:mb-8 animate-slideDown">
-            <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
-              Unggah Dokumen Baru
-            </h1>
-            <p className="hidden lg:block text-gray-600 mt-2 font-medium">
-              Tambahkan dokumen baru ke catatan keuangan Anda
-            </p>
-          </div>
-
           {/* Upload Form */}
           <form
             onSubmit={handleSubmit}
