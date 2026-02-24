@@ -44,10 +44,9 @@ export default function DocumentTableDesktop({
               />
             </th>
             <th className="text-left py-4 px-2 font-semibold">Nama</th>
-            <th className="text-center py-4 px-2 font-semibold">Format</th>
-            <th className="text-center py-4 px-2 font-semibold">Size</th>
-            <th className="text-center py-4 px-2 font-semibold">Tanggal</th>
             <th className="text-center py-4 px-2 font-semibold">Kategori</th>
+            <th className="text-center py-4 px-2 font-semibold">Format</th>
+            <th className="text-center py-4 px-2 font-semibold">Tanggal</th>
             <th className="text-center py-4 px-2 font-semibold">Aksi</th>
           </tr>
         </thead>
@@ -68,7 +67,7 @@ export default function DocumentTableDesktop({
           ) : (
             <tr>
               <td colSpan={7} className="py-12 text-center text-gray-400">
-                Tidak ada dokumen ditemukan
+                Dokumen kosong.
               </td>
             </tr>
           )}

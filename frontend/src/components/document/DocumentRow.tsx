@@ -20,7 +20,6 @@ export default function DocumentRow({
   onEdit,
   onDelete,
 }: DocumentRowProps) {
-
   // 🔥 ambil format dari file_path
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";
@@ -60,6 +59,7 @@ export default function DocumentRow({
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(doc.id)}
+          aria-label={`Select document ${doc.nama_sppd}`}
         />
       </td>
 
@@ -68,16 +68,14 @@ export default function DocumentRow({
         {doc.nama_sppd}
       </td>
 
-      {/* Nama Kegiatan */}
-      <td className="py-4 px-2 text-sm text-gray-700">
-        {doc.kategori}
-      </td>
+      {/* Kategori */}
+      <td className="py-4 px-2 text-sm text-center text-gray-700">{doc.kategori}</td>
 
       {/* Format */}
       <td className="py-4 px-2 text-center">
         <span
           className={`px-3 py-1 ${getFormatStyle(
-            doc.file_path
+            doc.file_path,
           )} rounded-full text-xs font-semibold`}
         >
           {format.toUpperCase()}
@@ -93,13 +91,25 @@ export default function DocumentRow({
       <td className="py-4 px-2">
         <div className="flex gap-3 justify-center">
           <button onClick={() => onView?.(doc.id)}>
-            <img src={eyeIcon} className="w-5 h-5 opacity-70" />
+            <img
+              src={eyeIcon}
+              alt="View document"
+              className="w-5 h-5 opacity-70"
+            />
           </button>
           <button onClick={() => onEdit?.(doc.id)}>
-            <img src={editIcon} className="w-5 h-5 opacity-70" />
+            <img
+              src={editIcon}
+              alt="Edit document"
+              className="w-5 h-5 opacity-70"
+            />
           </button>
           <button onClick={() => onDelete?.(doc.id)}>
-            <img src={deleteIcon} className="w-5 h-5 opacity-70" />
+            <img
+              src={deleteIcon}
+              alt="Delete document"
+              className="w-5 h-5 opacity-70"
+            />
           </button>
         </div>
       </td>
