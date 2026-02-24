@@ -27,9 +27,9 @@ export default function DocumentTableDesktop({
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="text-gray-500 border-b border-gray-200">
+        <thead className="text-gray-950 border-b border-gray-200">
           <tr>
-            <th className="text-center py-4 px-2 font-semibold w-12">
+            <th className="text-center align-middle py-4 px-2 font-bold w-12">
               <input
                 type="checkbox"
                 title="Pilih Semua"
@@ -40,14 +40,14 @@ export default function DocumentTableDesktop({
                   }
                 }}
                 onChange={(e) => onSelectAll(e.target.checked)}
-                className="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer"
+                className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
               />
             </th>
-            <th className="text-left py-4 px-2 font-semibold">Nama</th>
-            <th className="text-center py-4 px-2 font-semibold">Kategori</th>
-            <th className="text-center py-4 px-2 font-semibold">Format</th>
-            <th className="text-center py-4 px-2 font-semibold">Tanggal</th>
-            <th className="text-center py-4 px-2 font-semibold">Aksi</th>
+            <th className="text-left py-4 px-2 font-bold">Nama</th>
+            <th className="text-center py-4 px-2 font-bold">Kategori</th>
+            <th className="text-center py-4 px-2 font-bold">Format</th>
+            <th className="text-center py-4 px-2 font-bold">Tanggal</th>
+            <th className="text-center py-4 px-2 font-bold">Aksi</th>
           </tr>
         </thead>
 
