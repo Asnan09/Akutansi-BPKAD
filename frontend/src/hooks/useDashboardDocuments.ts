@@ -4,11 +4,6 @@ import { Document, ToastState } from "../types";
 import { useDocumentFilters } from "./useDocumentFilters";
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:3001/api",
-});
-
-
 type ConfirmDialogState = {
   isOpen: boolean;
   documentId: number | string | null;
@@ -94,7 +89,7 @@ export function useDashboardDocuments() {
   const handleView = (id: number | string) => {
     const doc = documents.find((item) => item.id === id);
     showToast(
-      `Melihat ${doc?.name || "dokumen"}... (fungsi preview belum diimplementasikan)`,
+      `Melihat ${doc?.nama_sppd || "dokumen"}... (fungsi preview belum diimplementasikan)`,
       "info",
     );
   };
@@ -123,7 +118,7 @@ export function useDashboardDocuments() {
     setConfirmDialog({
       isOpen: true,
       documentId: id,
-      documentName: doc?.name || "dokumen ini",
+      documentName: doc?.nama_sppd || "dokumen ini",
       isMultiple: false,
     });
   };
@@ -149,58 +144,54 @@ export function useDashboardDocuments() {
     );
   };
 
-const confirmDelete = async () => {
-  try {
-    if (confirmDialog.isMultiple) {
+  const confirmDelete = async () => {
+    try {
+      if (confirmDialog.isMultiple) {
+        for (const id of selectedDocuments) {
+          await axios.delete(`http://localhost:3001/api/documents/${id}`);
+        }
 
-      for (const id of selectedDocuments) {
-        await axios.delete(`http://localhost:3001/api/documents/${id}`);
+        const updatedDocuments = documents.filter(
+          (doc) => !selectedDocuments.has(doc.id),
+        );
+
+        setDocuments(updatedDocuments);
+        setFilteredDocuments(updatedDocuments);
+        setSelectedDocuments(new Set());
+
+        showToast(
+          `${selectedDocuments.size} dokumen berhasil dihapus!`,
+          "success",
+        );
+      } else if (confirmDialog.documentId) {
+        await axios.delete(
+          `http://localhost:3001/api/documents/${confirmDialog.documentId}`,
+        );
+
+        const updatedDocuments = documents.filter(
+          (doc) => doc.id !== confirmDialog.documentId,
+        );
+
+        setDocuments(updatedDocuments);
+        setFilteredDocuments(updatedDocuments);
+
+        const newSelected = new Set(selectedDocuments);
+        newSelected.delete(confirmDialog.documentId);
+        setSelectedDocuments(newSelected);
+
+        showToast("Dokumen berhasil dihapus!", "success");
       }
-
-      const updatedDocuments = documents.filter(
-        (doc) => !selectedDocuments.has(doc.id),
-      );
-
-      setDocuments(updatedDocuments);
-      setFilteredDocuments(updatedDocuments);
-      setSelectedDocuments(new Set());
-
-      showToast(
-        `${selectedDocuments.size} dokumen berhasil dihapus!`,
-        "success",
-      );
-
-    } else if (confirmDialog.documentId) {
-
-      await axios.delete(
-        `http://localhost:3001/api/documents/${confirmDialog.documentId}`
-      );
-
-      const updatedDocuments = documents.filter(
-        (doc) => doc.id !== confirmDialog.documentId,
-      );
-
-      setDocuments(updatedDocuments);
-      setFilteredDocuments(updatedDocuments);
-
-      const newSelected = new Set(selectedDocuments);
-      newSelected.delete(confirmDialog.documentId);
-      setSelectedDocuments(newSelected);
-
-      showToast("Dokumen berhasil dihapus!", "success");
+    } catch (error) {
+      showToast("Gagal menghapus dokumen dari server", "error");
     }
 
-  } catch (error) {
-    showToast("Gagal menghapus dokumen dari server", "error");
-  }
-
-  setConfirmDialog({
-    isOpen: false,
-    documentId: null,
-    documentName: "",
-    isMultiple: false,
-  });
-};
+    setConfirmDialog({
+      isOpen: false,
+      documentId: null,
+      documentName: "",
+      isMultiple: false,
+    });
+  };
 
   const cancelDelete = () => {
     setConfirmDialog({

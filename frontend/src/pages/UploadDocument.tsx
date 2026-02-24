@@ -2,9 +2,9 @@ import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import Toast from "../components/layout/ui/Toast";
-import UploadDocumentInfoSection from "../components/document/UploadDocumentInfoSection";
-import UploadFileSection from "../components/document/UploadFileSection";
-import UploadFormActions from "../components/document/UploadFormActions";
+import UploadDocumentInfoSection from "../components/document/forms/UploadDocumentInfoSection";
+import UploadFileSection from "../components/document/forms/UploadFileSection";
+import UploadFormActions from "../components/document/forms/UploadFormActions";
 import { ToastState } from "../types";
 import { useFileUpload } from "../hooks/useFileUpload";
 

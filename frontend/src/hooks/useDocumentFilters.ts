@@ -14,14 +14,16 @@ export function useDocumentFilters(
     searchQuery?: string,
     startDate?: string,
     endDate?: string,
+    category?: string,
   ) => {
     let result = [...docs];
 
     // 🔍 Search filter (cari di nama_sppd & kategori)
     if (searchQuery) {
-      result = result.filter((doc) =>
-        doc.nama_sppd.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.kategori.toLowerCase().includes(searchQuery.toLowerCase())
+      result = result.filter(
+        (doc) =>
+          doc.nama_sppd.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          doc.kategori.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -48,6 +50,10 @@ export function useDocumentFilters(
       });
     }
 
+    if (category) {
+      result = result.filter((doc) => doc.kategori === category);
+    }
+
     return result;
   };
 
@@ -69,6 +75,21 @@ export function useDocumentFilters(
     }
   };
 
+  const handleCategoryFilter = (category: string) => {
+    const filtered = applyFilters(
+      documents,
+      undefined,
+      undefined,
+      undefined,
+      category,
+    );
+    setFilteredDocuments(filtered);
+
+    if (category && filtered.length === 0) {
+      showToast("Tidak ada dokumen pada kategori ini", "info");
+    }
+  };
+
   const handleRefresh = () => {
     setFilteredDocuments(documents);
     showToast("Filter telah direset", "info");
@@ -81,6 +102,7 @@ export function useDocumentFilters(
     setFilteredDocuments,
     handleSearch,
     handleDateRangeFilter,
+    handleCategoryFilter,
     handleRefresh,
   };
 }

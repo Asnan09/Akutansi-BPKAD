@@ -1,9 +1,9 @@
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
-import FilterBar from "../components/document/FilterBar";
-import DocumentTable from "../components/document/DocumentTable";
-import SelectedActionsBar from "../components/document/SelectedActionsBar";
-import EditModal from "../components/document/EditModal";
+import FilterBar from "../components/document/table/FilterBar";
+import DocumentTable from "../components/document/table/DocumentTable";
+import SelectedActionsBar from "../components/document/table/SelectedActionsBar";
+import EditModal from "../components/document/modals/EditModal";
 import Toast from "../components/layout/ui/Toast";
 import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { useDashboardDocuments } from "../hooks/useDashboardDocuments";
