@@ -79,7 +79,7 @@ export default function DocumentTablePagination({
           </Select>
         </Field>
 
-        <div className="w-[50px] text-center text-sm font-medium">
+        <div className="text-center text-sm font-medium">
           {currentPage} dari {totalPages}
         </div>
 
