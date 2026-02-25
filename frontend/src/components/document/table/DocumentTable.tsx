@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import DocumentTableToolbar from "./DocumentTableToolbar";
 import DocumentTableDesktop from "./DocumentTableDesktop";
@@ -28,14 +30,17 @@ export default function DocumentTable({
   onSelectAll,
 }: DocumentTableProps) {
   const navigate = useNavigate();
+  const documentsContentRef = useRef<HTMLDivElement | null>(null);
   const {
     sortOrder,
     currentPage,
     totalPages,
+    rowsPerPage,
     currentDocuments,
     goToPage,
+    setRowsPerPage,
     handleSortClick,
-  } = useDocumentTableState(documents, totalDocuments);
+  } = useDocumentTableState(documents);
 
   const handleUploadClick = () => {
     navigate("/upload");
@@ -48,6 +53,39 @@ export default function DocumentTable({
     currentDocuments.some((doc) => selectedDocuments.has(doc.id)) &&
     !allSelected;
 
+  useEffect(() => {
+    if (!documentsContentRef.current) {
+      return;
+    }
+
+    const paginatedItems = documentsContentRef.current.querySelectorAll(
+      "[data-paginated-item]",
+    );
+
+    gsap.killTweensOf(documentsContentRef.current);
+    gsap.killTweensOf(paginatedItems);
+
+    if (paginatedItems.length > 0) {
+      gsap.fromTo(
+        paginatedItems,
+        { autoAlpha: 0 },
+        {
+          autoAlpha: 1,
+          duration: 1,
+          ease: "power2.out",
+          stagger: 0.025,
+        },
+      );
+      return;
+    }
+
+    gsap.fromTo(
+      documentsContentRef.current,
+      { autoAlpha: 0 },
+      { autoAlpha: 1, duration: 0.18, ease: "power2.out" },
+    );
+  }, [currentPage]);
+
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
       <DocumentTableToolbar
@@ -56,32 +94,36 @@ export default function DocumentTable({
         onUploadClick={handleUploadClick}
       />
 
-      <DocumentTableDesktop
-        documents={currentDocuments}
-        selectedDocuments={selectedDocuments}
-        allSelected={allSelected}
-        someSelected={someSelected}
-        onSelectAll={onSelectAll}
-        onSelectDocument={onSelectDocument}
-        onView={onView}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+      <div ref={documentsContentRef} className="overflow-hidden">
+        <DocumentTableDesktop
+          documents={currentDocuments}
+          selectedDocuments={selectedDocuments}
+          allSelected={allSelected}
+          someSelected={someSelected}
+          onSelectAll={onSelectAll}
+          onSelectDocument={onSelectDocument}
+          onView={onView}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
 
-      <DocumentTableMobile
-        documents={currentDocuments}
-        selectedDocuments={selectedDocuments}
-        onSelectDocument={onSelectDocument}
-        onView={onView}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+        <DocumentTableMobile
+          documents={currentDocuments}
+          selectedDocuments={selectedDocuments}
+          onSelectDocument={onSelectDocument}
+          onView={onView}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      </div>
 
       <DocumentTablePagination
         totalDocuments={totalDocuments}
         currentPage={currentPage}
         totalPages={totalPages}
+        rowsPerPage={rowsPerPage}
         onPageChange={goToPage}
+        onRowsPerPageChange={setRowsPerPage}
       />
     </div>
   );
