@@ -1,37 +1,25 @@
+// frontend/src/components/layout/AuthHero.tsx
 import buildingImage from "../../assets/images/logo-bpkad.png";
 import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
-    <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-screen order-1 lg:order-2 overflow-hidden">
+    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2">
       <img
         src={buildingImage}
         alt="Gedung BPKAD"
         className="absolute inset-0 w-full h-full object-contain object-[100%_90%] animate-zoomIn"
       />
 
-      {/* Gradient Overlay */}
-      <div
-        className="
-          absolute inset-0
-          bg-gradient-to-t
-          from-[#FF5700]/60
-          via-[#FF5700]/10
-          to-transparent
-        "
-      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#FF5700]/60 via-[#FF5700]/10 to-transparent" />
 
-      {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[650px] lg:h-[650px] border-[3px] border-white/20 rotate-45 rounded-[60px] auth-hero-ring-primary" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] lg:w-[550px] lg:h-[550px] border-[2px] border-white/10 rotate-45 rounded-[50px] auth-hero-ring-secondary" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] border-[3px] border-white/20 rotate-45 rounded-[60px] auth-hero-ring-primary" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] border-[2px] border-white/10 rotate-45 rounded-[50px] auth-hero-ring-secondary" />
       </div>
 
-      {/* Info Card */}
-      <div className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-4 right-4 sm:left-8 sm:right-8 lg:left-16 lg:right-16 max-w-xl mx-auto lg:mx-0 animate-slideInRight animate-delay-500">
-        <div className="bg-gradient-to-br from-black/40 via-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-[1.02] group">
-          
-          {/* Badge */}
+      <div className="absolute bottom-16 left-16 right-16 max-w-xl animate-slideInRight animate-delay-500">
+        <div className="bg-gradient-to-br from-black/40 via-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-8 text-white shadow-2xl border border-white/10">
           <div className="flex items-center text-xs font-bold mb-4 tracking-widest">
             <span className="relative flex h-3 w-3 mr-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -42,33 +30,18 @@ export default function AuthHero() {
             </span>
           </div>
 
-          {/* Title */}
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-4 group-hover:scale-[1.02] transition-transform duration-500">
-            <span className="bg-gradient-to-r from-white via-orange-100 to-white bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-              Sistem Arsip
-              <br />
-              Dokumen Keuangan
-            </span>
+          <h1 className="text-4xl font-bold leading-tight mb-4">
+            Sistem Arsip
+            <br />
+            Dokumen Keuangan
           </h1>
 
-          {/* Description */}
-          <p className="text-sm sm:text-base text-gray-200 leading-relaxed">
+          <p className="text-base text-gray-200 leading-relaxed">
             Penyimpanan dan akses dokumen PDF untuk staf akuntansi secara terpusat, cepat, dan aman.
           </p>
 
-          {/* Decorative Line */}
-          <div className="mt-6 h-1 w-24 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full group-hover:w-32 transition-all duration-500"></div>
+          <div className="mt-6 h-1 w-24 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full"></div>
         </div>
-      </div>
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-1" />
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-2" />
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-3" />
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-4" />
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-5" />
-        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-6" />
       </div>
     </div>
   );

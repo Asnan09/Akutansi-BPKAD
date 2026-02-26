@@ -1,3 +1,4 @@
+// frontend/src/components/layout/LoginForm.tsx
 import userIcon from "../../assets/icons/profile.svg";
 import lockIcon from "../../assets/icons/kunci.svg";
 import logoBpkad from "../../assets/images/bpkad-building.png";
@@ -26,7 +27,7 @@ export default function LoginForm({
   onSubmit,
 }: LoginFormProps) {
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-2 lg:order-1 animate-[slideInLeft_0.6s_ease-out]">
+    <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
       <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-2xl shadow-orange-500/10 px-6 sm:px-12 py-10 sm:py-14 border border-orange-100/50 backdrop-blur-sm animate-[fadeIn_0.8s_ease-out_0.2s_both]">
         <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
           <div className="relative mb-4">
@@ -51,14 +52,10 @@ export default function LoginForm({
 
           <div className="animate-[slideUp_0.5s_ease-out_0.5s_both]">
             <label className="block text-xs font-bold text-gray-700 mb-2.5 tracking-wide uppercase">
-              Nama Pengguna
+              NAMA PENGGUNA
             </label>
             <div className="relative flex items-center bg-white border border-gray-300 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20">
-              <img
-                src={userIcon}
-                className="w-5 h-5 mr-3 opacity-40"
-                alt="User"
-              />
+              <img src={userIcon} className="w-5 h-5 mr-3 opacity-40" alt="User" />
               <input
                 type="text"
                 placeholder="Masukkan NIP atau username"
@@ -73,14 +70,10 @@ export default function LoginForm({
 
           <div className="animate-[slideUp_0.5s_ease-out_0.6s_both]">
             <label className="block text-xs font-bold text-gray-700 mb-2.5 tracking-wide uppercase">
-              Kata Sandi
+              KATA SANDI
             </label>
             <div className="relative flex items-center bg-white border border-gray-300 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20">
-              <img
-                src={lockIcon}
-                className="w-5 h-5 mr-3 opacity-40"
-                alt="Lock"
-              />
+              <img src={lockIcon} className="w-5 h-5 mr-3 opacity-40" alt="Lock" />
               <input
                 type="password"
                 placeholder="Masukkan kata sandi"
@@ -109,18 +102,11 @@ export default function LoginForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed animate-[slideUp_0.5s_ease-out_0.8s_both] overflow-hidden group"
+            className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-            <span className="relative flex items-center justify-center gap-2">
-              {isLoading ? "Sedang masuk..." : "MASUK"}
-            </span>
+            {isLoading ? "Sedang masuk..." : "MASUK"}
           </button>
         </form>
-
-        <div className="mt-8 text-center animate-[fadeIn_0.5s_ease-out_1s_both]">
-          <p className="text-xs text-gray-500"></p>
-        </div>
       </div>
     </div>
   );

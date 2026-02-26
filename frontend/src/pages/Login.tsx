@@ -1,3 +1,4 @@
+// frontend/src/pages/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/api";
@@ -31,7 +32,6 @@ export default function Login() {
         localStorage.removeItem("authToken");
       }
 
-      // Arahkan ke dasbor setelah berhasil login
       navigate("/dashboarddokumen");
     } catch (err: Error | unknown) {
       const errorMessage =
@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col lg:flex-row bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif] overflow-hidden fixed inset-0">
+    <div className="min-h-screen w-full flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <LoginForm
         username={username}
         password={password}
