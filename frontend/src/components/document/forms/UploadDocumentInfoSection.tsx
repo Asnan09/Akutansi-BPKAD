@@ -1,3 +1,9 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { format } from "date-fns";
+import { id as localeId } from "date-fns/locale";
+import { FaChevronDown } from "react-icons/fa";
+import { Calendar } from "../../layout/ui/calendar";
+
 type UploadFormData = {
   name: string;
   date: string;
@@ -15,6 +21,52 @@ export default function UploadDocumentInfoSection({
   formData,
   onInputChange,
 }: UploadDocumentInfoSectionProps) {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  const categoryWrapperRef = useRef<HTMLDivElement>(null);
+  const calendarWrapperRef = useRef<HTMLDivElement>(null);
+
+  const selectedDate = useMemo(() => {
+    if (!formData.date) return undefined;
+    const dateObject = new Date(`${formData.date}T00:00:00`);
+    return Number.isNaN(dateObject.getTime()) ? undefined : dateObject;
+  }, [formData.date]);
+
+  const displayDate = useMemo(() => {
+    if (!selectedDate) return "Pilih Tanggal";
+    return format(selectedDate, "dd MMMM yyyy", { locale: localeId });
+  }, [selectedDate]);
+
+  const emitFieldChange = (name: "date" | "category", value: string) => {
+    onInputChange({
+      target: { name, value },
+    } as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>);
+  };
+
+  useEffect(() => {
+    const onClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (
+        categoryWrapperRef.current &&
+        !categoryWrapperRef.current.contains(target)
+      ) {
+        setIsCategoryOpen(false);
+      }
+
+      if (
+        calendarWrapperRef.current &&
+        !calendarWrapperRef.current.contains(target)
+      ) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
   return (
     <div className="space-y-6 animate-slideInLeft animate-delay-200">
       <div className="flex items-center gap-3 mb-6">
@@ -56,58 +108,96 @@ export default function UploadDocumentInfoSection({
       </div>
 
       <div>
-        <label
-          htmlFor="date"
-          className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
-        >
+        <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
           Tanggal
         </label>
-        <input
-          type="date"
-          id="date"
-          name="date"
-          value={formData.date}
-          onChange={onInputChange}
-          className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
-          required
-        />
+        <div ref={calendarWrapperRef} className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setIsCalendarOpen((prev) => !prev);
+              setIsCategoryOpen(false);
+            }}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white flex items-center justify-between"
+          >
+            <span className={selectedDate ? "text-gray-900" : "text-gray-500"}>
+              {displayDate}
+            </span>
+            <FaChevronDown
+              className={`text-xs text-gray-500 transition-transform duration-200 ${
+                isCalendarOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {isCalendarOpen && (
+            <div className="absolute top-full left-0 mt-2 z-30 border border-gray-200 rounded-xl bg-white shadow-xl p-2">
+              <Calendar
+                mode="single"
+                captionLayout="dropdown"
+                fromYear={2000}
+                toYear={new Date().getFullYear() + 10}
+                selected={selectedDate}
+                onSelect={(selected) => {
+                  if (!selected) return;
+                  emitFieldChange("date", format(selected, "yyyy-MM-dd"));
+                  setIsCalendarOpen(false);
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div>
-        <label
-          htmlFor="category"
-          className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
-        >
+        <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
           Kategori
         </label>
-        <div className="relative">
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={onInputChange}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white appearance-none cursor-pointer"
-            required
+        <div ref={categoryWrapperRef} className="relative">
+          <button
+            type="button"
+            onClick={() => {
+              setIsCategoryOpen((prev) => !prev);
+              setIsCalendarOpen(false);
+            }}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white flex items-center justify-between"
           >
-            <option value="">Pilih Kategori</option>
-            <option value="Lampiran">Lampiran</option>
-            <option value="Keuangan">Keuangan</option>
-          </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg
-              className="w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <span
+              className={formData.category ? "text-gray-900" : "text-gray-500"}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
+              {formData.category || "Pilih Kategori"}
+            </span>
+            <FaChevronDown
+              className={`text-xs text-gray-500 transition-transform duration-200 ${
+                isCategoryOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {isCategoryOpen && (
+            <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 rounded-xl bg-white shadow-xl p-2">
+              {(["Lampiran", "Keuangan"] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    emitFieldChange("category", option);
+                    setIsCategoryOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-base transition-colors ${
+                    formData.category === option
+                      ? "bg-orange-50 text-orange-600"
+                      : "hover:bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <input type="hidden" name="category" value={formData.category} required />
+          <input type="hidden" name="date" value={formData.date} required />
         </div>
       </div>
     </div>
