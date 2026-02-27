@@ -94,7 +94,12 @@ export function useFileUpload(
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.date || !formData.category || !selectedFile) {
+    if (
+      !formData.name ||
+      !formData.date ||
+      !formData.category ||
+      !selectedFile
+    ) {
       showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
       return;
     }
@@ -122,7 +127,7 @@ export function useFileUpload(
         setSelectedFile(null);
         navigate("/dashboarddokumen");
       }, 2000);
-    } catch  {
+    } catch {
       showToast("Gagal mengunggah dokumen", "error");
     } finally {
       setIsUploading(false);

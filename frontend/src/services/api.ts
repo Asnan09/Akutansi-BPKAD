@@ -1,31 +1,29 @@
 import axios from "axios";
 import { Document } from "../types";
 
-// Impor ikon dipindahkan dari file service ini.
-// Komponen yang menampilkan data akan bertanggung jawab untuk menampilkan ikon.
-
-/**
- * Mendefinisikan tipe data untuk respons login yang berhasil.
- */
 export interface LoginResponse {
   message: string;
   token: string;
 }
 
-// Membuat instance axios dengan URL dasar yang sudah ditentukan untuk backend kita.
+type DocumentApiItem = {
+  id: number;
+  nama_sppd: string;
+  tanggal_sppd: string;
+  kategori: string;
+  file_path: string;
+  created_at?: string;
+};
+
 const apiClient = axios.create({
   baseURL: "http://localhost:3001/api",
 });
 
-/**
- * Mengekspor fungsi untuk mengambil data dokumen dari backend.
- * @returns Promise yang akan resolve dengan array of Document.
- */
 export const getDocuments = async (): Promise<Document[]> => {
   try {
-    const response = await apiClient.get("/documents");
+    const response = await apiClient.get<DocumentApiItem[]>("/documents");
 
-    return response.data.map((item: any) => ({
+    return response.data.map((item) => ({
       id: item.id,
       nama_sppd: item.nama_sppd,
       tanggal_sppd: item.tanggal_sppd,
@@ -39,12 +37,13 @@ export const getDocuments = async (): Promise<Document[]> => {
   }
 };
 
-/**
- * Mengirim permintaan login ke backend.
- * @param username Nama pengguna.
- * @param password Kata sandi pengguna.
- * @returns Promise yang resolve dengan data LoginResponse.
- */
+export const updateDocument = async (
+  id: number | string,
+  updatedData: Partial<Document>,
+): Promise<void> => {
+  await apiClient.put(`/documents/${id}`, updatedData);
+};
+
 export const login = async (
   username: string,
   password: string,
@@ -57,12 +56,10 @@ export const login = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      // Lemparkan kembali error dengan pesan dari backend agar bisa ditangkap di komponen
       throw new Error(
         error.response.data.message || "Terjadi kesalahan saat mencoba login.",
       );
     }
-    // Untuk error lainnya yang tidak terduga
     throw new Error("Terjadi kesalahan yang tidak diketahui.");
   }
 };
