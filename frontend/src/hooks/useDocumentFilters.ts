@@ -18,7 +18,7 @@ export function useDocumentFilters(
   ) => {
     let result = [...docs];
 
-    // 🔍 Search filter (cari di nama_sppd & kategori)
+    // Search filter (nama_sppd & kategori)
     if (searchQuery) {
       result = result.filter(
         (doc) =>
@@ -27,29 +27,22 @@ export function useDocumentFilters(
       );
     }
 
-    // 📅 Date range filter (pakai tanggal_sppd langsung)
+    // Date range filter (aman dari masalah timezone)
     if (startDate || endDate) {
       result = result.filter((doc) => {
-        const docDate = new Date(doc.tanggal_sppd);
+        // Ambil format YYYY-MM-DD dari data dokumen
+        const docDate = (doc.tanggal_sppd || "").slice(0, 10);
 
-        if (startDate && endDate) {
-          const start = new Date(startDate);
-          const end = new Date(endDate);
-          end.setHours(23, 59, 59, 999);
-          return docDate >= start && docDate <= end;
-        } else if (startDate) {
-          const start = new Date(startDate);
-          return docDate >= start;
-        } else if (endDate) {
-          const end = new Date(endDate);
-          end.setHours(23, 59, 59, 999);
-          return docDate <= end;
-        }
+        if (!docDate) return false;
+
+        if (startDate && docDate < startDate) return false;
+        if (endDate && docDate > endDate) return false;
 
         return true;
       });
     }
 
+    // Category filter
     if (category) {
       result = result.filter((doc) => doc.kategori === category);
     }

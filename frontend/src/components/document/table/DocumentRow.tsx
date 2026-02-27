@@ -20,7 +20,6 @@ export default function DocumentRow({
   onEdit,
   onDelete,
 }: DocumentRowProps) {
-  // 🔥 ambil format dari file_path
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";
   };
@@ -45,6 +44,19 @@ export default function DocumentRow({
     }
   };
 
+  const formatTanggal = (value: string) => {
+    const dateOnly = (value || "").slice(0, 10); // YYYY-MM-DD
+    const [year, month, day] = dateOnly.split("-").map(Number);
+
+    if (!year || !month || !day) return value || "-";
+
+    return new Date(year, month - 1, day).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   const format = getFileFormat(doc.file_path);
 
   return (
@@ -54,7 +66,6 @@ export default function DocumentRow({
         isSelected ? "bg-orange-50" : ""
       }`}
     >
-      {/* Checkbox */}
       <td className="py-4 px-2 w-12 text-center align-middle">
         <input
           type="checkbox"
@@ -65,19 +76,16 @@ export default function DocumentRow({
         />
       </td>
 
-      {/* No SPPD */}
       <td className="py-4 px-2 text-sm font-medium text-gray-800 max-w-0">
         <span className="block truncate" title={doc.nama_sppd}>
           {doc.nama_sppd}
         </span>
       </td>
 
-      {/* Kategori */}
       <td className="py-4 px-2 text-sm text-center text-gray-700">
         {doc.kategori}
       </td>
 
-      {/* Format */}
       <td className="py-4 px-2 text-center">
         <span
           className={`px-3 py-1 ${getFormatStyle(
@@ -88,16 +96,10 @@ export default function DocumentRow({
         </span>
       </td>
 
-      {/* Tanggal */}
       <td className="py-4 px-2 text-center text-sm text-gray-600">
-        {new Date(doc.tanggal_sppd).toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
+        {formatTanggal(doc.tanggal_sppd)}
       </td>
 
-      {/* Aksi */}
       <td className="py-4 px-2">
         <div className="flex gap-3 justify-center">
           <button

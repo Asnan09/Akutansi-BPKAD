@@ -1,50 +1,43 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Document } from "../types";
 
 export type SortOrder = "newest" | "oldest" | null;
 
+const toTimestamp = (value: string) => {
+  const dateOnly = (value || "").slice(0, 10);
+  const [year, month, day] = dateOnly.split("-").map(Number);
+  if (!year || !month || !day) return 0;
+  return new Date(year, month - 1, day).getTime();
+};
+
 export function useDocumentTableState(documents: Document[]) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPageState] = useState(10);
 
   const sortedDocuments = useMemo(() => {
     return [...documents].sort((a, b) => {
       if (!sortOrder) return 0;
-
-      const dateA = new Date(a.tanggal_sppd);
-      const dateB = new Date(b.tanggal_sppd);
-
-      if (sortOrder === "newest") {
-        return dateB.getTime() - dateA.getTime();
-      }
-
-      return dateA.getTime() - dateB.getTime();
+      const dateA = toTimestamp(a.tanggal_sppd);
+      const dateB = toTimestamp(b.tanggal_sppd);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
     });
   }, [documents, sortOrder]);
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(sortedDocuments.length / rowsPerPage),
-  );
-  const startIndex = (currentPage - 1) * rowsPerPage;
+  const totalPages = Math.max(1, Math.ceil(sortedDocuments.length / rowsPerPage));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+
+  const startIndex = (safeCurrentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentDocuments = sortedDocuments.slice(startIndex, endIndex);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [rowsPerPage]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
   const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
+  const setRowsPerPage = (value: number) => {
+    setRowsPerPageState(value);
+    setCurrentPage(1); // pindah ke page 1 saat rows berubah (tanpa useEffect)
   };
 
   const handleSortClick = (order: "newest" | "oldest") => {
@@ -53,7 +46,7 @@ export function useDocumentTableState(documents: Document[]) {
 
   return {
     sortOrder,
-    currentPage,
+    currentPage: safeCurrentPage,
     totalPages,
     rowsPerPage,
     currentDocuments,

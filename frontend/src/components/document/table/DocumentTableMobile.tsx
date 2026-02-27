@@ -17,7 +17,6 @@ export default function DocumentTableMobile({
   onEdit,
   onDelete,
 }: DocumentTableMobileProps) {
-  // 🔥 ambil ekstensi dari file_path
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";
   };
@@ -40,6 +39,15 @@ export default function DocumentTableMobile({
       default:
         return "bg-gray-100 text-gray-600";
     }
+  };
+
+  const formatTanggal = (value: string) => {
+    const dateOnly = (value || "").slice(0, 10);
+    const [year, month, day] = dateOnly.split("-").map(Number);
+
+    if (!year || !month || !day) return value || "-";
+
+    return new Date(year, month - 1, day).toLocaleDateString("id-ID");
   };
 
   return (
@@ -69,16 +77,13 @@ export default function DocumentTableMobile({
                   />
 
                   <div className="flex-1">
-                    {/* No SPPD */}
                     <h3 className="font-semibold text-gray-800 text-sm">
                       {doc.nama_sppd}
                     </h3>
 
-                    {/* Nama Kegiatan */}
                     <p className="text-xs text-gray-600 mt-1">{doc.kategori}</p>
 
                     <div className="flex items-center gap-2 text-xs mt-2 flex-wrap">
-                      {/* Format */}
                       <span
                         className={`px-2 py-1 ${getFormatStyle(
                           doc.file_path,
@@ -87,9 +92,8 @@ export default function DocumentTableMobile({
                         {format.toUpperCase()}
                       </span>
 
-                      {/* Tanggal */}
                       <span className="text-gray-500">
-                        {new Date(doc.tanggal_sppd).toLocaleDateString("id-ID")}
+                        {formatTanggal(doc.tanggal_sppd)}
                       </span>
                     </div>
                   </div>
