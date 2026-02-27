@@ -233,7 +233,7 @@ export function useEditModal({
     setIsCategoryOpen(true);
   };
 
-  const selectCategory = (kategori: "Lampiran" | "Keuangan") => {
+  const selectCategory = (kategori: "Lampiran" | "Keuangan" | "BKU" | "STS") => {
     setFormData((prev) => ({
       ...prev,
       kategori,

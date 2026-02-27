@@ -7,7 +7,7 @@ import { Calendar } from "../../layout/ui/calendar";
 type UploadFormData = {
   name: string;
   date: string;
-  category: "Lampiran" | "Keuangan" | "";
+  category: "Lampiran" | "Keuangan" | "BKU" | "STS" | "";
 };
 
 type UploadDocumentInfoSectionProps = {
@@ -91,7 +91,7 @@ export default function UploadDocumentInfoSection({
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
+          className="block text-sm font-bold text-gray-700 mb-3"
         >
           Nama Dokumen
         </label>
@@ -108,7 +108,7 @@ export default function UploadDocumentInfoSection({
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+        <label className="block text-sm font-bold text-gray-700 mb-3">
           Tanggal
         </label>
         <div ref={calendarWrapperRef} className="relative">
@@ -150,7 +150,7 @@ export default function UploadDocumentInfoSection({
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+        <label className="block text-sm font-bold text-gray-700 mb-3">
           Kategori
         </label>
         <div ref={categoryWrapperRef} className="relative">
@@ -176,7 +176,7 @@ export default function UploadDocumentInfoSection({
 
           {isCategoryOpen && (
             <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 rounded-xl bg-white shadow-xl p-2">
-              {(["Lampiran", "Keuangan"] as const).map((option) => (
+              {(["Lampiran", "Keuangan", "BKU", "STS"] as const).map((option) => (
                 <button
                   key={option}
                   type="button"

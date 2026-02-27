@@ -12,6 +12,8 @@ const categoryOptions = [
   { value: "", label: "Semua Kategori" },
   { value: "Lampiran", label: "Lampiran" },
   { value: "Keuangan", label: "Keuangan" },
+  { value: "BKU", label: "BKU" },
+  { value: "STS", label: "STS" },
 ];
 
 export default function CategoryFilterSelect({
