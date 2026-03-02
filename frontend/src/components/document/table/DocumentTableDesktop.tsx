@@ -1,5 +1,6 @@
 import { Document } from "../../../types";
 import DocumentRow from "./DocumentRow";
+import AppTooltip from "../../ui/app-tooltip";
 
 type DocumentTableDesktopProps = {
   documents: Document[];
@@ -30,18 +31,21 @@ export default function DocumentTableDesktop({
         <thead className="text-gray-950 border-b border-gray-200">
           <tr>
             <th className="text-center align-middle py-4 px-2 font-bold w-12">
-              <input
-                type="checkbox"
-                title="Pilih Semua"
-                checked={allSelected}
-                ref={(input) => {
-                  if (input) {
-                    input.indeterminate = someSelected;
-                  }
-                }}
-                onChange={(e) => onSelectAll(e.target.checked)}
-                className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
-              />
+              <AppTooltip content="Pilih Semua">
+                <input
+                  type="checkbox"
+                  title=""
+                  aria-label="Pilih semua dokumen"
+                  checked={allSelected}
+                  ref={(input) => {
+                    if (input) {
+                      input.indeterminate = someSelected;
+                    }
+                  }}
+                  onChange={(e) => onSelectAll(e.target.checked)}
+                  className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
+                />
+              </AppTooltip>
             </th>
             <th className="text-left py-4 px-2 font-bold w-1/5">Nama</th>
             <th className="text-center py-4 px-2 font-bold w-1/5">Kategori</th>

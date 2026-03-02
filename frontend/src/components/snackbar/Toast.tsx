@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import AppTooltip from "../ui/app-tooltip";
 
 interface ToastProps {
   message: string;
@@ -100,25 +101,28 @@ export default function Toast({
         <p className="flex-1 font-semibold text-sm leading-relaxed">
           {message}
         </p>
-        <button
-          title="Close"
-          onClick={onClose}
-          className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <AppTooltip content="Close">
+          <button
+            onClick={onClose}
+            title=""
+            aria-label="Close"
+            className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </AppTooltip>
 
         <div className="absolute bottom-0 left-0 h-1 w-full bg-white/30 rounded-b-2xl animate-shrink"></div>
       </div>

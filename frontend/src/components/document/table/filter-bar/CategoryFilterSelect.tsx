@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { FaChevronDown } from "react-icons/fa";
+import AppTooltip from "../../../ui/app-tooltip";
 
 type CategoryFilterSelectProps = {
   value: string;
@@ -151,17 +152,18 @@ export default function CategoryFilterSelect({
         Kategori
       </label>
       <div ref={wrapperRef} className="relative">
-        <button
-          type="button"
-          title="Category"
-          onClick={toggleDropdown}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 hover:border-orange-400 text-left transition flex items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]"
-        >
-          <span>{selectedLabel}</span>
-          <span ref={chevronRef} className="inline-block text-gray-400">
-            <FaChevronDown className="text-xs" />
-          </span>
-        </button>
+        <AppTooltip content="Pilih kategori">
+          <button
+            type="button"
+            onClick={toggleDropdown}
+            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 hover:border-orange-400 text-left transition flex items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]"
+          >
+            <span>{selectedLabel}</span>
+            <span ref={chevronRef} className="inline-block text-gray-400">
+              <FaChevronDown className="text-xs" />
+            </span>
+          </button>
+        </AppTooltip>
       </div>
       {dropdown}
     </div>

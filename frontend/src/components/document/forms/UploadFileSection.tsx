@@ -69,10 +69,11 @@ export default function UploadFileSection({
         <input
           ref={fileInputRef}
           type="file"
+          title=""
+          aria-label="File Input"
           onChange={onFileInputChange}
           className="hidden"
           accept=".pdf,.docx,.xlsx,.pptx"
-          title="File Input"
         />
 
         {selectedFile ? (

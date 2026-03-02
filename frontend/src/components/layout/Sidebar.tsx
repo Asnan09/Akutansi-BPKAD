@@ -1,7 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import homeIcon from "../../assets/icons/home.svg";
 import documentIcon from "../../assets/icons/upload.svg";
+import historyIcon from "../../assets/icons/refresh.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
+import AppTooltip from "../ui/app-tooltip";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -34,48 +36,65 @@ export default function Sidebar() {
 
       {/* MENU NAVIGATION */}
       <nav className="flex flex-col gap-4 flex-1">
-        <button
-          onClick={() => navigate("/dashboarddokumen")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+        <AppTooltip content="Dashboard">
+          <button
+            onClick={() => navigate("/dashboarddokumen")}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/dashboarddokumen")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
-          title="Dashboard"
-        >
-          <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
-        </button>
+          >
+            <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
+          </button>
+        </AppTooltip>
 
-        <button
-          onClick={() => navigate("/upload")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+        <AppTooltip content="Upload Dokumen">
+          <button
+            onClick={() => navigate("/upload")}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/upload")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
-          title="Upload Dokumen"
-        >
-          <img src={documentIcon} className="w-6 h-6" alt="Upload" />
-        </button>
+          >
+            <img src={documentIcon} className="w-6 h-6" alt="Upload" />
+          </button>
+        </AppTooltip>
+
+        <AppTooltip content="Riwayat Unggah">
+          <button
+            onClick={() => navigate("/riwayat")}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${
+              isActive("/riwayat")
+                ? "bg-white/30 shadow-lg scale-105"
+                : "hover:bg-white/20"
+            }`}
+          >
+            <img src={historyIcon} className="w-6 h-6" alt="Riwayat Unggah" />
+          </button>
+        </AppTooltip>
       </nav>
 
       {/* SEPARATOR LINE BEFORE LOGOUT */}
       <div className="w-12 h-px bg-white/30 mb-6"></div>
 
       {/* LOGOUT - SEPARATED */}
-      <button
-        onClick={handleLogout}
-        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center transition-all group"
-        title="Keluar"
-      >
-        <img
-          src={logoutIcon}
-          className="w-6 h-6 group-hover:scale-110 transition-transform"
-          alt="Logout"
-        />
-      </button>
+      <AppTooltip content="Keluar">
+        <button
+          onClick={handleLogout}
+          className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center transition-all group"
+        >
+          <img
+            src={logoutIcon}
+            className="w-6 h-6 group-hover:scale-110 transition-transform"
+            alt="Logout"
+          />
+        </button>
+      </AppTooltip>
     </aside>
   );
 }
