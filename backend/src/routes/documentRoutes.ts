@@ -4,6 +4,8 @@ import {
   createDocument,
   updateDocument,
   deleteDocument,
+  getUploadHistory,
+  restoreDocumentFromHistory,
 } from "../controllers/documentController";
 import multer from "multer";
 import path from "path";
@@ -32,8 +34,10 @@ const upload = multer({ storage: storage });
 
 // route untuk dokumen
 router.get("/documents", getAllDocuments);
+router.get("/documents/history", getUploadHistory);
 router.post("/documents", upload.single("file"), createDocument); // taro middleware multer di sini
 router.put("/documents/:id", updateDocument);
 router.delete("/documents/:id", deleteDocument);
+router.post("/documents/history/:id/restore", restoreDocumentFromHistory);
 
 export default router;
