@@ -2,6 +2,8 @@ import { Document, UploadHistory } from "../types";
 
 const HISTORY_STORAGE_KEY = "upload_history_local_items";
 const HIDDEN_IDS_STORAGE_KEY = "upload_history_hidden_ids";
+const PERMANENT_DELETED_IDS_STORAGE_KEY =
+  "upload_history_permanent_deleted_ids";
 
 const readJson = <T>(key: string, fallback: T): T => {
   if (typeof window === "undefined") {
@@ -50,8 +52,19 @@ export const getHiddenDocumentIds = (): Array<number | string> => {
   return readJson<Array<number | string>>(HIDDEN_IDS_STORAGE_KEY, []);
 };
 
+export const getPermanentDeletedDocumentIds = (): Array<number | string> => {
+  return readJson<Array<number | string>>(
+    PERMANENT_DELETED_IDS_STORAGE_KEY,
+    [],
+  );
+};
+
 const setHiddenDocumentIds = (ids: Array<number | string>) => {
   writeJson(HIDDEN_IDS_STORAGE_KEY, ids);
+};
+
+const setPermanentDeletedDocumentIds = (ids: Array<number | string>) => {
+  writeJson(PERMANENT_DELETED_IDS_STORAGE_KEY, ids);
 };
 
 export const moveDocumentsToLocalHistory = (documents: Document[]) => {
@@ -88,8 +101,13 @@ export const restoreDocumentFromLocalHistory = (
 ): boolean => {
   const historyItems = getLocalUploadHistoryItems();
   const hiddenIds = getHiddenDocumentIds();
+  const permanentDeletedIds = getPermanentDeletedDocumentIds();
 
   const stringId = String(id);
+  if (permanentDeletedIds.some((itemId) => String(itemId) === stringId)) {
+    return false;
+  }
+
   const nextHistoryItems = historyItems.filter(
     (item) => String(item.id) !== stringId,
   );
@@ -107,6 +125,40 @@ export const restoreDocumentFromLocalHistory = (
 
   setLocalUploadHistoryItems(nextHistoryItems);
   setHiddenDocumentIds(nextHiddenIds);
+
+  return true;
+};
+
+export const permanentlyDeleteDocumentFromLocalHistory = (
+  id: number | string,
+): boolean => {
+  const stringId = String(id);
+  const historyItems = getLocalUploadHistoryItems();
+  const hiddenIds = getHiddenDocumentIds();
+  const permanentDeletedIds = getPermanentDeletedDocumentIds();
+
+  const nextHistoryItems = historyItems.filter(
+    (item) => String(item.id) !== stringId,
+  );
+  const nextHiddenIds = Array.from(
+    new Set([...hiddenIds.map(String), stringId]),
+  );
+  const nextPermanentDeletedIds = Array.from(
+    new Set([...permanentDeletedIds.map(String), stringId]),
+  );
+
+  const hasChanged =
+    nextHistoryItems.length !== historyItems.length ||
+    nextHiddenIds.length !== hiddenIds.length ||
+    nextPermanentDeletedIds.length !== permanentDeletedIds.length;
+
+  if (!hasChanged) {
+    return false;
+  }
+
+  setLocalUploadHistoryItems(nextHistoryItems);
+  setHiddenDocumentIds(nextHiddenIds);
+  setPermanentDeletedDocumentIds(nextPermanentDeletedIds);
 
   return true;
 };

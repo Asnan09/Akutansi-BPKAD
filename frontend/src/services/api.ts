@@ -8,6 +8,8 @@ import {
 import {
   getHiddenDocumentIds,
   getLocalUploadHistoryItems,
+  getPermanentDeletedDocumentIds,
+  permanentlyDeleteDocumentFromLocalHistory,
   restoreDocumentFromLocalHistory,
 } from "../utils/uploadHistoryLocal";
 
@@ -57,6 +59,9 @@ export const getUploadHistories = async (
   const documents = await getDocuments();
   const localHistoryItems = getLocalUploadHistoryItems();
   const hiddenIds = new Set(getHiddenDocumentIds().map(String));
+  const permanentDeletedIds = new Set(
+    getPermanentDeletedDocumentIds().map(String),
+  );
 
   const localHistoryById = new Map<string, UploadHistory>();
   for (const historyItem of localHistoryItems) {
@@ -106,9 +111,11 @@ export const getUploadHistories = async (
 
   const filteredItems =
     searchText.length === 0
-      ? allItems
-      : allItems.filter((item) =>
-          item.documentName.toLowerCase().includes(searchText),
+      ? allItems.filter((item) => !permanentDeletedIds.has(String(item.id)))
+      : allItems.filter(
+          (item) =>
+            item.documentName.toLowerCase().includes(searchText) &&
+            !permanentDeletedIds.has(String(item.id)),
         );
 
   const total = filteredItems.length;
@@ -171,6 +178,18 @@ export const restoreUploadHistories = async (
     restoredCount,
     failedCount,
   };
+};
+
+export const permanentlyDeleteUploadHistory = async (
+  id: number | string,
+): Promise<{ message: string }> => {
+  const deleted = permanentlyDeleteDocumentFromLocalHistory(id);
+
+  if (!deleted) {
+    return { message: "Data riwayat tidak ditemukan." };
+  }
+
+  return { message: "Dokumen berhasil dihapus permanen." };
 };
 
 export const updateDocument = async (

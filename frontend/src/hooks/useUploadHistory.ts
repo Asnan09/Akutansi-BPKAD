@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
   getUploadHistories,
+  permanentlyDeleteUploadHistory,
   restoreUploadHistories,
   restoreUploadHistory,
 } from "../services/api";
@@ -19,6 +20,9 @@ export function useUploadHistory({
   const [items, setItems] = useState<UploadHistory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [restoringId, setRestoringId] = useState<number | string | null>(null);
+  const [permanentlyDeletingId, setPermanentlyDeletingId] = useState<
+    number | string | null
+  >(null);
   const [isRestoringSelected, setIsRestoringSelected] =
     useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -166,11 +170,34 @@ export function useUploadHistory({
     }
   };
 
+  const handlePermanentDelete = async (
+    id: number | string,
+  ): Promise<string> => {
+    setPermanentlyDeletingId(id);
+
+    try {
+      const response = await permanentlyDeleteUploadHistory(id);
+      await fetchHistory();
+      setSelectedIds((previous) => {
+        const next = new Set(previous);
+        next.delete(String(id));
+        return next;
+      });
+
+      return response.message;
+    } catch {
+      return "Gagal menghapus dokumen secara permanen.";
+    } finally {
+      setPermanentlyDeletingId(null);
+    }
+  };
+
   return {
     items,
     loading,
     error,
     restoringId,
+    permanentlyDeletingId,
     isRestoringSelected,
     selectedIds,
     selectedRestorableCount,
@@ -189,5 +216,6 @@ export function useUploadHistory({
     handleToggleSelectAll,
     handleRestore,
     handleRestoreSelected,
+    handlePermanentDelete,
   };
 }

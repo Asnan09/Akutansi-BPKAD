@@ -11,6 +11,7 @@ type HistoryContentSectionProps = {
   loading: boolean;
   error: string;
   restoringId: number | string | null;
+  permanentlyDeletingId: number | string | null;
   isRestoringSelected: boolean;
   selectedIds: Set<string>;
   selectedRestorableCount: number;
@@ -26,6 +27,7 @@ type HistoryContentSectionProps = {
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
   onRestore: (id: number | string) => void;
+  onPermanentDeleteRequest: (id: number | string) => void;
   onRestoreSelected: () => void;
   onPageChange: (nextPage: number) => void;
   onPageSizeChange: (nextSize: number) => void;
@@ -36,6 +38,7 @@ export default function HistoryContentSection({
   loading,
   error,
   restoringId,
+  permanentlyDeletingId,
   isRestoringSelected,
   selectedIds,
   selectedRestorableCount,
@@ -51,6 +54,7 @@ export default function HistoryContentSection({
   onToggleSelectAll,
   onToggleSelect,
   onRestore,
+  onPermanentDeleteRequest,
   onRestoreSelected,
   onPageChange,
   onPageSizeChange,
@@ -142,11 +146,13 @@ export default function HistoryContentSection({
             <HistoryTable
               items={items}
               restoringId={restoringId}
+              permanentlyDeletingId={permanentlyDeletingId}
               selectedIds={selectedIds}
               allRestorableSelected={allRestorableSelected}
               onToggleSelectAll={onToggleSelectAll}
               onToggleSelect={onToggleSelect}
               onRestore={onRestore}
+              onPermanentDeleteRequest={onPermanentDeleteRequest}
             />
             <HistoryPagination
               page={page}

@@ -3,11 +3,13 @@ import { UploadHistory } from "../../../types";
 type HistoryTableProps = {
   items: UploadHistory[];
   restoringId: number | string | null;
+  permanentlyDeletingId: number | string | null;
   selectedIds: Set<string>;
   allRestorableSelected: boolean;
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
   onRestore: (id: number | string) => void;
+  onPermanentDeleteRequest: (id: number | string) => void;
 };
 
 const formatDate = (dateValue: string) => {
@@ -31,11 +33,13 @@ const formatDate = (dateValue: string) => {
 export default function HistoryTable({
   items,
   restoringId,
+  permanentlyDeletingId,
   selectedIds,
   allRestorableSelected,
   onToggleSelectAll,
   onToggleSelect,
   onRestore,
+  onPermanentDeleteRequest,
 }: HistoryTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100">
@@ -112,18 +116,37 @@ export default function HistoryTable({
                 </td>
                 <td className="px-4 py-4 text-right align-top">
                   {item.isDeleted ? (
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        disabled={restoringId === item.id}
+                        onClick={() => onRestore(item.id)}
+                        className="inline-flex items-center justify-center rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {restoringId === item.id ? "Memproses..." : "Restorasi"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={permanentlyDeletingId === item.id}
+                        onClick={() => onPermanentDeleteRequest(item.id)}
+                        className="inline-flex items-center justify-center rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {permanentlyDeletingId === item.id
+                          ? "Memproses..."
+                          : "Hapus"}
+                      </button>
+                    </div>
+                  ) : (
                     <button
                       type="button"
-                      disabled={restoringId === item.id}
-                      onClick={() => onRestore(item.id)}
-                      className="inline-flex items-center justify-center rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-70"
+                      disabled={permanentlyDeletingId === item.id}
+                      onClick={() => onPermanentDeleteRequest(item.id)}
+                      className="inline-flex items-center justify-center rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                      {restoringId === item.id
+                      {permanentlyDeletingId === item.id
                         ? "Memproses..."
-                        : "Restorasi File"}
+                        : "Hapus"}
                     </button>
-                  ) : (
-                    <span className="text-xs text-gray-400">-</span>
                   )}
                 </td>
               </tr>
