@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import dashboardIcon from "../../assets/icons/Dashboard.svg";
 import homeIcon from "../../assets/icons/home.svg";
 import documentIcon from "../../assets/icons/upload.svg";
 import historyIcon from "../../assets/icons/refresh.svg";
@@ -10,10 +11,7 @@ export default function Sidebar() {
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
-
-  const handleLogout = () => {
-    navigate("/login");
-  };
+  const handleLogout = () => navigate("/login");
 
   return (
     <aside
@@ -21,7 +19,6 @@ export default function Sidebar() {
       bg-gradient-to-b from-orange-500 to-orange-600 
       flex flex-col items-center py-6 shadow-xl z-50"
     >
-      {/* LOGO */}
       <div className="mb-8 text-white text-3xl">
         <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none">
           <path
@@ -31,22 +28,34 @@ export default function Sidebar() {
         </svg>
       </div>
 
-      {/* SEPARATOR LINE */}
       <div className="w-12 h-px bg-white/30 mb-6"></div>
 
-      {/* MENU NAVIGATION */}
       <nav className="flex flex-col gap-4 flex-1">
         <AppTooltip content="Dashboard">
           <button
-            onClick={() => navigate("/dashboarddokumen")}
+            onClick={() => navigate("/dashboard")}
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
-              isActive("/dashboarddokumen")
+              isActive("/dashboard")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
           >
-            <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
+            <img src={dashboardIcon} className="w-6 h-6" alt="Dashboard" />
+          </button>
+        </AppTooltip>
+
+        <AppTooltip content="Dokumen Management">
+          <button
+            onClick={() => navigate("/dokumen-management")}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${
+              isActive("/dokumen-management")
+                ? "bg-white/30 shadow-lg scale-105"
+                : "hover:bg-white/20"
+            }`}
+          >
+            <img src={homeIcon} className="w-6 h-6" alt="Dokumen Management" />
           </button>
         </AppTooltip>
 
@@ -79,10 +88,8 @@ export default function Sidebar() {
         </AppTooltip>
       </nav>
 
-      {/* SEPARATOR LINE BEFORE LOGOUT */}
       <div className="w-12 h-px bg-white/30 mb-6"></div>
 
-      {/* LOGOUT - SEPARATED */}
       <AppTooltip content="Keluar">
         <button
           onClick={handleLogout}

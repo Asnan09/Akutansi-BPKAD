@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getDocuments, updateDocument } from "../services/api";
-import { Document, ToastState } from "../types";
+import { getDocuments, updateDocument, uploadsBaseUrl } from "../../services/api";
+import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
 import {
   getHiddenDocumentIds,
   moveDocumentsToLocalHistory,
-} from "../utils/uploadHistoryLocal";
+} from "../../utils/uploadHistoryLocal";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -14,7 +14,7 @@ type ConfirmDialogState = {
   isMultiple: boolean;
 };
 
-export function useDashboardDocuments() {
+export function useDocumentManagement() {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -112,7 +112,7 @@ export function useDashboardDocuments() {
       .replace(/^\/?uploads\/?/i, "")
       .replace(/^\/+/, "");
 
-    const fileUrl = `http://localhost:3001/uploads/${normalizedPath}`;
+    const fileUrl = `${uploadsBaseUrl}/${normalizedPath}`;
     const previewUrl = `${window.location.origin}/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`;
     window.open(previewUrl, "_blank", "noopener,noreferrer");
   };
@@ -182,7 +182,6 @@ export function useDashboardDocuments() {
         const documentsToMove = documents.filter((doc) =>
           selectedDocuments.has(doc.id),
         );
-
         moveDocumentsToLocalHistory(documentsToMove);
 
         const updatedDocuments = documents.filter(
