@@ -1,4 +1,5 @@
 import { Document } from "../../../types";
+import AppTooltip from "../../ui/app-tooltip";
 
 type DocumentTableMobileProps = {
   documents: Document[];
@@ -68,13 +69,14 @@ export default function DocumentTableMobile({
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
-                  <input
-                    title="checkbox"
-                    type="checkbox"
-                    checked={selectedDocuments.has(doc.id)}
-                    onChange={() => onSelectDocument(doc.id)}
-                    className="w-5 h-5 text-orange-600 border-gray-300 rounded"
-                  />
+                  <AppTooltip content="Pilih dokumen">
+                    <input
+                      type="checkbox"
+                      checked={selectedDocuments.has(doc.id)}
+                      onChange={() => onSelectDocument(doc.id)}
+                      className="w-5 h-5 text-orange-600 border-gray-300 rounded"
+                    />
+                  </AppTooltip>
 
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-800 text-sm">

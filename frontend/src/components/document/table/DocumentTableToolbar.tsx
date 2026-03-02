@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SortOrder } from "../../../hooks/useDocumentTableState";
 import uploadIcon from "../../../assets/icons/upload.svg";
 import refreshIcon from "../../../assets/icons/refresh.svg";
+import AppTooltip from "../../ui/app-tooltip";
 
 type DocumentTableToolbarProps = {
   sortOrder: SortOrder;
@@ -92,19 +93,20 @@ export default function DocumentTableToolbar({
             Unggah Baru
           </button>
 
-          <button
-            onClick={handleRefresh}
-            disabled={isSpinning}
-            className="bg-orange-500 hover:bg-orange-600 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 shrink-0 disabled:opacity-80"
-            title="Refresh"
-          >
-            <img
-              src={refreshIcon}
-              key={isSpinning ? "spinning" : "idle"}
-              className={`w-4 h-4 lg:w-5 lg:h-5 ${isSpinning ? "spin-once" : ""}`}
-              alt="refresh"
-            />
-          </button>
+          <AppTooltip content="Refresh">
+            <button
+              onClick={handleRefresh}
+              disabled={isSpinning}
+              className="bg-orange-500 hover:bg-orange-600 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 shrink-0 disabled:opacity-80"
+            >
+              <img
+                src={refreshIcon}
+                key={isSpinning ? "spinning" : "idle"}
+                className={`w-4 h-4 lg:w-5 lg:h-5 ${isSpinning ? "spin-once" : ""}`}
+                alt="refresh"
+              />
+            </button>
+          </AppTooltip>
         </div>
       </div>
     </>

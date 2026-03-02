@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import AppTooltip from "../../ui/app-tooltip";
 
 type HistoryPaginationProps = {
   page: number;
@@ -43,17 +44,20 @@ export default function HistoryPagination({
       </p>
 
       <div className="flex items-center gap-2">
-        <select
-          ref={pageSizeSelectRef}
-          title="pilih halaman"
-          value={pageSize}
-          onChange={(event) => onPageSizeChange(Number(event.target.value))}
-          className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 outline-none"
-        >
-          <option value={5}>5 / halaman</option>
-          <option value={10}>10 / halaman</option>
-          <option value={20}>20 / halaman</option>
-        </select>
+        <AppTooltip content="Pilih jumlah data per halaman">
+          <select
+            ref={pageSizeSelectRef}
+            title=""
+            aria-label="Pilih jumlah data per halaman"
+            value={pageSize}
+            onChange={(event) => onPageSizeChange(Number(event.target.value))}
+            className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 outline-none"
+          >
+            <option value={5}>5 / halaman</option>
+            <option value={10}>10 / halaman</option>
+            <option value={20}>20 / halaman</option>
+          </select>
+        </AppTooltip>
 
         <button
           type="button"

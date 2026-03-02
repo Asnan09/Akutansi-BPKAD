@@ -1,6 +1,7 @@
 import { FaChevronDown } from "react-icons/fa";
 import { Calendar } from "../../layout/ui/calendar";
 import { EditFormData } from "./editModalTypes";
+import AppTooltip from "../../ui/app-tooltip";
 
 type EditModalFormFieldsProps = {
   formData: EditFormData;
@@ -45,58 +46,62 @@ export default function EditModalFormFields({
     <>
       <div>
         <label className="block text-sm font-medium mb-1">Nama SPPD</label>
-        <input
-          type="text"
-          name="nama_sppd"
-          value={formData.nama_sppd}
-          onChange={onInputChange}
-          title="Nama SPPD"
-          className="w-full border rounded-lg px-3 py-2"
-          required
-        />
+        <AppTooltip content="Nama SPPD">
+          <input
+            type="text"
+            name="nama_sppd"
+            value={formData.nama_sppd}
+            onChange={onInputChange}
+            className="w-full border rounded-lg px-3 py-2"
+            required
+          />
+        </AppTooltip>
       </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">Kategori</label>
         <div ref={categoryWrapperRef} className="relative">
-          <button
-            type="button"
-            onClick={onToggleCategory}
-            className="w-full border rounded-lg px-3 py-2 text-left bg-white flex items-center justify-between"
-            title="Pilih Kategori"
-          >
-            <span
-              className={formData.kategori ? "text-black" : "text-gray-500"}
+          <AppTooltip content="Pilih Kategori">
+            <button
+              type="button"
+              onClick={onToggleCategory}
+              className="w-full border rounded-lg px-3 py-2 text-left bg-white flex items-center justify-between"
             >
-              {formData.kategori || "Pilih Kategori"}
-            </span>
-            <span
-              ref={categoryChevronRef}
-              className="inline-block text-gray-500"
-            >
-              <FaChevronDown className="text-xs" />
-            </span>
-          </button>
+              <span
+                className={formData.kategori ? "text-black" : "text-gray-500"}
+              >
+                {formData.kategori || "Pilih Kategori"}
+              </span>
+              <span
+                ref={categoryChevronRef}
+                className="inline-block text-gray-500"
+              >
+                <FaChevronDown className="text-xs" />
+              </span>
+            </button>
+          </AppTooltip>
 
           {isCategoryOpen && (
             <div
               ref={categoryDropdownRef}
               className="absolute top-full left-0 mt-2 z-20 w-full border rounded-lg bg-white shadow-lg p-1"
             >
-              {(["Lampiran", "Keuangan", "BKU", "STS"] as const).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => onSelectCategory(option)}
-                  className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 ${
-                    formData.kategori === option
-                      ? "bg-orange-50 text-orange-600"
-                      : ""
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
+              {(["Lampiran", "Keuangan", "BKU", "STS"] as const).map(
+                (option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => onSelectCategory(option)}
+                    className={`w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 ${
+                      formData.kategori === option
+                        ? "bg-orange-50 text-orange-600"
+                        : ""
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ),
+              )}
             </div>
           )}
         </div>

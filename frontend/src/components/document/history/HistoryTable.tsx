@@ -1,4 +1,5 @@
 import { UploadHistory } from "../../../types";
+import AppTooltip from "../../ui/app-tooltip";
 
 type HistoryTableProps = {
   items: UploadHistory[];
@@ -93,12 +94,11 @@ export default function HistoryTable({
                   />
                 </td>
                 <td className="max-w-0 px-4 py-4 align-top">
-                  <div
-                    className="block w-full truncate text-sm font-medium text-gray-900"
-                    title={item.documentName}
-                  >
-                    {item.documentName}
-                  </div>
+                  <AppTooltip content={item.documentName}>
+                    <div className="block w-full truncate text-sm font-medium text-gray-900">
+                      {item.documentName}
+                    </div>
+                  </AppTooltip>
                   <div className="mt-1 block w-full truncate text-xs text-gray-500">
                     {item.fileSize}
                   </div>
@@ -106,13 +106,12 @@ export default function HistoryTable({
                 <td className="px-4 py-4 text-sm text-gray-700 align-top">
                   {formatDate(item.uploadedAt)}
                 </td>
-                <td
-                  className="px-4 py-4 align-top text-sm text-gray-600"
-                  title={`Diunggah oleh ${item.uploadedBy}`}
-                >
-                  <span className="block truncate">
-                    Diunggah oleh {item.uploadedBy}
-                  </span>
+                <td className="px-4 py-4 align-top text-sm text-gray-600">
+                  <AppTooltip content={`Diunggah oleh ${item.uploadedBy}`}>
+                    <span className="block truncate">
+                      Diunggah oleh {item.uploadedBy}
+                    </span>
+                  </AppTooltip>
                 </td>
                 <td className="px-4 py-4 text-right align-top">
                   {item.isDeleted ? (

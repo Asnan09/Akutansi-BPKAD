@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
+import AppTooltip from "../../../ui/app-tooltip";
 
 type DateRangePickerProps = {
   onChange?: (start: string, end: string) => void;
@@ -226,75 +227,79 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
         </div>
 
         <div className="flex items-center justify-between mb-4 gap-2">
-          <button
-            onClick={() => setViewDate(new Date(year, month - 1, 1))}
-            className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
-            title="dropdown btn"
-          >
-            <svg
-              className="w-4 h-4 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <AppTooltip content="Bulan sebelumnya">
+            <button
+              onClick={() => setViewDate(new Date(year, month - 1, 1))}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+          </AppTooltip>
 
-          <select
-            value={month}
-            onChange={(e) =>
-              setViewDate(new Date(year, Number(e.target.value), 1))
-            }
-            className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer flex-1"
-            title="dropdown btn"
-          >
-            {monthNames.map((name, idx) => (
-              <option key={name} value={idx}>
-                {name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={year}
-            onChange={(e) =>
-              setViewDate(new Date(Number(e.target.value), month, 1))
-            }
-            className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer w-20"
-            title="dropdown btn"
-          >
-            {yearRange.map((optionYear) => (
-              <option key={optionYear} value={optionYear}>
-                {optionYear}
-              </option>
-            ))}
-          </select>
-
-          <button
-            onClick={() => setViewDate(new Date(year, month + 1, 1))}
-            className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
-            title="dropdown btn"
-          >
-            <svg
-              className="w-4 h-4 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <AppTooltip content="Pilih bulan">
+            <select
+              value={month}
+              onChange={(e) =>
+                setViewDate(new Date(year, Number(e.target.value), 1))
+              }
+              className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer flex-1"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+              {monthNames.map((name, idx) => (
+                <option key={name} value={idx}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </AppTooltip>
+
+          <AppTooltip content="Pilih tahun">
+            <select
+              value={year}
+              onChange={(e) =>
+                setViewDate(new Date(Number(e.target.value), month, 1))
+              }
+              className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer w-20"
+            >
+              {yearRange.map((optionYear) => (
+                <option key={optionYear} value={optionYear}>
+                  {optionYear}
+                </option>
+              ))}
+            </select>
+          </AppTooltip>
+
+          <AppTooltip content="Bulan berikutnya">
+            <button
+              onClick={() => setViewDate(new Date(year, month + 1, 1))}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
+            >
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </AppTooltip>
         </div>
 
         <div className="grid grid-cols-7 mb-2">

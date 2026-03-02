@@ -1,21 +1,19 @@
 import UploadIcon from "../../../assets/icons/upload.svg";
+import AppTooltip from "../../ui/app-tooltip";
 
 export default function UploadArea() {
   return (
     <div className="bg-white rounded-2xl shadow p-10 grid grid-cols-2 gap-10">
       <div>
         <label className="block mb-2">Nama Dokumen</label>
-        <input
-          className="w-full border rounded-xl px-4 py-3 mb-6"
-          title="Nama Dokumen"
-        />
+        <AppTooltip content="Nama Dokumen">
+          <input className="w-full border rounded-xl px-4 py-3 mb-6" />
+        </AppTooltip>
 
         <label className="block mb-2">Tanggal</label>
-        <input
-          type="date"
-          className="w-full border rounded-xl px-4 py-3"
-          title="Tanggal"
-        />
+        <AppTooltip content="Tanggal">
+          <input type="date" className="w-full border rounded-xl px-4 py-3" />
+        </AppTooltip>
       </div>
 
       <div className="border-2 border-dashed rounded-xl flex items-center justify-center">

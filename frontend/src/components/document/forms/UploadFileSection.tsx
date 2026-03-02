@@ -72,7 +72,6 @@ export default function UploadFileSection({
           onChange={onFileInputChange}
           className="hidden"
           accept=".pdf,.docx,.xlsx,.pptx"
-          title="File Input"
         />
 
         {selectedFile ? (

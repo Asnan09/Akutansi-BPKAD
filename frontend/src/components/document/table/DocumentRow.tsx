@@ -2,6 +2,7 @@ import { MdEdit } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
 import { FaTrashAlt } from "react-icons/fa";
 import { Document } from "../../../types";
+import AppTooltip from "../../ui/app-tooltip";
 
 interface DocumentRowProps {
   doc: Document;
@@ -77,9 +78,9 @@ export default function DocumentRow({
       </td>
 
       <td className="py-4 px-2 text-sm font-medium text-gray-800 max-w-0">
-        <span className="block truncate" title={doc.nama_sppd}>
-          {doc.nama_sppd}
-        </span>
+        <AppTooltip content={doc.nama_sppd}>
+          <span className="block truncate">{doc.nama_sppd}</span>
+        </AppTooltip>
       </td>
 
       <td className="py-4 px-2 text-sm text-center text-gray-700">
@@ -102,30 +103,33 @@ export default function DocumentRow({
 
       <td className="py-4 px-2">
         <div className="flex gap-3 justify-center">
-          <button
-            onClick={() => onView?.(doc.id)}
-            aria-label="View document"
-            title="Lihat dokumen"
-            className="text-blue-600 hover:text-blue-700 transition-colors"
-          >
-            <IoMdEye className="w-6 h-6" />
-          </button>
-          <button
-            onClick={() => onEdit?.(doc.id)}
-            aria-label="Edit document"
-            title="Edit dokumen"
-            className="text-amber-500 hover:text-amber-600 transition-colors"
-          >
-            <MdEdit className="w-6 h-6" />
-          </button>
-          <button
-            onClick={() => onDelete?.(doc.id)}
-            aria-label="Delete document"
-            title="Hapus dokumen"
-            className="text-red-600 hover:text-red-700 transition-colors"
-          >
-            <FaTrashAlt className="w-5 h-5" />
-          </button>
+          <AppTooltip content="Lihat dokumen">
+            <button
+              onClick={() => onView?.(doc.id)}
+              aria-label="View document"
+              className="text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              <IoMdEye className="w-6 h-6" />
+            </button>
+          </AppTooltip>
+          <AppTooltip content="Edit dokumen">
+            <button
+              onClick={() => onEdit?.(doc.id)}
+              aria-label="Edit document"
+              className="text-amber-500 hover:text-amber-600 transition-colors"
+            >
+              <MdEdit className="w-6 h-6" />
+            </button>
+          </AppTooltip>
+          <AppTooltip content="Hapus dokumen">
+            <button
+              onClick={() => onDelete?.(doc.id)}
+              aria-label="Delete document"
+              className="text-red-600 hover:text-red-700 transition-colors"
+            >
+              <FaTrashAlt className="w-5 h-5" />
+            </button>
+          </AppTooltip>
         </div>
       </td>
     </tr>
