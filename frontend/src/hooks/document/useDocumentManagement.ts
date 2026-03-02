@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { getDocuments, updateDocument } from "../services/api";
-import { Document, ToastState } from "../types";
+import {
+  apiClient,
+  getDocuments,
+  updateDocument,
+  uploadsBaseUrl,
+} from "../../services/api";
+import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
-import axios from "axios";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -11,7 +15,7 @@ type ConfirmDialogState = {
   isMultiple: boolean;
 };
 
-export function useDashboardDocuments() {
+export function useDocumentManagement() {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -104,7 +108,7 @@ export function useDashboardDocuments() {
       .replace(/^\/?uploads\/?/i, "")
       .replace(/^\/+/, "");
 
-    const fileUrl = `http://localhost:3001/uploads/${normalizedPath}`;
+    const fileUrl = `${uploadsBaseUrl}/${normalizedPath}`;
     const previewUrl = `${window.location.origin}/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`;
     window.open(previewUrl, "_blank", "noopener,noreferrer");
   };
@@ -172,7 +176,7 @@ export function useDashboardDocuments() {
     try {
       if (confirmDialog.isMultiple) {
         for (const id of selectedDocuments) {
-          await axios.delete(`http://localhost:3001/api/documents/${id}`);
+          await apiClient.delete(`/documents/${id}`);
         }
 
         const updatedDocuments = documents.filter(
@@ -188,9 +192,7 @@ export function useDashboardDocuments() {
           "success",
         );
       } else if (confirmDialog.documentId) {
-        await axios.delete(
-          `http://localhost:3001/api/documents/${confirmDialog.documentId}`,
-        );
+        await apiClient.delete(`/documents/${confirmDialog.documentId}`);
 
         const updatedDocuments = documents.filter(
           (doc) => doc.id !== confirmDialog.documentId,
