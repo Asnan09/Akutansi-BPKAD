@@ -5,6 +5,10 @@ import {
   UploadHistoryQuery,
   UploadHistoryResult,
 } from "../types";
+import {
+  getLocalUploadHistoryItems,
+  restoreDocumentFromLocalHistory,
+} from "../utils/uploadHistoryLocal";
 
 export interface LoginResponse {
   message: string;
@@ -19,29 +23,6 @@ type DocumentApiItem = {
   file_path: string;
   created_at?: string;
 };
-
-type UploadHistoryApiItem = {
-  id: number | string;
-  document_name?: string;
-  nama_sppd?: string;
-  uploaded_at?: string;
-  created_at?: string;
-  uploaded_by?: string;
-  uploader_name?: string;
-  file_size?: string;
-  size_label?: string;
-  file_path?: string;
-};
-
-type UploadHistoryApiResponse =
-  | UploadHistoryApiItem[]
-  | {
-      items?: UploadHistoryApiItem[];
-      data?: UploadHistoryApiItem[];
-      total?: number;
-      page?: number;
-      limit?: number;
-    };
 
 const apiClient = axios.create({
   baseURL: "http://localhost:3001/api",
@@ -65,82 +46,43 @@ export const getDocuments = async (): Promise<Document[]> => {
   }
 };
 
-const toUploadHistory = (item: UploadHistoryApiItem): UploadHistory => ({
-  id: item.id,
-  documentName: item.document_name || item.nama_sppd || "Dokumen tanpa nama",
-  uploadedAt: item.uploaded_at || item.created_at || "",
-  uploadedBy: item.uploaded_by || item.uploader_name || "-",
-  fileSize: item.file_size || item.size_label || "-",
-  filePath: item.file_path || "",
-});
-
 export const getUploadHistories = async (
   query: UploadHistoryQuery = {},
 ): Promise<UploadHistoryResult> => {
-  try {
-    const response = await apiClient.get<UploadHistoryApiResponse>(
-      "/documents/history",
-      {
-        params: {
-          page: query.page,
-          limit: query.limit,
-          search: query.search,
-        },
-      },
-    );
+  const page = Math.max(query.page || 1, 1);
+  const limit = Math.max(query.limit || 10, 1);
+  const searchText = (query.search || "").trim().toLowerCase();
 
-    const payload = response.data;
+  const allItems = getLocalUploadHistoryItems();
+  const filteredItems =
+    searchText.length === 0
+      ? allItems
+      : allItems.filter((item) =>
+          item.documentName.toLowerCase().includes(searchText),
+        );
 
-    if (Array.isArray(payload)) {
-      return {
-        items: payload.map(toUploadHistory),
-        total: payload.length,
-        page: query.page || 1,
-        limit: query.limit || 10,
-      };
-    }
+  const total = filteredItems.length;
+  const start = (page - 1) * limit;
+  const items = filteredItems.slice(start, start + limit);
 
-    const apiItems = payload.items || payload.data || [];
-
-    return {
-      items: apiItems.map(toUploadHistory),
-      total: payload.total ?? apiItems.length,
-      page: payload.page ?? query.page ?? 1,
-      limit: payload.limit ?? query.limit ?? 10,
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      const fallback = await getDocuments();
-      return {
-        items: fallback.map((item) =>
-          toUploadHistory({
-            id: item.id,
-            nama_sppd: item.nama_sppd,
-            created_at: item.created_at,
-            file_path: item.file_path,
-          }),
-        ),
-        total: fallback.length,
-        page: 1,
-        limit: query.limit || 10,
-      };
-    }
-
-    console.error("Terjadi kesalahan saat mengambil data riwayat:", error);
-    return {
-      items: [],
-      total: 0,
-      page: query.page || 1,
-      limit: query.limit || 10,
-    };
-  }
+  return {
+    items,
+    total,
+    page,
+    limit,
+  };
 };
 
 export const restoreUploadHistory = async (
   id: number | string,
 ): Promise<{ message: string }> => {
-  const response = await apiClient.post(`/documents/history/${id}/restore`);
-  return response.data;
+  const restored = restoreDocumentFromLocalHistory(id);
+
+  if (!restored) {
+    return { message: "Data riwayat tidak ditemukan." };
+  }
+
+  return { message: "Dokumen berhasil direstorasi." };
 };
 
 export const updateDocument = async (
