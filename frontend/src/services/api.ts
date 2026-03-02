@@ -6,6 +6,7 @@ import {
   UploadHistoryResult,
 } from "../types";
 import {
+  getHiddenDocumentIds,
   getLocalUploadHistoryItems,
   restoreDocumentFromLocalHistory,
 } from "../utils/uploadHistoryLocal";
@@ -53,7 +54,56 @@ export const getUploadHistories = async (
   const limit = Math.max(query.limit || 10, 1);
   const searchText = (query.search || "").trim().toLowerCase();
 
-  const allItems = getLocalUploadHistoryItems();
+  const documents = await getDocuments();
+  const localHistoryItems = getLocalUploadHistoryItems();
+  const hiddenIds = new Set(getHiddenDocumentIds().map(String));
+
+  const localHistoryById = new Map<string, UploadHistory>();
+  for (const historyItem of localHistoryItems) {
+    localHistoryById.set(String(historyItem.id), historyItem);
+  }
+
+  const documentHistoryItems: UploadHistory[] = documents.map((document) => {
+    const localHistory = localHistoryById.get(String(document.id));
+
+    return {
+      id: document.id,
+      documentName: localHistory?.documentName || document.nama_sppd,
+      uploadedAt:
+        localHistory?.uploadedAt ||
+        document.created_at ||
+        document.tanggal_sppd ||
+        "",
+      uploadedBy: localHistory?.uploadedBy || "-",
+      fileSize: localHistory?.fileSize || "-",
+      filePath: localHistory?.filePath || document.file_path,
+      isDeleted: hiddenIds.has(String(document.id)),
+    };
+  });
+
+  const extraHistoryItems = localHistoryItems
+    .filter(
+      (historyItem) =>
+        !documentHistoryItems.some(
+          (documentItem) => String(documentItem.id) === String(historyItem.id),
+        ),
+    )
+    .map((historyItem) => ({
+      ...historyItem,
+      isDeleted: hiddenIds.has(String(historyItem.id)),
+    }));
+
+  const allItems = [...documentHistoryItems, ...extraHistoryItems].sort(
+    (itemA, itemB) => {
+      const timeA = new Date(itemA.uploadedAt).getTime();
+      const timeB = new Date(itemB.uploadedAt).getTime();
+
+      return (
+        (Number.isNaN(timeB) ? 0 : timeB) - (Number.isNaN(timeA) ? 0 : timeA)
+      );
+    },
+  );
+
   const filteredItems =
     searchText.length === 0
       ? allItems

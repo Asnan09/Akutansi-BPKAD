@@ -32,19 +32,25 @@ export default function HistoryTable({
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100">
       <div className="overflow-x-auto">
-        <table className="min-w-full table-fixed divide-y divide-gray-100">
+        <table className="w-full table-fixed divide-y divide-gray-100">
+          <colgroup>
+            <col style={{ width: "44%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "16%" }} />
+          </colgroup>
           <thead className="bg-gray-50">
             <tr>
-              <th className="w-[34%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Nama Dokumen
               </th>
-              <th className="w-[20%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Tanggal Upload
               </th>
-              <th className="w-[30%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Informasi
               </th>
-              <th className="w-[16%] px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Aksi
               </th>
             </tr>
@@ -52,14 +58,14 @@ export default function HistoryTable({
           <tbody className="divide-y divide-gray-100 bg-white">
             {items.map((item) => (
               <tr key={item.id}>
-                <td className="px-4 py-4 align-top">
+                <td className="max-w-0 px-4 py-4 align-top">
                   <div
-                    className="truncate text-sm font-medium text-gray-900"
+                    className="block w-full truncate text-sm font-medium text-gray-900"
                     title={item.documentName}
                   >
                     {item.documentName}
                   </div>
-                  <div className="mt-1 text-xs text-gray-500">
+                  <div className="mt-1 block w-full truncate text-xs text-gray-500">
                     {item.fileSize}
                   </div>
                 </td>
@@ -75,16 +81,20 @@ export default function HistoryTable({
                   </span>
                 </td>
                 <td className="px-4 py-4 text-right align-top">
-                  <button
-                    type="button"
-                    disabled={restoringId === item.id}
-                    onClick={() => onRestore(item.id)}
-                    className="inline-flex items-center justify-center rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {restoringId === item.id
-                      ? "Memproses..."
-                      : "Restorasi File"}
-                  </button>
+                  {item.isDeleted ? (
+                    <button
+                      type="button"
+                      disabled={restoringId === item.id}
+                      onClick={() => onRestore(item.id)}
+                      className="inline-flex items-center justify-center rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {restoringId === item.id
+                        ? "Memproses..."
+                        : "Restorasi File"}
+                    </button>
+                  ) : (
+                    <span className="text-xs text-gray-400">-</span>
+                  )}
                 </td>
               </tr>
             ))}

@@ -20,6 +20,7 @@ export interface UploadHistory {
   uploadedBy: string;
   fileSize: string;
   filePath: string;
+  isDeleted?: boolean;
 }
 
 export interface UploadHistoryQuery {
