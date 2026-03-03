@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../../ui/select";
 
-type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BPKU" | "STS";
+type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BKU" | "STS";
 
 type Props = {
   data: { label: string; value: number }[];

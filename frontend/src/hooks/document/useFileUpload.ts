@@ -122,7 +122,9 @@ export function useFileUpload(
       setTimeout(() => {
         setFormData({ name: "", date: "", category: "" });
         setSelectedFile(null);
-        navigate("/dokumen-management");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       }, 2000);
     } catch {
       showToast("Gagal mengunggah dokumen", "error");

@@ -10,7 +10,7 @@ type Props = {
 const CATEGORY_COLORS: Record<string, string> = {
   Lampiran: "#F97316",
   Keuangan: "#3B82F6",
-  BPKU: "#14B8A6",
+  BKU: "#14B8A6",
   STS: "#6366F1",
 };
 

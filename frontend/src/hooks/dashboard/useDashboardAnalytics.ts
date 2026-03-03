@@ -6,10 +6,10 @@ import type {
 } from "../../services/api";
 import { getDashboardAnalytics, getDocuments } from "../../services/api";
 
-type DashboardCategory = "Lampiran" | "Keuangan" | "BPKU" | "STS";
+type DashboardCategory = "Lampiran" | "Keuangan" | "BKU" | "STS";
 type CategoryFilter = "all" | DashboardCategory;
 
-const categories: DashboardCategory[] = ["Lampiran", "Keuangan", "BPKU", "STS"];
+const categories: DashboardCategory[] = ["Lampiran", "Keuangan", "BKU", "STS"];
 
 const monthOptions = [
   { value: 0, label: "Semua Bulan" },
@@ -44,17 +44,54 @@ type NormalizedLogin = {
 let analyticsCache: DashboardAnalyticsResponse | null = null;
 let analyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
 
-function normalizeDateOnly(dateText?: string | null): string | null {
-  if (!dateText) return null;
-  const value = String(dateText);
-  if (value.length >= 10) return value.slice(0, 10);
-  return null;
+function toLocalIsoDate(value: Date): string {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-function normalizeDateTime(dateText?: string | null): string {
-  if (!dateText) return "";
-  const value = String(dateText).replace("T", " ").slice(0, 16);
-  return value;
+function normalizeDateOnly(dateValue?: unknown): string | null {
+  if (!dateValue) return null;
+
+  if (dateValue instanceof Date) {
+    return toLocalIsoDate(dateValue);
+  }
+
+  const raw = String(dateValue).trim();
+  if (!raw) return null;
+
+  // Sudah format YYYY-MM-DD...
+  if (/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw.slice(0, 10);
+
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return toLocalIsoDate(parsed);
+}
+
+function normalizeDateTime(dateValue?: unknown): string {
+  if (!dateValue) return "";
+
+  if (dateValue instanceof Date) {
+    const date = toLocalIsoDate(dateValue);
+    const hh = String(dateValue.getHours()).padStart(2, "0");
+    const mm = String(dateValue.getMinutes()).padStart(2, "0");
+    return `${date} ${hh}:${mm}`;
+  }
+
+  const raw = String(dateValue).trim();
+  if (!raw) return "";
+
+  if (/^\d{4}-\d{2}-\d{2}/.test(raw)) {
+    return raw.replace("T", " ").slice(0, 16);
+  }
+
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return raw.slice(0, 16);
+  const date = toLocalIsoDate(parsed);
+  const hh = String(parsed.getHours()).padStart(2, "0");
+  const mm = String(parsed.getMinutes()).padStart(2, "0");
+  return `${date} ${hh}:${mm}`;
 }
 
 function toIsoDate(date: Date) {
@@ -88,7 +125,7 @@ function formatDateLabel(dateText: string) {
 function toDashboardCategory(category: string): DashboardCategory {
   if (category === "Lampiran") return "Lampiran";
   if (category === "Keuangan") return "Keuangan";
-  if (category === "BPKU") return "BPKU";
+  if (category === "BPKU" || category === "BKU") return "BKU";
   return "STS";
 }
 
@@ -110,6 +147,33 @@ export function useDashboardAnalytics() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
+  const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    const scheduleMidnightRefresh = () => {
+      const now = new Date();
+      const nextMidnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0,
+        0,
+        1,
+      );
+      const delay = nextMidnight.getTime() - now.getTime();
+
+      timer = setTimeout(() => {
+        setTodayKey(toIsoDate(new Date()));
+        scheduleMidnightRefresh();
+      }, Math.max(delay, 1000));
+    };
+
+    scheduleMidnightRefresh();
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -140,7 +204,7 @@ export function useDashboardAnalytics() {
             id: row.id,
             username: row.username,
             role: normalizeRole(row.role),
-            loginAt: normalizeDateTime(row.login_at),
+            loginAt: normalizeDateTime(row.login_at as unknown),
           }),
         );
 
@@ -230,8 +294,10 @@ export function useDashboardAnalytics() {
   }, [uploads, effectiveSelectedYear, selectedCategory]);
 
   const filteredLogins = useMemo(() => {
-    return [...logins].sort((a, b) => (a.loginAt < b.loginAt ? 1 : -1));
-  }, [logins]);
+    return [...logins]
+      .filter((item) => item.loginAt.slice(0, 10) === todayKey)
+      .sort((a, b) => (a.loginAt < b.loginAt ? 1 : -1));
+  }, [logins, todayKey]);
 
   const totalDocuments = filteredUploads.length;
   const totalStaffUsers = new Set(
