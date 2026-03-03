@@ -51,8 +51,8 @@ export default function Dashboard() {
               <p className="text-3xl font-bold text-blue-500">{summary.totalStaffUsers}</p>
             </div>
             <div className="bg-white rounded-2xl border border-teal-100 p-5">
-              <p className="text-sm font-medium text-gray-500">Total Login</p>
-              <p className="text-3xl font-bold text-teal-500">{summary.totalLogins}</p>
+              <p className="text-sm font-medium text-gray-500">Aktivitas Hari Ini</p>
+              <p className="text-3xl font-bold text-teal-500">{summary.todayUploadCount}</p>
             </div>
           </div>
 
