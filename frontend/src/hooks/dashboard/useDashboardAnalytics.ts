@@ -72,8 +72,8 @@ export function useDashboardAnalytics() {
         const normalizedUploads = payload.documents
           .map((doc: DashboardApiDocument) => {
             const dateOnly =
-              normalizeDateOnly(doc.created_at) ||
               normalizeDateOnly(doc.tanggal_sppd) ||
+              normalizeDateOnly(doc.created_at) ||
               null;
             if (!dateOnly) return null;
 
@@ -109,8 +109,8 @@ export function useDashboardAnalytics() {
             const fallbackUploads = docs
               .map((doc) => {
                 const dateOnly =
-                  normalizeDateOnly(doc.created_at) ||
                   normalizeDateOnly(doc.tanggal_sppd) ||
+                  normalizeDateOnly(doc.created_at) ||
                   null;
                 if (!dateOnly) return null;
                 return {
