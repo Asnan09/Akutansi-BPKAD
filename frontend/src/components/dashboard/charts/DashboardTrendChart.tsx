@@ -110,7 +110,7 @@ function DashboardTrendChart({
 
   const selectClass =
     "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 transition " +
-    "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300 " +
+    "focus:outline-none focus:ring-0 focus:border-slate-200 " +
     "data-[state=open]:border-orange-300 data-[state=open]:ring-2 data-[state=open]:ring-orange-200";
 
   return (
@@ -172,4 +172,18 @@ function DashboardTrendChart({
   );
 }
 
-export default memo(DashboardTrendChart);
+function arePropsEqual(prev: Props, next: Props) {
+  if (prev.selectedCategory !== next.selectedCategory) return false;
+  if (prev.selectedMonth !== next.selectedMonth) return false;
+  if (prev.selectedYear !== next.selectedYear) return false;
+  if (prev.data.length !== next.data.length) return false;
+
+  for (let i = 0; i < prev.data.length; i += 1) {
+    if (prev.data[i].label !== next.data[i].label) return false;
+    if (prev.data[i].value !== next.data[i].value) return false;
+  }
+
+  return true;
+}
+
+export default memo(DashboardTrendChart, arePropsEqual);
