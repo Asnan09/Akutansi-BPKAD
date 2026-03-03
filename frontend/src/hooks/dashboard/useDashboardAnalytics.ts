@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
-  DashboardAnalyticsResponse,
   DashboardApiDocument,
   DashboardApiLoginActivity,
 } from "../../services/api";
@@ -11,6 +10,7 @@ import {
   isInCurrentLocalWeek,
   isSameLocalDay,
   monthOptions,
+  yearOptions,
   normalizeDateOnly,
   normalizeDateTime,
   normalizeRole,
@@ -23,27 +23,17 @@ import {
 } from "./dashboardAnalytics.helpers";
 const LOGIN_RESET_MODE: LoginResetMode = "daily";
 
-let analyticsCache: DashboardAnalyticsResponse | null = null;
-let analyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
-
 async function loadAnalyticsShared() {
-  if (analyticsCache) return analyticsCache;
-  if (!analyticsPromise) {
-    analyticsPromise = getDashboardAnalytics().then((result) => {
-      analyticsCache = result;
-      return result;
-    });
-  }
-  return analyticsPromise;
+  return getDashboardAnalytics();
 }
 
 export function useDashboardAnalytics() {
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
+  const [staffUsersCount, setStaffUsersCount] = useState<number>(0);
   const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
 
   useEffect(() => {
@@ -107,6 +97,7 @@ export function useDashboardAnalytics() {
 
         setUploads(normalizedUploads);
         setLogins(normalizedLogins);
+        setStaffUsersCount(Number(payload.totalStaffUsers ?? 0));
       })
       .catch((error) => {
         console.error("Gagal memuat analytics dashboard:", error);
@@ -131,6 +122,7 @@ export function useDashboardAnalytics() {
               })
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
+            setStaffUsersCount(0);
           })
           .catch((fallbackError) => {
             console.error("Fallback dokumen dashboard gagal:", fallbackError);
@@ -142,28 +134,15 @@ export function useDashboardAnalytics() {
     };
   }, []);
 
-  const yearOptions = useMemo(() => {
-    const years = uploads
-      .map((u) => new Date(u.uploadedAt).getFullYear())
-      .filter((y) => !Number.isNaN(y));
-    const uniqueYears = Array.from(new Set(years)).sort((a, b) => a - b);
-    if (uniqueYears.length === 0) return [currentYear];
-    return uniqueYears;
-  }, [uploads, currentYear]);
-
-  const effectiveSelectedYear = yearOptions.includes(selectedYear)
-    ? selectedYear
-    : yearOptions[yearOptions.length - 1];
-
   const filteredUploads = useMemo(() => {
     return uploads.filter((r) => {
       const d = new Date(r.uploadedAt);
-      const yearMatch = d.getFullYear() === effectiveSelectedYear;
+      const yearMatch = selectedYear === 0 || d.getFullYear() === selectedYear;
       const monthMatch = selectedMonth === 0 || d.getMonth() + 1 === selectedMonth;
       const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
       return yearMatch && monthMatch && categoryMatch;
     });
-  }, [uploads, effectiveSelectedYear, selectedMonth, selectedCategory]);
+  }, [uploads, selectedYear, selectedMonth, selectedCategory]);
 
   const distributionData = useMemo(() => {
     const target = selectedCategory === "all" ? categories : [selectedCategory];
@@ -181,14 +160,14 @@ export function useDashboardAnalytics() {
 
     uploads.forEach((r) => {
       const d = new Date(r.uploadedAt);
-      const yearMatch = d.getFullYear() === effectiveSelectedYear;
+      const yearMatch = selectedYear === 0 || d.getFullYear() === selectedYear;
       const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
       if (!yearMatch || !categoryMatch) return;
       base[d.getMonth()].value += 1;
     });
 
     return base;
-  }, [uploads, effectiveSelectedYear, selectedCategory]);
+  }, [uploads, selectedYear, selectedCategory]);
 
   const filteredLogins = useMemo(() => {
     return [...logins]
@@ -200,9 +179,7 @@ export function useDashboardAnalytics() {
   }, [logins, todayKey]);
 
   const totalDocuments = filteredUploads.length;
-  const totalStaffUsers = new Set(
-    filteredLogins.filter((x) => x.role === "Staff").map((x) => x.username),
-  ).size;
+  const totalStaffUsers = staffUsersCount;
   const totalLogins = filteredLogins.length;
   const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
@@ -246,7 +223,7 @@ export function useDashboardAnalytics() {
   }, [uploads]);
 
   return {
-    selectedYear: effectiveSelectedYear,
+    selectedYear,
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,

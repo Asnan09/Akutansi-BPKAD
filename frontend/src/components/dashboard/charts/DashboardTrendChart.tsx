@@ -166,6 +166,7 @@ function DashboardTrendChart({
               <SelectValue placeholder="Tahun" />
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
+              <SelectItem value="0">Tahun</SelectItem>
               {yearOptions.map((y) => (
                 <SelectItem key={y} value={String(y)}>
                   {y}
