@@ -41,6 +41,9 @@ type NormalizedLogin = {
   loginAt: string; // YYYY-MM-DD HH:mm
 };
 
+type LoginResetMode = "daily" | "weekly";
+const LOGIN_RESET_MODE: LoginResetMode = "daily";
+
 let analyticsCache: DashboardAnalyticsResponse | null = null;
 let analyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
 
@@ -83,6 +86,16 @@ function normalizeDateTime(dateValue?: unknown): string {
   if (!raw) return "";
 
   if (/^\d{4}-\d{2}-\d{2}/.test(raw)) {
+    // Jika format ISO (mis. pakai "T"/"Z"), parse ke local time agar filter harian akurat.
+    if (raw.includes("T") || raw.endsWith("Z")) {
+      const parsedIso = new Date(raw);
+      if (!Number.isNaN(parsedIso.getTime())) {
+        const date = toLocalIsoDate(parsedIso);
+        const hh = String(parsedIso.getHours()).padStart(2, "0");
+        const mm = String(parsedIso.getMinutes()).padStart(2, "0");
+        return `${date} ${hh}:${mm}`;
+      }
+    }
     return raw.replace("T", " ").slice(0, 16);
   }
 
@@ -99,6 +112,31 @@ function toIsoDate(date: Date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function isSameLocalDay(dateText: string, targetIso: string) {
+  const parsed = new Date(dateText.replace(" ", "T"));
+  if (Number.isNaN(parsed.getTime())) {
+    return dateText.slice(0, 10) === targetIso;
+  }
+  return toIsoDate(parsed) === targetIso;
+}
+
+function isInCurrentLocalWeek(dateText: string) {
+  const parsed = new Date(dateText.replace(" ", "T"));
+  if (Number.isNaN(parsed.getTime())) return false;
+
+  const now = new Date();
+  const nowDay = now.getDay(); // 0 Minggu - 6 Sabtu
+  const mondayOffset = nowDay === 0 ? 6 : nowDay - 1;
+  const weekStart = new Date(now);
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(now.getDate() - mondayOffset);
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 7);
+
+  return parsed >= weekStart && parsed < weekEnd;
 }
 
 function formatDateLabel(dateText: string) {
@@ -295,7 +333,10 @@ export function useDashboardAnalytics() {
 
   const filteredLogins = useMemo(() => {
     return [...logins]
-      .filter((item) => item.loginAt.slice(0, 10) === todayKey)
+      .filter((item) => {
+        if (LOGIN_RESET_MODE === "weekly") return isInCurrentLocalWeek(item.loginAt);
+        return isSameLocalDay(item.loginAt, todayKey);
+      })
       .sort((a, b) => (a.loginAt < b.loginAt ? 1 : -1));
   }, [logins, todayKey]);
 
