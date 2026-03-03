@@ -2,6 +2,13 @@ import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import type { ChartOptions } from "chart.js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
 
 type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BPKU" | "STS";
 
@@ -102,8 +109,9 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
-    "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300";
+    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 transition " +
+    "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300 " +
+    "data-[state=open]:border-orange-300 data-[state=open]:ring-2 data-[state=open]:ring-orange-200";
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
@@ -113,41 +121,47 @@ function DashboardTrendChart({
         </h3>
 
         <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
-          <select
+          <Select
             value={selectedCategory}
-            onChange={(e) => onChangeCategory(e.target.value as CategoryValue)}
-            className={selectClass}
+            onValueChange={(v) => onChangeCategory(v as CategoryValue)}
           >
-            {categoryOptions.map((c) => (
-              <option key={c} value={c}>
-                {c === "all" ? "Kategori" : c}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className={selectClass}>
+              <SelectValue placeholder="Kategori" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[12.5rem]">
+              {categoryOptions.map((c) => (
+                <SelectItem key={c} value={c}>
+                  {c === "all" ? "Kategori" : c}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select
-            value={selectedMonth}
-            onChange={(e) => onChangeMonth(Number(e.target.value))}
-            className={selectClass}
-          >
-            {monthOptions.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-          </select>
+          <Select value={String(selectedMonth)} onValueChange={(v) => onChangeMonth(Number(v))}>
+            <SelectTrigger className={selectClass}>
+              <SelectValue placeholder="Semua Bulan" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[12.5rem]">
+              {monthOptions.map((m) => (
+                <SelectItem key={m.value} value={String(m.value)}>
+                  {m.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select
-            value={selectedYear}
-            onChange={(e) => onChangeYear(Number(e.target.value))}
-            className={selectClass}
-          >
-            {yearOptions.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+          <Select value={String(selectedYear)} onValueChange={(v) => onChangeYear(Number(v))}>
+            <SelectTrigger className={selectClass}>
+              <SelectValue placeholder="Tahun" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[12.5rem]">
+              {yearOptions.map((y) => (
+                <SelectItem key={y} value={String(y)}>
+                  {y}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
