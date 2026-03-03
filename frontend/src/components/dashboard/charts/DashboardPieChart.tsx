@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
@@ -14,6 +15,53 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const numberFormatter = new Intl.NumberFormat("id-ID");
+
+type AnimatedNumberProps = {
+  value: number;
+  decimals?: number;
+  suffix?: string;
+  formatThousands?: boolean;
+};
+
+function AnimatedNumber({
+  value,
+  decimals = 0,
+  suffix = "",
+  formatThousands = false,
+}: AnimatedNumberProps) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const duration = 900;
+    const start = performance.now();
+
+    const animate = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - (1 - progress) * (1 - progress);
+      setDisplayValue(value * eased);
+      if (progress < 1) frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [value]);
+
+  const roundedNumber =
+    decimals > 0 ? Number(displayValue.toFixed(decimals)) : Math.round(displayValue);
+  const textValue = formatThousands
+    ? numberFormatter.format(roundedNumber)
+    : decimals > 0
+      ? roundedNumber.toFixed(decimals)
+      : roundedNumber.toString();
+
+  return (
+    <>
+      {textValue}
+      {suffix}
+    </>
+  );
+}
 
 export default function DashboardPieChart({ data }: Props) {
   const detailData = [...data].sort((a, b) => b.value - a.value);
@@ -108,7 +156,7 @@ export default function DashboardPieChart({ data }: Props) {
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
               <p className="text-xs uppercase tracking-wide text-slate-500">Total</p>
               <p className="text-3xl font-bold text-slate-800">
-                {numberFormatter.format(total)}
+                <AnimatedNumber value={total} formatThousands />
               </p>
               <p className="text-xs text-slate-500">Dokumen</p>
             </div>
@@ -125,7 +173,7 @@ export default function DashboardPieChart({ data }: Props) {
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
                 <p className="text-xs text-slate-500">Total Kategori</p>
                 <p className="text-lg font-semibold text-slate-800">
-                  {detailWithPercentage.length}
+                  <AnimatedNumber value={detailWithPercentage.length} />
                 </p>
               </div>
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
@@ -137,7 +185,11 @@ export default function DashboardPieChart({ data }: Props) {
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
                 <p className="text-xs text-slate-500">Persentase Tertinggi</p>
                 <p className="text-lg font-semibold text-slate-800">
-                  {topCategory ? `${topCategory.percentage.toFixed(1)}%` : "0%"}
+                  {topCategory ? (
+                    <AnimatedNumber value={topCategory.percentage} decimals={1} suffix="%" />
+                  ) : (
+                    "0%"
+                  )}
                 </p>
               </div>
             </div>
@@ -163,7 +215,8 @@ export default function DashboardPieChart({ data }: Props) {
                       </p>
                     </div>
                     <p className="text-sm font-semibold text-slate-800">
-                      {numberFormatter.format(item.value)} ({item.percentage.toFixed(1)}%)
+                      <AnimatedNumber value={item.value} /> (
+                      <AnimatedNumber value={item.percentage} decimals={1} suffix="%" />)
                     </p>
                   </div>
 
