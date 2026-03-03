@@ -132,6 +132,31 @@ export function useDashboardAnalytics() {
       }));
   }, []);
 
+  const todayUploadRows = useMemo(() => {
+    const todayIso = toIsoDate(new Date());
+    return uploadRecords
+      .filter((record) => record.uploadedAt === todayIso)
+      .sort((a, b) => (a.id < b.id ? 1 : -1))
+      .map((record) => ({
+        id: record.id,
+        name: `Dokumen_${record.kategori}_${record.id}.pdf`,
+        kategori: record.kategori,
+        tanggal: formatDateLabel(record.uploadedAt),
+      }));
+  }, []);
+
+  const latestUploadRows = useMemo(() => {
+    return [...uploadRecords]
+      .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
+      .slice(0, 7)
+      .map((record) => ({
+        id: record.id,
+        name: `Dokumen_${record.kategori}_${record.id}.pdf`,
+        kategori: record.kategori,
+        tanggal: formatDateLabel(record.uploadedAt),
+      }));
+  }, []);
+
   return {
     selectedYear,
     setSelectedYear,
@@ -148,6 +173,8 @@ export function useDashboardAnalytics() {
     todayUploadCount,
     latestUploadedDocument,
     uploadActivityRows,
+    todayUploadRows,
+    latestUploadRows,
     distributionData,
     trendData,
     filteredLogins,

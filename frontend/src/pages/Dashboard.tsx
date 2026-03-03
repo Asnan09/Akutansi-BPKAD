@@ -91,9 +91,8 @@ export default function Dashboard() {
 
           <div data-animate-item>
             <DashboardUploadActivityCard
-              todayUploadCount={summary.todayUploadCount}
-              latestDocument={summary.latestUploadedDocument}
-              rows={summary.uploadActivityRows}
+              todayRows={summary.todayUploadRows}
+              latestRows={summary.latestUploadRows}
             />
           </div>
         </main>
