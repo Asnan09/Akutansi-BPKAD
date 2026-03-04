@@ -14,6 +14,9 @@ type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BKU" | "STS";
 
 type Props = {
   data: { label: string; value: number }[];
+  trendMode: "monthly" | "daily";
+  trendUploadDays: number;
+  trendEmptyDays: number;
   selectedCategory: CategoryValue;
   selectedMonth: number;
   selectedYear: number;
@@ -27,6 +30,9 @@ type Props = {
 
 function DashboardTrendChart({
   data,
+  trendMode,
+  trendUploadDays,
+  trendEmptyDays,
   selectedCategory,
   selectedMonth,
   selectedYear,
@@ -48,7 +54,7 @@ function DashboardTrendChart({
       labels: data.map((d) => d.label),
       datasets: [
         {
-          label: "Upload per Bulan",
+          label: trendMode === "daily" ? "Upload per Hari" : "Upload per Bulan",
           data: data.map((d) => d.value),
           borderColor: "#3B82F6",
           backgroundColor: "rgba(59,130,246,0.16)",
@@ -62,7 +68,7 @@ function DashboardTrendChart({
         },
       ],
     }),
-    [data],
+    [data, trendMode],
   );
 
   const options: ChartOptions<"line"> = useMemo(
@@ -127,11 +133,18 @@ function DashboardTrendChart({
         },
         x: {
           grid: { display: false },
-          ticks: { color: "#475569" },
+          ticks: {
+            color: "#475569",
+            maxTicksLimit: trendMode === "daily" ? 31 : 12,
+            autoSkip: false,
+            font: {
+              size: trendMode === "daily" ? 10 : 12,
+            },
+          },
         },
       },
     }),
-    [],
+    [trendMode],
   );
 
   const selectClass =
@@ -191,6 +204,14 @@ function DashboardTrendChart({
         </div>
       </div>
 
+      {trendMode === "daily" && (
+        <div className="mb-3 text-sm text-slate-600">
+          Hari upload: <span className="font-semibold text-slate-800">{trendUploadDays}</span>
+          {" | "}
+          Hari kosong: <span className="font-semibold text-slate-800">{trendEmptyDays}</span>
+        </div>
+      )}
+
       <div className="h-[260px] sm:h-[300px]">
         <Line key={chartKey} data={chartData} options={options} updateMode="none" />
       </div>
@@ -199,6 +220,9 @@ function DashboardTrendChart({
 }
 
 function arePropsEqual(prev: Props, next: Props) {
+  if (prev.trendMode !== next.trendMode) return false;
+  if (prev.trendUploadDays !== next.trendUploadDays) return false;
+  if (prev.trendEmptyDays !== next.trendEmptyDays) return false;
   if (prev.selectedCategory !== next.selectedCategory) return false;
   if (prev.selectedMonth !== next.selectedMonth) return false;
   if (prev.selectedYear !== next.selectedYear) return false;
