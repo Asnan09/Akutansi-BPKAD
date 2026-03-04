@@ -28,6 +28,7 @@ export interface UploadHistoryQuery {
   page?: number;
   limit?: number;
   search?: string;
+  status?: "all" | "diunggah" | "dihapus" | "diedit";
 }
 
 export interface UploadHistoryResult {

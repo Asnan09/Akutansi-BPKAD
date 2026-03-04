@@ -18,6 +18,7 @@ export default function UploadHistory() {
     selectedRestorableCount,
     allRestorableSelected,
     searchInput,
+    statusFilter,
     page,
     limit,
     total,
@@ -26,6 +27,7 @@ export default function UploadHistory() {
     setPage,
     setLimit,
     handleSearchSubmit,
+    handleStatusFilterChange,
     handleRefresh,
     handleToggleSelect,
     handleToggleSelectAll,
@@ -57,11 +59,13 @@ export default function UploadHistory() {
               selectedRestorableCount={selectedRestorableCount}
               allRestorableSelected={allRestorableSelected}
               searchValue={searchInput}
+              statusValue={statusFilter}
               page={page}
               pageSize={limit}
               totalItems={total}
               totalPages={totalPages}
               onSearchValueChange={setSearchInput}
+              onStatusValueChange={handleStatusFilterChange}
               onSearchSubmit={handleSearchSubmit}
               onRefresh={handleRefresh}
               onToggleSelectAll={handleToggleSelectAll}

@@ -78,6 +78,7 @@ export const getUploadHistories = async (
   const page = Math.max(query.page || 1, 1);
   const limit = Math.max(query.limit || 10, 1);
   const searchText = (query.search || "").trim().toLowerCase();
+  const statusFilter = query.status || "all";
 
   const documents = await getDocuments();
   const localHistoryItems = getLocalUploadHistoryItems();
@@ -138,10 +139,29 @@ export const getUploadHistories = async (
     },
   );
 
+  const statusFilteredItems =
+    statusFilter === "all"
+      ? allItems
+      : allItems.filter((item) => {
+          const normalizedStatus = item.status?.toLowerCase();
+
+          if (statusFilter === "dihapus") {
+            return normalizedStatus === "dihapus" || item.isDeleted;
+          }
+
+          if (statusFilter === "diedit") {
+            return normalizedStatus === "diedit";
+          }
+
+          return normalizedStatus === "diunggah" || !item.isDeleted;
+        });
+
   const filteredItems =
     searchText.length === 0
-      ? allItems.filter((item) => !permanentDeletedIds.has(String(item.id)))
-      : allItems.filter(
+      ? statusFilteredItems.filter(
+          (item) => !permanentDeletedIds.has(String(item.id)),
+        )
+      : statusFilteredItems.filter(
           (item) =>
             item.documentName.toLowerCase().includes(searchText) &&
             !permanentDeletedIds.has(String(item.id)),

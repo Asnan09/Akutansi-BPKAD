@@ -30,6 +30,9 @@ export function useUploadHistory({
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "diunggah" | "dihapus" | "diedit"
+  >("all");
   const [page, setPage] = useState<number>(initialPage);
   const [limit, setLimit] = useState<number>(initialLimit);
   const [total, setTotal] = useState<number>(0);
@@ -63,6 +66,7 @@ export function useUploadHistory({
         page,
         limit,
         search: searchQuery || undefined,
+        status: statusFilter,
       });
 
       setItems(result.items);
@@ -72,7 +76,7 @@ export function useUploadHistory({
     } finally {
       setLoading(false);
     }
-  }, [limit, page, searchQuery]);
+  }, [limit, page, searchQuery, statusFilter]);
 
   useEffect(() => {
     fetchHistory();
@@ -108,6 +112,13 @@ export function useUploadHistory({
 
   const handleRefresh = () => {
     fetchHistory();
+  };
+
+  const handleStatusFilterChange = (
+    nextStatus: "all" | "diunggah" | "dihapus" | "diedit",
+  ) => {
+    setPage(1);
+    setStatusFilter(nextStatus);
   };
 
   const handleToggleSelect = (id: number | string, checked: boolean) => {
@@ -203,6 +214,7 @@ export function useUploadHistory({
     selectedRestorableCount,
     allRestorableSelected,
     searchInput,
+    statusFilter,
     page,
     limit,
     total,
@@ -211,6 +223,7 @@ export function useUploadHistory({
     setPage,
     setLimit,
     handleSearchSubmit,
+    handleStatusFilterChange,
     handleRefresh,
     handleToggleSelect,
     handleToggleSelectAll,

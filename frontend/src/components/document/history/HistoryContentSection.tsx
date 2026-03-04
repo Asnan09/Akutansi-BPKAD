@@ -15,11 +15,15 @@ type HistoryContentSectionProps = {
   selectedRestorableCount: number;
   allRestorableSelected: boolean;
   searchValue: string;
+  statusValue: "all" | "diunggah" | "dihapus" | "diedit";
   page: number;
   pageSize: number;
   totalItems: number;
   totalPages: number;
   onSearchValueChange: (value: string) => void;
+  onStatusValueChange: (
+    value: "all" | "diunggah" | "dihapus" | "diedit",
+  ) => void;
   onSearchSubmit: () => void;
   onRefresh: () => void;
   onToggleSelectAll: (checked: boolean) => void;
@@ -38,11 +42,13 @@ export default function HistoryContentSection({
   selectedRestorableCount,
   allRestorableSelected,
   searchValue,
+  statusValue,
   page,
   pageSize,
   totalItems,
   totalPages,
   onSearchValueChange,
+  onStatusValueChange,
   onSearchSubmit,
   onRefresh,
   onToggleSelectAll,
@@ -54,6 +60,7 @@ export default function HistoryContentSection({
   const selectedToolbarRef = useRef<HTMLDivElement | null>(null);
   const tableContentRef = useRef<HTMLDivElement | null>(null);
   const previousSelectedCountRef = useRef<number>(selectedRestorableCount);
+  const hasStatusAnimatedRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (selectedRestorableCount <= 0 || !selectedToolbarRef.current) {
@@ -96,12 +103,32 @@ export default function HistoryContentSection({
     previousSelectedCountRef.current = selectedRestorableCount;
   }, [selectedRestorableCount]);
 
+  useEffect(() => {
+    if (!tableContentRef.current) {
+      return;
+    }
+
+    if (!hasStatusAnimatedRef.current) {
+      hasStatusAnimatedRef.current = true;
+      return;
+    }
+
+    gsap.killTweensOf(tableContentRef.current);
+    gsap.fromTo(
+      tableContentRef.current,
+      { autoAlpha: 0.5, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
+    );
+  }, [statusValue]);
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
       <div className="mb-4">
         <HistoryToolbar
           searchValue={searchValue}
+          statusValue={statusValue}
           onSearchValueChange={onSearchValueChange}
+          onStatusValueChange={onStatusValueChange}
           onSearchSubmit={onSearchSubmit}
           onRefresh={onRefresh}
         />
