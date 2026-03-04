@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaRegClock } from "react-icons/fa";
+import { FaRegFolderOpen } from "react-icons/fa";
 import dashboardIcon from "../../assets/icons/Dashboard.svg";
-import homeIcon from "../../assets/icons/home.svg";
 import documentIcon from "../../assets/icons/upload.svg";
-import historyIcon from "../../assets/icons/refresh.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 import AppTooltip from "../ui/app-tooltip";
 
@@ -48,6 +48,7 @@ export default function Sidebar() {
         <AppTooltip content="Dokumen Management">
           <button
             onClick={() => navigate("/dokumen-management")}
+            aria-label="Dokumen Management"
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/dokumen-management")
@@ -55,7 +56,10 @@ export default function Sidebar() {
                 : "hover:bg-white/20"
             }`}
           >
-            <img src={homeIcon} className="w-6 h-6" alt="Dokumen Management" />
+            <FaRegFolderOpen
+              className="w-6 h-6 text-white"
+              aria-hidden="true"
+            />
           </button>
         </AppTooltip>
 
@@ -76,6 +80,7 @@ export default function Sidebar() {
         <AppTooltip content="Riwayat Unggah">
           <button
             onClick={() => navigate("/riwayat")}
+            aria-label="Riwayat Unggah"
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/riwayat")
@@ -83,7 +88,7 @@ export default function Sidebar() {
                 : "hover:bg-white/20"
             }`}
           >
-            <img src={historyIcon} className="w-6 h-6" alt="Riwayat Unggah" />
+            <FaRegClock className="w-6 h-6 text-white" aria-hidden="true" />
           </button>
         </AppTooltip>
       </nav>

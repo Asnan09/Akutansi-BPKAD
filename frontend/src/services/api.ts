@@ -49,7 +49,9 @@ type DocumentApiItem = {
 };
 
 const apiClient = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:3001/api",
+  baseURL:
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+    "http://localhost:3001/api",
   timeout: 15000,
 });
 
@@ -97,6 +99,7 @@ export const getUploadHistories = async (
   const page = Math.max(query.page || 1, 1);
   const limit = Math.max(query.limit || 10, 1);
   const searchText = (query.search || "").trim().toLowerCase();
+  const statusFilter = query.status || "all";
 
   const documents = await getDocuments();
   const localHistoryItems = getLocalUploadHistoryItems();
@@ -124,6 +127,9 @@ export const getUploadHistories = async (
       uploadedBy: localHistory?.uploadedBy || "-",
       fileSize: localHistory?.fileSize || "-",
       filePath: localHistory?.filePath || document.file_path,
+      status: hiddenIds.has(String(document.id))
+        ? "dihapus"
+        : (localHistory?.status ?? "diunggah"),
       isDeleted: hiddenIds.has(String(document.id)),
     };
   });
@@ -137,6 +143,9 @@ export const getUploadHistories = async (
     )
     .map((historyItem) => ({
       ...historyItem,
+      status: hiddenIds.has(String(historyItem.id))
+        ? "dihapus"
+        : (historyItem.status ?? "diunggah"),
       isDeleted: hiddenIds.has(String(historyItem.id)),
     }));
 
@@ -151,10 +160,29 @@ export const getUploadHistories = async (
     },
   );
 
+  const statusFilteredItems =
+    statusFilter === "all"
+      ? allItems
+      : allItems.filter((item) => {
+          const normalizedStatus = item.status?.toLowerCase();
+
+          if (statusFilter === "dihapus") {
+            return normalizedStatus === "dihapus" || item.isDeleted;
+          }
+
+          if (statusFilter === "diedit") {
+            return normalizedStatus === "diedit";
+          }
+
+          return normalizedStatus === "diunggah" || !item.isDeleted;
+        });
+
   const filteredItems =
     searchText.length === 0
-      ? allItems.filter((item) => !permanentDeletedIds.has(String(item.id)))
-      : allItems.filter(
+      ? statusFilteredItems.filter(
+          (item) => !permanentDeletedIds.has(String(item.id)),
+        )
+      : statusFilteredItems.filter(
           (item) =>
             item.documentName.toLowerCase().includes(searchText) &&
             !permanentDeletedIds.has(String(item.id)),

@@ -1,39 +1,24 @@
-import { useState } from "react";
 import HistoryContentSection from "../components/document/history/HistoryContentSection";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
-import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { Toast } from "../components/snackbar";
 import { useUploadHistory } from "../hooks/useUploadHistory";
 import { useToastState } from "../hooks/useToastState";
 import { getRestoreToastType } from "../utils/historyToastUtils";
 
-type PermanentDeleteDialogState = {
-  isOpen: boolean;
-  documentId: number | string | null;
-  documentName: string;
-};
-
 export default function UploadHistory() {
   const { toast, showToast, closeToast } = useToastState("info");
-  const [permanentDeleteDialog, setPermanentDeleteDialog] =
-    useState<PermanentDeleteDialogState>({
-      isOpen: false,
-      documentId: null,
-      documentName: "",
-    });
 
   const {
     items,
     loading,
     error,
-    restoringId,
-    permanentlyDeletingId,
     isRestoringSelected,
     selectedIds,
     selectedRestorableCount,
     allRestorableSelected,
     searchInput,
+    statusFilter,
     page,
     limit,
     total,
@@ -42,58 +27,18 @@ export default function UploadHistory() {
     setPage,
     setLimit,
     handleSearchSubmit,
+    handleStatusFilterChange,
     handleRefresh,
     handleToggleSelect,
     handleToggleSelectAll,
-    handleRestore,
     handleRestoreSelected,
-    handlePermanentDelete,
   } = useUploadHistory();
-
-  const handleRestoreClick = async (id: number | string) => {
-    const message = await handleRestore(id);
-    const toastType = getRestoreToastType(message);
-
-    showToast(message, toastType);
-  };
 
   const handleRestoreSelectedClick = async () => {
     const message = await handleRestoreSelected();
     const toastType = getRestoreToastType(message);
 
     showToast(message, toastType);
-  };
-
-  const openPermanentDeleteDialog = (id: number | string) => {
-    const item = items.find((historyItem) => historyItem.id === id);
-
-    setPermanentDeleteDialog({
-      isOpen: true,
-      documentId: id,
-      documentName: item?.documentName || "dokumen ini",
-    });
-  };
-
-  const closePermanentDeleteDialog = () => {
-    setPermanentDeleteDialog({
-      isOpen: false,
-      documentId: null,
-      documentName: "",
-    });
-  };
-
-  const confirmPermanentDelete = async () => {
-    if (permanentDeleteDialog.documentId === null) {
-      return;
-    }
-
-    const message = await handlePermanentDelete(
-      permanentDeleteDialog.documentId,
-    );
-    const toastType = getRestoreToastType(message);
-
-    showToast(message, toastType);
-    closePermanentDeleteDialog();
   };
 
   return (
@@ -109,24 +54,22 @@ export default function UploadHistory() {
               items={items}
               loading={loading}
               error={error}
-              restoringId={restoringId}
-              permanentlyDeletingId={permanentlyDeletingId}
               isRestoringSelected={isRestoringSelected}
               selectedIds={selectedIds}
               selectedRestorableCount={selectedRestorableCount}
               allRestorableSelected={allRestorableSelected}
               searchValue={searchInput}
+              statusValue={statusFilter}
               page={page}
               pageSize={limit}
               totalItems={total}
               totalPages={totalPages}
               onSearchValueChange={setSearchInput}
+              onStatusValueChange={handleStatusFilterChange}
               onSearchSubmit={handleSearchSubmit}
               onRefresh={handleRefresh}
               onToggleSelectAll={handleToggleSelectAll}
               onToggleSelect={handleToggleSelect}
-              onRestore={handleRestoreClick}
-              onPermanentDeleteRequest={openPermanentDeleteDialog}
               onRestoreSelected={handleRestoreSelectedClick}
               onPageChange={setPage}
               onPageSizeChange={(value) => {
@@ -141,17 +84,6 @@ export default function UploadHistory() {
       {toast.show && (
         <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       )}
-
-      <ConfirmDialog
-        isOpen={permanentDeleteDialog.isOpen}
-        title="Hapus Permanen Dokumen?"
-        message={`Dokumen "${permanentDeleteDialog.documentName}" akan dihapus permanen dan tidak bisa direstorasi lagi.`}
-        confirmText="Hapus Permanen"
-        cancelText="Batal"
-        onConfirm={confirmPermanentDelete}
-        onCancel={closePermanentDeleteDialog}
-        type="danger"
-      />
     </div>
   );
 }

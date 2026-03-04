@@ -10,24 +10,24 @@ type HistoryContentSectionProps = {
   items: UploadHistory[];
   loading: boolean;
   error: string;
-  restoringId: number | string | null;
-  permanentlyDeletingId: number | string | null;
   isRestoringSelected: boolean;
   selectedIds: Set<string>;
   selectedRestorableCount: number;
   allRestorableSelected: boolean;
   searchValue: string;
+  statusValue: "all" | "diunggah" | "dihapus" | "diedit";
   page: number;
   pageSize: number;
   totalItems: number;
   totalPages: number;
   onSearchValueChange: (value: string) => void;
+  onStatusValueChange: (
+    value: "all" | "diunggah" | "dihapus" | "diedit",
+  ) => void;
   onSearchSubmit: () => void;
   onRefresh: () => void;
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
-  onRestore: (id: number | string) => void;
-  onPermanentDeleteRequest: (id: number | string) => void;
   onRestoreSelected: () => void;
   onPageChange: (nextPage: number) => void;
   onPageSizeChange: (nextSize: number) => void;
@@ -37,24 +37,22 @@ export default function HistoryContentSection({
   items,
   loading,
   error,
-  restoringId,
-  permanentlyDeletingId,
   isRestoringSelected,
   selectedIds,
   selectedRestorableCount,
   allRestorableSelected,
   searchValue,
+  statusValue,
   page,
   pageSize,
   totalItems,
   totalPages,
   onSearchValueChange,
+  onStatusValueChange,
   onSearchSubmit,
   onRefresh,
   onToggleSelectAll,
   onToggleSelect,
-  onRestore,
-  onPermanentDeleteRequest,
   onRestoreSelected,
   onPageChange,
   onPageSizeChange,
@@ -62,6 +60,7 @@ export default function HistoryContentSection({
   const selectedToolbarRef = useRef<HTMLDivElement | null>(null);
   const tableContentRef = useRef<HTMLDivElement | null>(null);
   const previousSelectedCountRef = useRef<number>(selectedRestorableCount);
+  const hasStatusAnimatedRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (selectedRestorableCount <= 0 || !selectedToolbarRef.current) {
@@ -104,12 +103,32 @@ export default function HistoryContentSection({
     previousSelectedCountRef.current = selectedRestorableCount;
   }, [selectedRestorableCount]);
 
+  useEffect(() => {
+    if (!tableContentRef.current) {
+      return;
+    }
+
+    if (!hasStatusAnimatedRef.current) {
+      hasStatusAnimatedRef.current = true;
+      return;
+    }
+
+    gsap.killTweensOf(tableContentRef.current);
+    gsap.fromTo(
+      tableContentRef.current,
+      { autoAlpha: 0.5, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
+    );
+  }, [statusValue]);
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
       <div className="mb-4">
         <HistoryToolbar
           searchValue={searchValue}
+          statusValue={statusValue}
           onSearchValueChange={onSearchValueChange}
+          onStatusValueChange={onStatusValueChange}
           onSearchSubmit={onSearchSubmit}
           onRefresh={onRefresh}
         />
@@ -127,9 +146,9 @@ export default function HistoryContentSection({
             type="button"
             onClick={onRestoreSelected}
             disabled={isRestoringSelected}
-            className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs h-10 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isRestoringSelected ? "Memproses..." : "Restorasi Terpilih"}
+            {isRestoringSelected ? "Memproses..." : "Restorasi File Ini"}
           </button>
         </div>
       )}
@@ -145,14 +164,10 @@ export default function HistoryContentSection({
           <>
             <HistoryTable
               items={items}
-              restoringId={restoringId}
-              permanentlyDeletingId={permanentlyDeletingId}
               selectedIds={selectedIds}
               allRestorableSelected={allRestorableSelected}
               onToggleSelectAll={onToggleSelectAll}
               onToggleSelect={onToggleSelect}
-              onRestore={onRestore}
-              onPermanentDeleteRequest={onPermanentDeleteRequest}
             />
             <HistoryPagination
               page={page}

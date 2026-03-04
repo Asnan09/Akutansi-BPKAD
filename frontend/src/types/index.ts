@@ -20,6 +20,7 @@ export interface UploadHistory {
   uploadedBy: string;
   fileSize: string;
   filePath: string;
+  status?: "diunggah" | "dihapus" | "diedit";
   isDeleted?: boolean;
 }
 
@@ -27,6 +28,7 @@ export interface UploadHistoryQuery {
   page?: number;
   limit?: number;
   search?: string;
+  status?: "all" | "diunggah" | "dihapus" | "diedit";
 }
 
 export interface UploadHistoryResult {

@@ -1,13 +1,28 @@
 import { Request, Response } from "express";
 import db from "../config/db";
 
+const ensureColumnExists = async (columnName: string, definition: string) => {
+  const [rows] = await db.query(
+    `SELECT 1
+     FROM INFORMATION_SCHEMA.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'documents'
+       AND COLUMN_NAME = ?
+     LIMIT 1`,
+    [columnName],
+  );
+
+  if ((rows as Record<string, unknown>[]).length === 0) {
+    await db.execute(`ALTER TABLE documents ADD COLUMN ${definition}`);
+  }
+};
+
 const ensureSoftDeleteColumns = async () => {
-  await db.execute(
-    "ALTER TABLE documents ADD COLUMN IF NOT EXISTS is_deleted TINYINT(1) NOT NULL DEFAULT 0",
+  await ensureColumnExists(
+    "is_deleted",
+    "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
   );
-  await db.execute(
-    "ALTER TABLE documents ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL",
-  );
+  await ensureColumnExists("deleted_at", "deleted_at DATETIME NULL");
 };
 
 const getDocumentName = (row: Record<string, any>): string => {
