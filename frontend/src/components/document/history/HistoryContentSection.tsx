@@ -119,9 +119,9 @@ export default function HistoryContentSection({
             type="button"
             onClick={onRestoreSelected}
             disabled={isRestoringSelected}
-            className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs h-10 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isRestoringSelected ? "Memproses..." : "Restorasi Terpilih"}
+            {isRestoringSelected ? "Memproses..." : "Restorasi File Ini"}
           </button>
         </div>
       )}
