@@ -10,8 +10,6 @@ type HistoryContentSectionProps = {
   items: UploadHistory[];
   loading: boolean;
   error: string;
-  restoringId: number | string | null;
-  permanentlyDeletingId: number | string | null;
   isRestoringSelected: boolean;
   selectedIds: Set<string>;
   selectedRestorableCount: number;
@@ -26,8 +24,6 @@ type HistoryContentSectionProps = {
   onRefresh: () => void;
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
-  onRestore: (id: number | string) => void;
-  onPermanentDeleteRequest: (id: number | string) => void;
   onRestoreSelected: () => void;
   onPageChange: (nextPage: number) => void;
   onPageSizeChange: (nextSize: number) => void;
@@ -37,8 +33,6 @@ export default function HistoryContentSection({
   items,
   loading,
   error,
-  restoringId,
-  permanentlyDeletingId,
   isRestoringSelected,
   selectedIds,
   selectedRestorableCount,
@@ -53,8 +47,6 @@ export default function HistoryContentSection({
   onRefresh,
   onToggleSelectAll,
   onToggleSelect,
-  onRestore,
-  onPermanentDeleteRequest,
   onRestoreSelected,
   onPageChange,
   onPageSizeChange,
@@ -145,14 +137,10 @@ export default function HistoryContentSection({
           <>
             <HistoryTable
               items={items}
-              restoringId={restoringId}
-              permanentlyDeletingId={permanentlyDeletingId}
               selectedIds={selectedIds}
               allRestorableSelected={allRestorableSelected}
               onToggleSelectAll={onToggleSelectAll}
               onToggleSelect={onToggleSelect}
-              onRestore={onRestore}
-              onPermanentDeleteRequest={onPermanentDeleteRequest}
             />
             <HistoryPagination
               page={page}

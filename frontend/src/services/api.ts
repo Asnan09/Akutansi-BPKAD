@@ -28,7 +28,9 @@ type DocumentApiItem = {
 };
 
 const apiClient = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:3001/api",
+  baseURL:
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+    "http://localhost:3001/api",
   timeout: 15000,
 });
 
@@ -103,6 +105,9 @@ export const getUploadHistories = async (
       uploadedBy: localHistory?.uploadedBy || "-",
       fileSize: localHistory?.fileSize || "-",
       filePath: localHistory?.filePath || document.file_path,
+      status: hiddenIds.has(String(document.id))
+        ? "dihapus"
+        : (localHistory?.status ?? "diunggah"),
       isDeleted: hiddenIds.has(String(document.id)),
     };
   });
@@ -116,6 +121,9 @@ export const getUploadHistories = async (
     )
     .map((historyItem) => ({
       ...historyItem,
+      status: hiddenIds.has(String(historyItem.id))
+        ? "dihapus"
+        : (historyItem.status ?? "diunggah"),
       isDeleted: hiddenIds.has(String(historyItem.id)),
     }));
 
