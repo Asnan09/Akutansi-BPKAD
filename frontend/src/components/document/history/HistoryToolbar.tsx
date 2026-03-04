@@ -58,11 +58,31 @@ export default function HistoryToolbar({
           >
             <SelectValue placeholder="Semua Status" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Status</SelectItem>
-            <SelectItem value="diunggah">Diunggah</SelectItem>
-            <SelectItem value="dihapus">Dihapus</SelectItem>
-            <SelectItem value="diedit">Diedit</SelectItem>
+          <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif]">
+            <SelectItem
+              value="all"
+              className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+            >
+              Semua Status
+            </SelectItem>
+            <SelectItem
+              value="diunggah"
+              className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+            >
+              Diunggah
+            </SelectItem>
+            <SelectItem
+              value="dihapus"
+              className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+            >
+              Dihapus
+            </SelectItem>
+            <SelectItem
+              value="diedit"
+              className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+            >
+              Diedit
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
