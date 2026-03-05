@@ -35,6 +35,7 @@ export function useDashboardAnalytics() {
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
   const [staffUsersCount, setStaffUsersCount] = useState<number>(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
 
   useEffect(() => {
@@ -96,6 +97,7 @@ export function useDashboardAnalytics() {
         setUploads(normalizedUploads);
         setLogins(normalizedLogins);
         setStaffUsersCount(Number(payload.totalStaffUsers ?? 0));
+        setIsLoaded(true);
       })
       .catch((error) => {
         console.error("Gagal memuat analytics dashboard:", error);
@@ -118,9 +120,11 @@ export function useDashboardAnalytics() {
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
             setStaffUsersCount(0);
+            setIsLoaded(true);
           })
           .catch((fallbackError) => {
             console.error("Fallback dokumen dashboard gagal:", fallbackError);
+            setIsLoaded(true);
           });
       });
 
@@ -304,5 +308,6 @@ export function useDashboardAnalytics() {
     trendEmptyDays,
     trendUploadCount,
     filteredLogins,
+    isLoaded,
   };
 }
