@@ -8,6 +8,7 @@ import DashboardLoginActivity from "../components/dashboard/tables/DashboardLogi
 import DashboardUploadActivityCard from "../components/dashboard/cards/DashboardUploadActivityCard";
 import DashboardPieChart from "../components/dashboard/charts/DashboardPieChart";
 import { useDashboardAnalytics } from "../hooks/dashboard/useDashboardAnalytics";
+import { useChartFilterAnimation } from "../hooks/dashboard/useChartFilterAnimation";
 
 type AnimatedStatNumberProps = {
   value: number;
@@ -47,6 +48,23 @@ export default function Dashboard() {
   const login = useDashboardAnalytics();
 
   const pageRef = useRef<HTMLDivElement | null>(null);
+  const distributionFilter = useChartFilterAnimation({
+    selectedCategory: distribution.selectedCategory,
+    selectedMonth: distribution.selectedMonth,
+    selectedYear: distribution.selectedYear,
+    setSelectedCategory: distribution.setSelectedCategory,
+    setSelectedMonth: distribution.setSelectedMonth,
+    setSelectedYear: distribution.setSelectedYear,
+  });
+
+  const trendFilter = useChartFilterAnimation({
+    selectedCategory: trend.selectedCategory,
+    selectedMonth: trend.selectedMonth,
+    selectedYear: trend.selectedYear,
+    setSelectedCategory: trend.setSelectedCategory,
+    setSelectedMonth: trend.setSelectedMonth,
+    setSelectedYear: trend.setSelectedYear,
+  });
 
   useEffect(() => {
     if (!pageRef.current) return;
@@ -92,34 +110,44 @@ export default function Dashboard() {
           </div>
 
           <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            <DashboardDistributionChart
-              data={distribution.distributionData}
-              selectedCategory={distribution.selectedCategory}
-              selectedMonth={distribution.selectedMonth}
-              selectedYear={distribution.selectedYear}
-              onChangeCategory={distribution.setSelectedCategory}
-              onChangeMonth={distribution.setSelectedMonth}
-              onChangeYear={distribution.setSelectedYear}
-              categoryOptions={distribution.categoryOptions}
-              monthOptions={distribution.monthOptions}
-              yearOptions={distribution.yearOptions}
-            />
+            {distribution.isLoaded ? (
+              <DashboardDistributionChart
+                data={distribution.distributionData}
+                animationNonce={distributionFilter.animationNonce}
+                selectedCategory={distribution.selectedCategory}
+                selectedMonth={distribution.selectedMonth}
+                selectedYear={distribution.selectedYear}
+                onChangeCategory={distributionFilter.handleCategoryChange}
+                onChangeMonth={distributionFilter.handleMonthChange}
+                onChangeYear={distributionFilter.handleYearChange}
+                categoryOptions={distribution.categoryOptions}
+                monthOptions={distribution.monthOptions}
+                yearOptions={distribution.yearOptions}
+              />
+            ) : (
+              <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-[392px]" />
+            )}
 
-            <DashboardTrendChart
-              data={trend.trendData}
+            {trend.isLoaded ? (
+              <DashboardTrendChart
+                data={trend.trendData}
+                animationNonce={trendFilter.animationNonce}
               trendMode={trend.trendMode}
               trendUploadDays={trend.trendUploadDays}
               trendEmptyDays={trend.trendEmptyDays}
               selectedCategory={trend.selectedCategory}
               selectedMonth={trend.selectedMonth}
               selectedYear={trend.selectedYear}
-              onChangeCategory={trend.setSelectedCategory}
-              onChangeMonth={trend.setSelectedMonth}
-              onChangeYear={trend.setSelectedYear}
-              categoryOptions={trend.categoryOptions}
-              monthOptions={trend.monthOptions}
-              yearOptions={trend.yearOptions}
-            />
+                onChangeCategory={trendFilter.handleCategoryChange}
+                onChangeMonth={trendFilter.handleMonthChange}
+                onChangeYear={trendFilter.handleYearChange}
+                categoryOptions={trend.categoryOptions}
+                monthOptions={trend.monthOptions}
+                yearOptions={trend.yearOptions}
+              />
+            ) : (
+              <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm h-[392px]" />
+            )}
           </div>
 
           <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">

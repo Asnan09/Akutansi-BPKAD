@@ -14,6 +14,7 @@ type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BKU" | "STS";
 
 type Props = {
   data: { label: string; value: number }[];
+  animationNonce: number;
   trendMode: "monthly" | "daily";
   trendUploadDays: number;
   trendEmptyDays: number;
@@ -28,8 +29,37 @@ type Props = {
   yearOptions: number[];
 };
 
+type TrendCanvasProps = {
+  chartKey: string;
+  chartData: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+      pointBackgroundColor: string;
+      pointBorderColor: string;
+      pointBorderWidth: number;
+      pointRadius: number;
+      pointHoverRadius: number;
+      fill: boolean;
+      tension: number;
+    }[];
+  };
+  options: ChartOptions<"line">;
+};
+
+const TrendCanvas = memo(
+  function TrendCanvas({ chartKey, chartData, options }: TrendCanvasProps) {
+    return <Line key={chartKey} data={chartData} options={options} updateMode="none" />;
+  },
+  (prev, next) => prev.chartKey === next.chartKey,
+);
+
 function DashboardTrendChart({
   data,
+  animationNonce,
   trendMode,
   trendUploadDays,
   trendEmptyDays,
@@ -43,18 +73,14 @@ function DashboardTrendChart({
   monthOptions,
   yearOptions,
 }: Props) {
-  const chartKey = useMemo(
-    () =>
-      `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`,
-    [selectedCategory, selectedMonth, selectedYear, data],
-  );
+  const chartKey = useMemo(() => `trend-${animationNonce}`, [animationNonce]);
 
   const chartData = useMemo(
     () => ({
       labels: data.map((d) => d.label),
       datasets: [
         {
-          label: trendMode === "daily" ? "Upload per Hari" : "Upload per Bulan",
+          label: trendMode === "daily" ? "Status Upload Harian (1/0)" : "Upload per Bulan",
           data: data.map((d) => d.value),
           borderColor: "#3B82F6",
           backgroundColor: "rgba(59,130,246,0.16)",
@@ -64,7 +90,7 @@ function DashboardTrendChart({
           pointRadius: 4,
           pointHoverRadius: 6,
           fill: true,
-          tension: 0.42,
+          tension: 0.55,
         },
       ],
     }),
@@ -80,7 +106,7 @@ function DashboardTrendChart({
         intersect: false,
       },
       animation: {
-        duration: 0,
+        duration: 1100,
         easing: "easeOutCubic",
       },
       animations: {
@@ -89,33 +115,35 @@ function DashboardTrendChart({
             if (ctx.type !== "data") return 0;
             return ctx.chart.chartArea?.left ?? 0;
           },
-          duration: 900,
-          easing: "easeOutQuart",
+          duration: (ctx: ScriptableContext<"line">) =>
+            ctx.mode === "resize" ? 0 : 1000,
+          easing: "easeOutCubic",
           delay: (ctx: ScriptableContext<"line">) =>
-            ctx.type === "data" ? ctx.dataIndex * 75 : 0,
+            ctx.mode === "default" && ctx.type === "data" ? ctx.dataIndex * 65 : 0,
         },
         y: {
-          duration: 900,
-          easing: "easeOutQuart",
+          duration: (ctx: ScriptableContext<"line">) =>
+            ctx.mode === "resize" ? 0 : 1000,
+          easing: "easeOutCubic",
           from: (ctx: ScriptableContext<"line">) => {
             if (ctx.type !== "data") return 0;
-            return ctx.chart.scales.y.getPixelForValue(0);
+            const yScale = ctx.chart.scales.y;
+            return yScale ? yScale.getPixelForValue(0) : 0;
           },
           delay: (ctx: ScriptableContext<"line">) =>
-            ctx.type === "data" ? ctx.dataIndex * 75 : 0,
+            ctx.mode === "default" && ctx.type === "data" ? ctx.dataIndex * 65 : 0,
+        },
+        tension: {
+          from: 0.15,
+          to: 0.55,
+          duration: (ctx: ScriptableContext<"line">) =>
+            ctx.mode === "resize" ? 0 : 800,
+          easing: "easeOutQuart",
         },
       },
       transitions: {
-        resize: {
-          animation: {
-            duration: 0,
-          },
-        },
-        active: {
-          animation: {
-            duration: 0,
-          },
-        },
+        resize: { animation: { duration: 0 } },
+        active: { animation: { duration: 0 } },
       },
       plugins: {
         legend: { display: false },
@@ -123,12 +151,28 @@ function DashboardTrendChart({
           backgroundColor: "#0F172A",
           displayColors: false,
           padding: 10,
+          callbacks:
+            trendMode === "daily"
+              ? {
+                  title: (items) => {
+                    const dayLabel = items[0]?.label ?? "";
+                    return `Tanggal ${dayLabel}`;
+                  },
+                  label: (ctx) =>
+                    Number(ctx.raw ?? 0) > 0 ? "1 (Upload)" : "0 (Tidak Upload)",
+                }
+              : undefined,
         },
       },
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { precision: 0, color: "#64748B" },
+          suggestedMax: trendMode === "daily" ? 1 : undefined,
+          ticks: {
+            precision: 0,
+            color: "#64748B",
+            stepSize: trendMode === "daily" ? 1 : undefined,
+          },
           grid: { color: "rgba(148,163,184,0.2)" },
         },
         x: {
@@ -137,9 +181,7 @@ function DashboardTrendChart({
             color: "#475569",
             maxTicksLimit: trendMode === "daily" ? 31 : 12,
             autoSkip: false,
-            font: {
-              size: trendMode === "daily" ? 10 : 12,
-            },
+            font: { size: trendMode === "daily" ? 10 : 12 },
           },
         },
       },
@@ -150,6 +192,8 @@ function DashboardTrendChart({
   const selectClass =
     "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
     "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
+
+  const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
@@ -204,7 +248,7 @@ function DashboardTrendChart({
         </div>
       </div>
 
-      {trendMode === "daily" && (
+      {canRenderChart && trendMode === "daily" && (
         <div className="mb-3 text-sm text-slate-600">
           Hari upload: <span className="font-semibold text-slate-800">{trendUploadDays}</span>
           {" | "}
@@ -213,13 +257,20 @@ function DashboardTrendChart({
       )}
 
       <div className="h-[260px] sm:h-[300px]">
-        <Line key={chartKey} data={chartData} options={options} updateMode="none" />
+        {!canRenderChart ? (
+          <div className="h-full rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-sm text-slate-500">
+            Pilih tahun untuk menampilkan data bulan yang dipilih.
+          </div>
+        ) : (
+          <TrendCanvas chartKey={chartKey} chartData={chartData} options={options} />
+        )}
       </div>
     </div>
   );
 }
 
 function arePropsEqual(prev: Props, next: Props) {
+  if (prev.animationNonce !== next.animationNonce) return false;
   if (prev.trendMode !== next.trendMode) return false;
   if (prev.trendUploadDays !== next.trendUploadDays) return false;
   if (prev.trendEmptyDays !== next.trendEmptyDays) return false;

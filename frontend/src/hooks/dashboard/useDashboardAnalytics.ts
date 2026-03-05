@@ -5,10 +5,6 @@ import type {
 } from "../../services/api";
 import { getDashboardAnalytics, getDocuments } from "../../services/api";
 import {
-  getHiddenDocumentIds,
-  getPermanentDeletedDocumentIds,
-} from "../../utils/uploadHistoryLocal";
-import {
   categories,
   formatDateLabel,
   isInCurrentLocalWeek,
@@ -39,6 +35,7 @@ export function useDashboardAnalytics() {
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
   const [staffUsersCount, setStaffUsersCount] = useState<number>(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
 
   useEffect(() => {
@@ -73,14 +70,8 @@ export function useDashboardAnalytics() {
     loadAnalyticsShared()
       .then((payload) => {
         if (!mounted) return;
-        const hiddenIds = new Set(
-          [...getHiddenDocumentIds(), ...getPermanentDeletedDocumentIds()].map((id) =>
-            String(id),
-          ),
-        );
 
         const normalizedUploads = payload.documents
-          .filter((doc: DashboardApiDocument) => !hiddenIds.has(String(doc.id)))
           .map((doc: DashboardApiDocument) => {
             const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
             if (!dateOnly) return null;
@@ -106,6 +97,7 @@ export function useDashboardAnalytics() {
         setUploads(normalizedUploads);
         setLogins(normalizedLogins);
         setStaffUsersCount(Number(payload.totalStaffUsers ?? 0));
+        setIsLoaded(true);
       })
       .catch((error) => {
         console.error("Gagal memuat analytics dashboard:", error);
@@ -114,13 +106,7 @@ export function useDashboardAnalytics() {
         getDocuments()
           .then((docs) => {
             if (!mounted) return;
-            const hiddenIds = new Set(
-              [...getHiddenDocumentIds(), ...getPermanentDeletedDocumentIds()].map((id) =>
-                String(id),
-              ),
-            );
             const fallbackUploads = docs
-              .filter((doc) => !hiddenIds.has(String(doc.id)))
               .map((doc) => {
                 const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
                 if (!dateOnly) return null;
@@ -134,9 +120,11 @@ export function useDashboardAnalytics() {
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
             setStaffUsersCount(0);
+            setIsLoaded(true);
           })
           .catch((fallbackError) => {
             console.error("Fallback dokumen dashboard gagal:", fallbackError);
+            setIsLoaded(true);
           });
       });
 
@@ -183,7 +171,9 @@ export function useDashboardAnalytics() {
         if (yearValue !== selectedYear) return;
         if (monthValue !== selectedMonth) return;
         if (dayValue < 1 || dayValue > daysInMonth) return;
-        daily[dayValue - 1].value += 1;
+        // Mode harian menampilkan status upload:
+        // 1 = ada upload di tanggal tersebut, 0 = tidak ada upload.
+        daily[dayValue - 1].value = 1;
       });
 
       return daily;
@@ -220,6 +210,26 @@ export function useDashboardAnalytics() {
     () => trendData.filter((item) => item.value === 0).length,
     [trendData],
   );
+
+  const trendUploadCount = useMemo(() => {
+    if (trendMode !== "daily") return 0;
+
+    return uploads.filter((r) => {
+      const [yearText, monthText] = r.uploadedAt.split("-");
+      const yearValue = Number(yearText);
+      const monthValue = Number(monthText);
+      const yearMatch = yearValue === selectedYear;
+      const monthMatch = monthValue === selectedMonth;
+      const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
+      return yearMatch && monthMatch && categoryMatch;
+    }).length;
+  }, [
+    trendMode,
+    uploads,
+    selectedYear,
+    selectedMonth,
+    selectedCategory,
+  ]);
 
   const filteredLogins = useMemo(() => {
     return [...logins]
@@ -296,6 +306,8 @@ export function useDashboardAnalytics() {
     trendMode,
     trendUploadDays,
     trendEmptyDays,
+    trendUploadCount,
     filteredLogins,
+    isLoaded,
   };
 }
