@@ -15,6 +15,7 @@ const categoryOptions = [
   { value: "Keuangan", label: "Keuangan" },
   { value: "BKU", label: "BKU" },
   { value: "STS", label: "STS" },
+  { value: "Rekening Koran", label: "Rekening Koran" },
 ];
 
 export default function CategoryFilterSelect({

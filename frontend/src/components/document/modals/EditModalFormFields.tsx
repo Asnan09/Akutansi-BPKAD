@@ -15,7 +15,14 @@ type EditModalFormFieldsProps = {
   calendarPopoverRef: React.RefObject<HTMLDivElement | null>;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onToggleCategory: () => void;
-  onSelectCategory: (kategori: "Lampiran" | "Keuangan" | "BKU" | "STS") => void;
+  onSelectCategory: (
+    kategori:
+      | "Lampiran"
+      | "Keuangan"
+      | "BKU"
+      | "STS"
+      | "Rekening Koran",
+  ) => void;
   onToggleCalendar: () => void;
   onSelectDate: (date: Date | undefined) => void;
   onClose: () => void;
@@ -88,7 +95,7 @@ export default function EditModalFormFields({
               ref={categoryDropdownRef}
               className="absolute top-full left-0 mt-2 z-20 w-full border rounded-lg bg-white shadow-lg p-1"
             >
-              {(["Lampiran", "Keuangan", "BKU", "STS"] as const).map(
+              {(["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"] as const).map(
                 (option) => (
                   <button
                     key={option}

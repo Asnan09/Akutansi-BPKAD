@@ -10,7 +10,13 @@ import {
   SelectValue,
 } from "../../ui/select";
 
-type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BKU" | "STS";
+type CategoryValue =
+  | "all"
+  | "Lampiran"
+  | "Keuangan"
+  | "BKU"
+  | "STS"
+  | "Rekening Koran";
 
 type Props = {
   data: { label: string; value: number }[];
