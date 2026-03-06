@@ -3,6 +3,13 @@ import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { FaChevronDown } from "react-icons/fa";
 import { Calendar } from "../../layout/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
 
 type UploadFormData = {
   name: string;
@@ -27,8 +34,12 @@ export default function UploadDocumentInfoSection({
   formData,
   onInputChange,
 }: UploadDocumentInfoSectionProps) {
+  const today = useMemo(() => new Date(), []);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isMonthSelectOpen, setIsMonthSelectOpen] = useState(false);
+  const [isYearSelectOpen, setIsYearSelectOpen] = useState(false);
+  const [viewMonth, setViewMonth] = useState<Date>(new Date());
 
   const categoryWrapperRef = useRef<HTMLDivElement>(null);
   const calendarWrapperRef = useRef<HTMLDivElement>(null);
@@ -44,6 +55,29 @@ export default function UploadDocumentInfoSection({
     return format(selectedDate, "dd MMMM yyyy", { locale: localeId });
   }, [selectedDate]);
 
+  const calendarYears = useMemo(() => {
+    const current = new Date().getFullYear();
+    return Array.from({ length: current - 2000 + 11 }, (_, i) => 2000 + i);
+  }, []);
+
+  const monthOptions = useMemo(
+    () => [
+      { value: 0, label: "Januari" },
+      { value: 1, label: "Februari" },
+      { value: 2, label: "Maret" },
+      { value: 3, label: "April" },
+      { value: 4, label: "Mei" },
+      { value: 5, label: "Juni" },
+      { value: 6, label: "Juli" },
+      { value: 7, label: "Agustus" },
+      { value: 8, label: "September" },
+      { value: 9, label: "Oktober" },
+      { value: 10, label: "November" },
+      { value: 11, label: "Desember" },
+    ],
+    [],
+  );
+
   const emitFieldChange = (name: "date" | "category", value: string) => {
     onInputChange({
       target: { name, value },
@@ -53,6 +87,22 @@ export default function UploadDocumentInfoSection({
   useEffect(() => {
     const onClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
+      const path =
+        typeof event.composedPath === "function" ? event.composedPath() : [];
+      const isCalendarSelectLayer = path.some((node) => {
+        if (!(node instanceof Element)) return false;
+        return (
+          node.classList.contains("upload-date-month-trigger") ||
+          node.classList.contains("upload-date-month-content") ||
+          node.classList.contains("upload-date-year-trigger") ||
+          node.classList.contains("upload-date-year-content") ||
+          node.matches("[data-radix-popper-content-wrapper]") ||
+          node.matches('[role="listbox"]')
+        );
+      });
+
+      // Jangan tutup popover tanggal saat user sedang interaksi dropdown bulan/tahun.
+      if (isCalendarSelectLayer || isMonthSelectOpen || isYearSelectOpen) return;
 
       if (
         categoryWrapperRef.current &&
@@ -71,7 +121,7 @@ export default function UploadDocumentInfoSection({
 
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
+  }, [isMonthSelectOpen, isYearSelectOpen]);
 
   return (
     <div className="space-y-6">
@@ -121,7 +171,16 @@ export default function UploadDocumentInfoSection({
           <button
             type="button"
             onClick={() => {
-              setIsCalendarOpen((prev) => !prev);
+              setIsCalendarOpen((prev) => {
+                const next = !prev;
+                if (next) {
+                  const baseDate = selectedDate ?? today;
+                  setViewMonth(
+                    new Date(baseDate.getFullYear(), baseDate.getMonth(), 1),
+                  );
+                }
+                return next;
+              });
               setIsCategoryOpen(false);
             }}
             className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white flex items-center justify-between"
@@ -138,11 +197,55 @@ export default function UploadDocumentInfoSection({
 
           {isCalendarOpen && (
             <div className="absolute top-full left-0 mt-2 z-30 border border-gray-200 rounded-xl bg-white shadow-xl p-2">
+              <div className="mb-2 grid grid-cols-[1fr_110px] gap-2 px-1">
+                <Select
+                  value={String(viewMonth.getMonth())}
+                  onOpenChange={setIsMonthSelectOpen}
+                  onValueChange={(value) =>
+                    setViewMonth(
+                      new Date(viewMonth.getFullYear(), Number(value), 1),
+                    )
+                  }
+                >
+                  <SelectTrigger className="h-9 text-sm upload-date-month-trigger">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-56 upload-date-month-content z-[100000]">
+                    {monthOptions.map((month) => (
+                      <SelectItem key={month.value} value={String(month.value)}>
+                        {month.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={String(viewMonth.getFullYear())}
+                  onOpenChange={setIsYearSelectOpen}
+                  onValueChange={(value) =>
+                    setViewMonth(
+                      new Date(Number(value), viewMonth.getMonth(), 1),
+                    )
+                  }
+                >
+                  <SelectTrigger className="h-9 text-sm upload-date-year-trigger">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-56 upload-date-year-content z-[100000]">
+                    {calendarYears.map((year) => (
+                      <SelectItem key={year} value={String(year)}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <Calendar
                 mode="single"
-                captionLayout="dropdown"
-                fromYear={2000}
-                toYear={new Date().getFullYear() + 10}
+                month={viewMonth}
+                onMonthChange={(month) => setViewMonth(month)}
+                captionLayout="label"
                 selected={selectedDate}
                 onSelect={(selected) => {
                   if (!selected) return;
