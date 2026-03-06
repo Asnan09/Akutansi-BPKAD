@@ -13,7 +13,13 @@ export function useFileUpload(
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    category: "" as "Lampiran" | "Keuangan" | "BKU" | "STS" | "",
+    category: "" as
+      | "Lampiran"
+      | "Keuangan"
+      | "BKU"
+      | "STS"
+      | "Rekening Koran"
+      | "",
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

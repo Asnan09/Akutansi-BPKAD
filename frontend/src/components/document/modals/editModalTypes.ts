@@ -1,6 +1,12 @@
 import { Document } from "../../../types";
 
-export type EditCategory = "Lampiran" | "Keuangan" | "BKU" | "STS" | "";
+export type EditCategory =
+  | "Lampiran"
+  | "Keuangan"
+  | "BKU"
+  | "STS"
+  | "Rekening Koran"
+  | "";
 
 export type EditFormData = {
   nama_sppd: string;

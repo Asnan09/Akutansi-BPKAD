@@ -1,4 +1,9 @@
-export type DashboardCategory = "Lampiran" | "Keuangan" | "BKU" | "STS";
+export type DashboardCategory =
+  | "Lampiran"
+  | "Keuangan"
+  | "BKU"
+  | "STS"
+  | "Rekening Koran";
 export type DashboardRole = "Admin" | "Staff";
 
 export type UploadRecord = {
@@ -19,6 +24,7 @@ export const categories: DashboardCategory[] = [
   "Keuangan",
   "BKU",
   "STS",
+  "Rekening Koran",
 ];
 
 export const monthOptions = [

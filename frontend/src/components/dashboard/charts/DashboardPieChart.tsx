@@ -12,6 +12,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Keuangan: "#3B82F6",
   BKU: "#14B8A6",
   STS: "#6366F1",
+  "Rekening Koran": "#EC4899",
 };
 
 const numberFormatter = new Intl.NumberFormat("id-ID");

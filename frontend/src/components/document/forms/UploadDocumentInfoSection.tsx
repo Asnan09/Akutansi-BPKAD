@@ -7,7 +7,13 @@ import { Calendar } from "../../layout/ui/calendar";
 type UploadFormData = {
   name: string;
   date: string;
-  category: "Lampiran" | "Keuangan" | "BKU" | "STS" | "";
+  category:
+    | "Lampiran"
+    | "Keuangan"
+    | "BKU"
+    | "STS"
+    | "Rekening Koran"
+    | "";
 };
 
 type UploadDocumentInfoSectionProps = {
@@ -176,7 +182,7 @@ export default function UploadDocumentInfoSection({
 
           {isCategoryOpen && (
             <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 rounded-xl bg-white shadow-xl p-2">
-              {(["Lampiran", "Keuangan", "BKU", "STS"] as const).map((option) => (
+              {(["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"] as const).map((option) => (
                 <button
                   key={option}
                   type="button"

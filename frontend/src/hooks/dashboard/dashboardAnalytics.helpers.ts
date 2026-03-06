@@ -1,4 +1,9 @@
-export type DashboardCategory = "Lampiran" | "Keuangan" | "BKU" | "STS";
+export type DashboardCategory =
+  | "Lampiran"
+  | "Keuangan"
+  | "BKU"
+  | "STS"
+  | "Rekening Koran";
 export type CategoryFilter = "all" | DashboardCategory;
 
 export type NormalizedUpload = {
@@ -22,6 +27,7 @@ export const categories: DashboardCategory[] = [
   "Keuangan",
   "BKU",
   "STS",
+  "Rekening Koran",
 ];
 
 export const monthOptions = [
@@ -155,6 +161,7 @@ export function toDashboardCategory(category: string): DashboardCategory {
   if (category === "Lampiran") return "Lampiran";
   if (category === "Keuangan") return "Keuangan";
   if (category === "BPKU" || category === "BKU") return "BKU";
+  if (category === "Rekening Koran") return "Rekening Koran";
   return "STS";
 }
 
