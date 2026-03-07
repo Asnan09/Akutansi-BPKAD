@@ -49,11 +49,11 @@ export default function UploadHistory() {
 
     const ctx = gsap.context(() => {
       gsap.from("[data-history-animate]", {
-        y: 20,
+        y: 28,
         opacity: 0,
-        duration: 0.55,
-        ease: "power2.out",
-        stagger: 0.08,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.14,
       });
     }, pageRef);
 
