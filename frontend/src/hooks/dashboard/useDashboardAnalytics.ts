@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
   DashboardApiDocument,
+  DashboardAnalyticsResponse,
   DashboardApiLoginActivity,
 } from "../../services/api";
 import { getDashboardAnalytics, getDocuments } from "../../services/api";
@@ -24,8 +25,27 @@ import {
 const LOGIN_RESET_MODE: LoginResetMode = "daily";
 type TrendMode = "daily" | "monthly";
 
+let dashboardAnalyticsCache: DashboardAnalyticsResponse | null = null;
+let dashboardAnalyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
+
 async function loadAnalyticsShared() {
-  return getDashboardAnalytics();
+  if (dashboardAnalyticsCache) {
+    return dashboardAnalyticsCache;
+  }
+
+  if (!dashboardAnalyticsPromise) {
+    dashboardAnalyticsPromise = getDashboardAnalytics()
+      .then((payload) => {
+        dashboardAnalyticsCache = payload;
+        return payload;
+      })
+      .catch((error) => {
+        dashboardAnalyticsPromise = null;
+        throw error;
+      });
+  }
+
+  return dashboardAnalyticsPromise;
 }
 
 export function useDashboardAnalytics() {

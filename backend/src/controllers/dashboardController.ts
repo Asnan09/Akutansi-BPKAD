@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import db from "../config/db";
 
+type AuthenticatedRequest = Request & {
+  user?: {
+    role: string;
+  };
+};
+
 const ensureSoftDeleteColumns = async () => {
   await db.execute(
     "ALTER TABLE documents ADD COLUMN IF NOT EXISTS is_deleted TINYINT(1) NOT NULL DEFAULT 0",
@@ -24,7 +30,7 @@ const ensureLoginActivitiesTable = async () => {
   `);
 };
 
-export const getDashboardAnalytics = async (_req: Request, res: Response) => {
+export const getDashboardAnalytics = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
 
@@ -35,19 +41,24 @@ export const getDashboardAnalytics = async (_req: Request, res: Response) => {
        ORDER BY created_at DESC, id DESC`,
     );
 
+    const currentUser = (req as AuthenticatedRequest).user;
+    const isAdminRole = currentUser?.role === "Admin Akuntansi";
+
     let loginRows: unknown[] = [];
-    try {
-      await ensureLoginActivitiesTable();
-      const [rows] = await db.query(
-        `SELECT id, username, role, login_at
-         FROM login_activities
-         ORDER BY login_at DESC, id DESC
-         LIMIT 1000`,
-      );
-      loginRows = rows as unknown[];
-    } catch (loginError) {
-      // Tetap kirim data dokumen walau tabel login belum bisa diakses/dibuat.
-      console.warn("Dashboard login activity fallback:", loginError);
+    if (isAdminRole) {
+      try {
+        await ensureLoginActivitiesTable();
+        const [rows] = await db.query(
+          `SELECT id, username, role, login_at
+           FROM login_activities
+           ORDER BY login_at DESC, id DESC
+           LIMIT 1000`,
+        );
+        loginRows = rows as unknown[];
+      } catch (loginError) {
+        // Tetap kirim data dokumen walau tabel login belum bisa diakses/dibuat.
+        console.warn("Dashboard login activity fallback:", loginError);
+      }
     }
 
     const [staffRows]: any = await db.query(

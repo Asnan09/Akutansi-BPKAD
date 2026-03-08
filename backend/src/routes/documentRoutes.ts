@@ -8,6 +8,10 @@ import {
   restoreDocumentFromHistory,
 } from "../controllers/documentController";
 import { getDashboardAnalytics } from "../controllers/dashboardController";
+import {
+  authenticateToken,
+  authorizeRoles,
+} from "../middleware/authMiddleware";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -56,12 +60,26 @@ const upload = multer({
 });
 
 // route untuk dokumen
-router.get("/documents", getAllDocuments);
-router.get("/dashboard/analytics", getDashboardAnalytics);
-router.get("/documents/history", getUploadHistory);
-router.post("/documents", upload.single("file"), createDocument); // taro middleware multer di sini
-router.put("/documents/:id", updateDocument);
-router.delete("/documents/:id", deleteDocument);
-router.post("/documents/history/:id/restore", restoreDocumentFromHistory);
+router.get("/documents", authenticateToken, getAllDocuments);
+router.get(
+  "/dashboard/analytics",
+  authenticateToken,
+  authorizeRoles("Admin Akuntansi", "Staff Akuntansi"),
+  getDashboardAnalytics,
+);
+router.get("/documents/history", authenticateToken, getUploadHistory);
+router.post(
+  "/documents",
+  authenticateToken,
+  upload.single("file"),
+  createDocument,
+); // taro middleware multer di sini
+router.put("/documents/:id", authenticateToken, updateDocument);
+router.delete("/documents/:id", authenticateToken, deleteDocument);
+router.post(
+  "/documents/history/:id/restore",
+  authenticateToken,
+  restoreDocumentFromHistory,
+);
 
 export default router;

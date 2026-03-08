@@ -166,5 +166,7 @@ export function toDashboardCategory(category: string): DashboardCategory {
 }
 
 export function normalizeRole(role: string): "Admin" | "Staff" {
-  return role.toLowerCase() === "admin" ? "Admin" : "Staff";
+  const normalizedRole = role.trim().toLowerCase();
+  if (normalizedRole.includes("admin")) return "Admin";
+  return "Staff";
 }
