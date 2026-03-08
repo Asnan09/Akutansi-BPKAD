@@ -1,7 +1,22 @@
 import { Request, Response } from "express";
 import db from "../config/db";
 
-const ensureColumnExists = async (columnName: string, definition: string) => {
+const allowedDefinitions: { [key: string]: string } = {
+  is_deleted: "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
+  deleted_at: "deleted_at DATETIME NULL",
+};
+
+const ensureColumnExists = async (
+  columnName: keyof typeof allowedDefinitions,
+) => {
+  const definition = allowedDefinitions[columnName];
+  if (!definition) {
+    console.error(
+      `Invalid column specified for ensureColumnExists: ${String(columnName)}`,
+    );
+    return;
+  }
+
   const [rows] = await db.query(
     `SELECT 1
      FROM INFORMATION_SCHEMA.COLUMNS
@@ -18,11 +33,8 @@ const ensureColumnExists = async (columnName: string, definition: string) => {
 };
 
 const ensureSoftDeleteColumns = async () => {
-  await ensureColumnExists(
-    "is_deleted",
-    "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
-  );
-  await ensureColumnExists("deleted_at", "deleted_at DATETIME NULL");
+  await ensureColumnExists("is_deleted");
+  await ensureColumnExists("deleted_at");
 };
 
 const getDocumentName = (row: Record<string, any>): string => {
