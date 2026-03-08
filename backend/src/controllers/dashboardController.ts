@@ -50,9 +50,16 @@ export const getDashboardAnalytics = async (_req: Request, res: Response) => {
       console.warn("Dashboard login activity fallback:", loginError);
     }
 
+    const [staffRows]: any = await db.query(
+      "SELECT COUNT(id) as total FROM users WHERE role = 'Staff Akuntansi'",
+    );
+
+    const totalStaffUsers = staffRows[0]?.total || 0;
+
     return res.status(200).json({
       documents: documentRows,
       loginActivities: loginRows,
+      totalStaffUsers: totalStaffUsers,
     });
   } catch (error) {
     console.error("Dashboard analytics error:", error);
