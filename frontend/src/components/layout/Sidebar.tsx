@@ -45,7 +45,7 @@ export default function Sidebar() {
           </button>
         </AppTooltip>
 
-        <AppTooltip content="Dokumen Management">
+        <AppTooltip content="Document Management">
           <button
             onClick={() => navigate("/dokumen-management")}
             aria-label="Dokumen Management"
@@ -63,7 +63,7 @@ export default function Sidebar() {
           </button>
         </AppTooltip>
 
-        <AppTooltip content="Upload Dokumen">
+        <AppTooltip content="Upload Document">
           <button
             onClick={() => navigate("/upload")}
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
@@ -77,7 +77,7 @@ export default function Sidebar() {
           </button>
         </AppTooltip>
 
-        <AppTooltip content="Riwayat Unggah">
+        <AppTooltip content="Upload History">
           <button
             onClick={() => navigate("/riwayat")}
             aria-label="Riwayat Unggah"
