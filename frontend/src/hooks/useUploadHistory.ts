@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   getUploadHistories,
+  permanentlyDeleteUploadHistories,
   permanentlyDeleteUploadHistory,
   restoreUploadHistories,
   restoreUploadHistory,
@@ -23,6 +24,8 @@ export function useUploadHistory({
     number | string | null
   >(null);
   const [isRestoringSelected, setIsRestoringSelected] =
+    useState<boolean>(false);
+  const [isPermanentlyDeletingSelected, setIsPermanentlyDeletingSelected] =
     useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string>("");
@@ -198,6 +201,27 @@ export function useUploadHistory({
     }
   };
 
+  const handlePermanentDeleteSelected = async (): Promise<string> => {
+    if (selectedIds.size === 0) {
+      return "Pilih minimal satu dokumen yang sudah dihapus.";
+    }
+
+    setIsPermanentlyDeletingSelected(true);
+
+    try {
+      const selectedRestorableIds = Array.from(selectedIds);
+      const response =
+        await permanentlyDeleteUploadHistories(selectedRestorableIds);
+      await fetchHistory();
+      setSelectedIds(new Set());
+      return response.message;
+    } catch {
+      return "Gagal menghapus dokumen terpilih secara permanen.";
+    } finally {
+      setIsPermanentlyDeletingSelected(false);
+    }
+  };
+
   return {
     items,
     loading,
@@ -205,6 +229,7 @@ export function useUploadHistory({
     restoringId,
     permanentlyDeletingId,
     isRestoringSelected,
+    isPermanentlyDeletingSelected,
     selectedIds,
     selectedRestorableCount,
     allRestorableSelected,
@@ -225,5 +250,6 @@ export function useUploadHistory({
     handleRestore,
     handleRestoreSelected,
     handlePermanentDelete,
+    handlePermanentDeleteSelected,
   };
 }

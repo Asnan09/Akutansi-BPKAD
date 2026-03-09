@@ -6,6 +6,7 @@ import {
   deleteDocument,
   getUploadHistory,
   restoreDocumentFromHistory,
+  permanentlyDeleteDocumentFromHistory,
 } from "../controllers/documentController";
 import { getDashboardAnalytics } from "../controllers/dashboardController";
 import {
@@ -96,6 +97,12 @@ router.post(
   authenticateToken,
   authorizeRoles("Admin Akuntansi"),
   restoreDocumentFromHistory,
+);
+router.delete(
+  "/documents/history/:id",
+  authenticateToken,
+  authorizeRoles("Admin Akuntansi"),
+  permanentlyDeleteDocumentFromHistory,
 );
 
 export default router;

@@ -206,8 +206,54 @@ export const restoreUploadHistories = async (
 export const permanentlyDeleteUploadHistory = async (
   id: number | string,
 ): Promise<{ message: string }> => {
+  const response = await apiClient.delete<{ message: string }>(
+    `/documents/history/${id}`,
+  );
   return {
-    message: `Hapus permanen belum tersedia di backend untuk dokumen ${id}.`,
+    message:
+      response.data.message || "Dokumen berhasil dihapus secara permanen.",
+  };
+};
+
+export const permanentlyDeleteUploadHistories = async (
+  ids: Array<number | string>,
+): Promise<{ message: string; deletedCount: number; failedCount: number }> => {
+  let deletedCount = 0;
+  let failedCount = 0;
+
+  for (const id of ids) {
+    try {
+      const result = await permanentlyDeleteUploadHistory(id);
+      if (result.message.toLowerCase().includes("successfully")) {
+        deletedCount += 1;
+      } else {
+        failedCount += 1;
+      }
+    } catch {
+      failedCount += 1;
+    }
+  }
+
+  if (deletedCount === 0) {
+    return {
+      message: "Tidak ada dokumen yang berhasil dihapus permanen.",
+      deletedCount,
+      failedCount,
+    };
+  }
+
+  if (failedCount > 0) {
+    return {
+      message: `${deletedCount} dokumen berhasil dihapus permanen, ${failedCount} gagal.`,
+      deletedCount,
+      failedCount,
+    };
+  }
+
+  return {
+    message: `${deletedCount} dokumen berhasil dihapus permanen.`,
+    deletedCount,
+    failedCount,
   };
 };
 

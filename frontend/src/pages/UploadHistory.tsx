@@ -17,6 +17,7 @@ export default function UploadHistory() {
     loading,
     error,
     isRestoringSelected,
+    isPermanentlyDeletingSelected,
     selectedIds,
     selectedRestorableCount,
     allRestorableSelected,
@@ -35,12 +36,30 @@ export default function UploadHistory() {
     handleToggleSelect,
     handleToggleSelectAll,
     handleRestoreSelected,
+    handlePermanentDeleteSelected,
   } = useUploadHistory();
 
   const handleRestoreSelectedClick = async () => {
     const message = await handleRestoreSelected();
     const toastType = getRestoreToastType(message);
 
+    showToast(message, toastType);
+  };
+
+  const handlePermanentDeleteSelectedClick = async () => {
+    const shouldDelete = window.confirm(
+      "Yakin ingin menghapus permanen dokumen terpilih? Tindakan ini tidak dapat dibatalkan.",
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    const message = await handlePermanentDeleteSelected();
+    const normalizedMessage = message.toLowerCase();
+    const toastType = normalizedMessage.includes("berhasil")
+      ? "success"
+      : "error";
     showToast(message, toastType);
   };
 
@@ -77,6 +96,7 @@ export default function UploadHistory() {
               loading={loading}
               error={error}
               isRestoringSelected={isRestoringSelected}
+              isPermanentlyDeletingSelected={isPermanentlyDeletingSelected}
               selectedIds={selectedIds}
               selectedRestorableCount={selectedRestorableCount}
               allRestorableSelected={allRestorableSelected}
@@ -93,6 +113,7 @@ export default function UploadHistory() {
               onToggleSelectAll={handleToggleSelectAll}
               onToggleSelect={handleToggleSelect}
               onRestoreSelected={handleRestoreSelectedClick}
+              onPermanentDeleteSelected={handlePermanentDeleteSelectedClick}
               onPageChange={setPage}
               onPageSizeChange={(value) => {
                 setPage(1);

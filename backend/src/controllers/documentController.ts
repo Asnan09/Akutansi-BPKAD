@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import db from "../config/db";
+import fs from "fs";
+import path from "path";
+import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
 
 const allowedDefinitions: { [key: string]: string } = {
   is_deleted: "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
@@ -224,6 +227,64 @@ export const restoreDocumentFromHistory = async (
     );
 
     return res.status(200).json({ message: "Document restored successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const permanentlyDeleteDocumentFromHistory = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    await ensureSoftDeleteColumns();
+
+    const { id } = req.params;
+    const [rows]: any = await db.execute(
+      "SELECT id, is_deleted, file_path FROM documents WHERE id = ?",
+      [id],
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    if (rows[0].is_deleted !== 1) {
+      return res
+        .status(400)
+        .json({ message: "Document must be in history before permanent delete" });
+    }
+
+    const filePath = String(rows[0].file_path || "");
+    const fileName = path.basename(filePath.replace(/\\/g, "/"));
+
+    if (fileName) {
+      const possiblePaths = [
+        path.join(BACKEND_UPLOADS_DIR, fileName),
+        path.join(ROOT_UPLOADS_DIR, fileName),
+      ];
+
+      await Promise.all(
+        possiblePaths.map(async (absolutePath) => {
+          try {
+            await fs.promises.unlink(absolutePath);
+          } catch (error: any) {
+            if (error?.code !== "ENOENT") {
+              console.error("Failed deleting file:", absolutePath, error);
+            }
+          }
+        }),
+      );
+    }
+
+    await db.execute("DELETE FROM documents WHERE id = ? AND is_deleted = 1", [
+      id,
+    ]);
+
+    return res
+      .status(200)
+      .json({ message: "Document permanently deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

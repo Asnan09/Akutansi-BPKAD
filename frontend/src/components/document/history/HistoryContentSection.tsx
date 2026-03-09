@@ -11,6 +11,7 @@ type HistoryContentSectionProps = {
   loading: boolean;
   error: string;
   isRestoringSelected: boolean;
+  isPermanentlyDeletingSelected: boolean;
   selectedIds: Set<string>;
   selectedRestorableCount: number;
   allRestorableSelected: boolean;
@@ -29,6 +30,7 @@ type HistoryContentSectionProps = {
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
   onRestoreSelected: () => void;
+  onPermanentDeleteSelected: () => void;
   onPageChange: (nextPage: number) => void;
   onPageSizeChange: (nextSize: number) => void;
 };
@@ -38,6 +40,7 @@ export default function HistoryContentSection({
   loading,
   error,
   isRestoringSelected,
+  isPermanentlyDeletingSelected,
   selectedIds,
   selectedRestorableCount,
   allRestorableSelected,
@@ -54,6 +57,7 @@ export default function HistoryContentSection({
   onToggleSelectAll,
   onToggleSelect,
   onRestoreSelected,
+  onPermanentDeleteSelected,
   onPageChange,
   onPageSizeChange,
 }: HistoryContentSectionProps) {
@@ -142,14 +146,26 @@ export default function HistoryContentSection({
           <p className="text-xs font-medium text-orange-700">
             {selectedRestorableCount} dokumen dipilih
           </p>
-          <button
-            type="button"
-            onClick={onRestoreSelected}
-            disabled={isRestoringSelected}
-            className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs h-10 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isRestoringSelected ? "Memproses..." : "Restorasi File Ini"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onRestoreSelected}
+              disabled={isRestoringSelected || isPermanentlyDeletingSelected}
+              className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-3 py-1.5 text-xs h-10 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isRestoringSelected ? "Memproses..." : "Restorasi File Ini"}
+            </button>
+            <button
+              type="button"
+              onClick={onPermanentDeleteSelected}
+              disabled={isPermanentlyDeletingSelected || isRestoringSelected}
+              className="inline-flex items-center justify-center rounded-lg bg-red-600 px-3 py-1.5 text-xs h-10 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isPermanentlyDeletingSelected
+                ? "Menghapus..."
+                : "Hapus Permanen File Ini"}
+            </button>
+          </div>
         </div>
       )}
 
