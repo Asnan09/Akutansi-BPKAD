@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { getJwtSecret } from "../config/jwt";
 
 type JwtPayload = {
   id: number;
@@ -25,7 +26,7 @@ export function authenticateToken(
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const secretKey = process.env.JWT_SECRET || "nuno123";
+  const secretKey = getJwtSecret();
 
   try {
     const decoded = jwt.verify(token, secretKey) as JwtPayload;

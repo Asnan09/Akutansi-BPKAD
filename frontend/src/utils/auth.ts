@@ -13,12 +13,33 @@ export function clearAuthToken(): void {
 
 export function isAuthenticated(): boolean {
   const token = getAuthToken();
-  return Boolean(token && token.trim().length > 0);
+  if (!token || token.trim().length === 0) {
+    return false;
+  }
+
+  try {
+    const decoded = jwtDecode<DecodedToken>(token);
+    if (!decoded?.exp) {
+      clearAuthToken();
+      return false;
+    }
+
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    if (decoded.exp <= nowInSeconds) {
+      clearAuthToken();
+      return false;
+    }
+
+    return true;
+  } catch {
+    clearAuthToken();
+    return false;
+  }
 }
 
 interface DecodedToken {
-  id: string;
-  nama: string;
+  id: number | string;
+  username: string;
   role: string;
   iat: number;
   exp: number;
@@ -32,8 +53,7 @@ export function getUser(): DecodedToken | null {
   try {
     const decoded: DecodedToken = jwtDecode(token);
     return decoded;
-  } catch (error) {
-    console.error("Gagal mendekode token:", error);
+  } catch {
     return null;
   }
 }

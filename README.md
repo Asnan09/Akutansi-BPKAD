@@ -14,6 +14,8 @@ Sistem manajemen dokumen akuntansi BPKAD divisi akuntansi, terdiri dari dua bagi
 ```sh
 cd backend
 npm install
+copy .env.example .env
+# lalu sesuaikan value DB_* dan JWT_SECRET di file .env
 npm run dev
 ```
 
@@ -34,4 +36,3 @@ npm run dev
 ## Pengembangan
 
 Lihat README di masing-masing folder untuk detail lebih lanjut.
-"# Akutansi-BPKAD"

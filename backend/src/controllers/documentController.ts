@@ -75,8 +75,6 @@ export const getAllDocuments = async (req: Request, res: Response) => {
 export const createDocument = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
 
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
 

@@ -6,9 +6,13 @@ import path from "path";
 import authRoutes from "./routes/authRoutes";
 import documentRoutes from "./routes/documentRoutes";
 import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "./config/uploadPaths";
+import { getJwtSecret } from "./config/jwt";
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Fail fast on startup if JWT secret is missing.
+getJwtSecret();
 
 app.use(cors());
 app.use(express.json());

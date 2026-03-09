@@ -83,21 +83,16 @@ export const uploadsBaseUrl = `${serverOrigin}/uploads`;
 export { apiClient };
 
 export const getDocuments = async (): Promise<Document[]> => {
-  try {
-    const response = await apiClient.get<DocumentApiItem[]>("/documents");
+  const response = await apiClient.get<DocumentApiItem[]>("/documents");
 
-    return response.data.map((item) => ({
-      id: item.id,
-      nama_sppd: item.nama_sppd,
-      tanggal_sppd: item.tanggal_sppd,
-      kategori: item.kategori,
-      file_path: item.file_path,
-      created_at: item.created_at,
-    }));
-  } catch (error) {
-    console.error("Terjadi kesalahan saat mengambil data dokumen:", error);
-    return [];
-  }
+  return response.data.map((item) => ({
+    id: item.id,
+    nama_sppd: item.nama_sppd,
+    tanggal_sppd: item.tanggal_sppd,
+    kategori: item.kategori,
+    file_path: item.file_path,
+    created_at: item.created_at,
+  }));
 };
 
 export const getUploadHistories = async (

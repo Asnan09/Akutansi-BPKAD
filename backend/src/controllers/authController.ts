@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
-// import bcrypt from 'bcrypt';belom kunyalakan
+import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from "../config/jwt";
 
 const ensureLoginActivitiesTable = async () => {
   await pool.execute(`
@@ -33,8 +34,23 @@ export const loginController = async (req: Request, res: Response) => {
 
     const user = rows[0];
 
-    // const isPasswordMatch = await bcrypt.compare(password, user.password);
-    const isPasswordMatch = password === user.password;
+    const storedPassword = String(user.password ?? "");
+    const isHashPassword = /^\$2[aby]\$\d{2}\$/.test(storedPassword);
+
+    let isPasswordMatch = false;
+    if (isHashPassword) {
+      isPasswordMatch = await bcrypt.compare(password, storedPassword);
+    } else {
+      // Transitional path: support legacy plaintext once, then upgrade to bcrypt hash.
+      isPasswordMatch = password === storedPassword;
+      if (isPasswordMatch) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.execute("UPDATE users SET password = ? WHERE id = ?", [
+          hashedPassword,
+          user.id,
+        ]);
+      }
+    }
 
     if (!isPasswordMatch) {
       return res.status(401).json({ message: 'Kombinasi nama pengguna dan kata sandi salah' });
@@ -46,7 +62,7 @@ export const loginController = async (req: Request, res: Response) => {
       role: user.role,
     };
 
-    const secretKey = process.env.JWT_SECRET || 'nuno123';
+    const secretKey = getJwtSecret();
     const token = jwt.sign(payload, secretKey, { expiresIn: '1d' });
 
     await ensureLoginActivitiesTable();
