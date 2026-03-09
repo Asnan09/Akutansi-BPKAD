@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   deleteDocument,
   getDocuments,
@@ -16,6 +17,7 @@ type ConfirmDialogState = {
 };
 
 export function useDocumentManagement() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -104,14 +106,42 @@ export function useDocumentManagement() {
       return;
     }
 
-    const normalizedPath = doc.file_path
-      .replace(/\\/g, "/")
-      .replace(/^\/?uploads\/?/i, "")
-      .replace(/^\/+/, "");
+    const rawPath = String(doc.file_path || "").trim();
+    const isAbsoluteUrl = /^https?:\/\//i.test(rawPath);
 
-    const fileUrl = `${uploadsBaseUrl}/${normalizedPath}`;
-    const previewUrl = `${window.location.origin}/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`;
-    window.open(previewUrl, "_blank", "noopener,noreferrer");
+    let fileUrl = rawPath;
+    let extension = "";
+
+    if (!isAbsoluteUrl) {
+      const normalized = rawPath.replace(/\\/g, "/");
+      const uploadsToken = "/uploads/";
+      const uploadsIndex = normalized.toLowerCase().lastIndexOf(uploadsToken);
+
+      let relativePath = normalized;
+      if (uploadsIndex >= 0) {
+        relativePath = normalized.slice(uploadsIndex + uploadsToken.length);
+      } else {
+        relativePath = normalized.replace(/^\/?uploads\/?/i, "");
+      }
+
+      relativePath = relativePath.replace(/^\/+/, "");
+      fileUrl = `${uploadsBaseUrl}/${relativePath}`;
+      extension = relativePath.split(".").pop()?.toLowerCase() || "";
+    } else {
+      extension = rawPath.split("?")[0].split(".").pop()?.toLowerCase() || "";
+    }
+
+    const previewableFormats = new Set(["pdf", "png", "jpg", "jpeg", "webp"]);
+    const isPreviewable = previewableFormats.has(extension);
+
+    if (isPreviewable) {
+      navigate(
+        `/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`,
+      );
+      return;
+    }
+
+    window.location.assign(fileUrl);
   };
 
   const handleEdit = (id: number | string) => {
