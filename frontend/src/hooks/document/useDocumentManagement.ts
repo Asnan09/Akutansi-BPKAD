@@ -128,11 +128,13 @@ export function useDocumentManagement() {
     }
 
     const fileUrl = resolveDocumentFileUrl(doc.file_path);
-    const openedWindow = window.open(fileUrl, "_blank", "noopener,noreferrer");
-    if (!openedWindow) {
-      showToast("Popup diblokir browser. Izinkan popup untuk melihat dokumen.", "warning");
-      return;
-    }
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   const handleEdit = (id: number | string) => {
