@@ -168,12 +168,21 @@ export const restoreUploadHistory = async (
 export const restoreUploadHistories = async (
   ids: Array<number | string>,
 ): Promise<{ message: string; restoredCount: number; failedCount: number }> => {
+  const isSuccessfulRestoreMessage = (message: string): boolean => {
+    const normalized = message.toLowerCase();
+    return (
+      normalized.includes("berhasil") ||
+      normalized.includes("success") ||
+      normalized.includes("restored")
+    );
+  };
+
   let restoredCount = 0;
   let failedCount = 0;
 
   for (const id of ids) {
     const result = await restoreUploadHistory(id);
-    if (result.message.toLowerCase().includes("berhasil")) {
+    if (isSuccessfulRestoreMessage(result.message)) {
       restoredCount += 1;
     } else {
       failedCount += 1;
