@@ -68,7 +68,9 @@ export default function AppRoutes() {
         path="/riwayat"
         element={
           <ProtectedRoute>
-            <UploadHistory />
+            <AdminOnlyRoute>
+              <UploadHistory />
+            </AdminOnlyRoute>
           </ProtectedRoute>
         }
       />

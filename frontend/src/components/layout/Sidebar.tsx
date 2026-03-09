@@ -12,6 +12,7 @@ export default function Sidebar() {
   const location = useLocation();
   const user = getUser();
   const canUploadDocument = user?.role === "Admin Akuntansi";
+  const canViewUploadHistory = user?.role === "Admin Akuntansi";
 
   const isActive = (path: string) => location.pathname === path;
   const handleLogout = () => navigate("/login");
@@ -82,20 +83,22 @@ export default function Sidebar() {
           </AppTooltip>
         )}
 
-        <AppTooltip content="Upload History">
-          <button
-            onClick={() => navigate("/riwayat")}
-            aria-label="Riwayat Unggah"
-            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+        {canViewUploadHistory && (
+          <AppTooltip content="Upload History">
+            <button
+              onClick={() => navigate("/riwayat")}
+              aria-label="Riwayat Unggah"
+              className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/riwayat")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
-          >
-            <FaRegClock className="w-6 h-6 text-white" aria-hidden="true" />
-          </button>
-        </AppTooltip>
+            >
+              <FaRegClock className="w-6 h-6 text-white" aria-hidden="true" />
+            </button>
+          </AppTooltip>
+        )}
       </nav>
 
       <div className="w-12 h-px bg-white/30 mb-6"></div>
