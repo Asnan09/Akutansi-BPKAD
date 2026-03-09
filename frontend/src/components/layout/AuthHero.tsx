@@ -40,7 +40,7 @@ export default function AuthHero() {
             </h1>
 
             <p className="text-base text-gray-200 leading-relaxed">
-              Penyimpanan dan akses dokumen PDF untuk staf akuntansi secara
+              Penyimpanan dan akses dokumen untuk akuntansi secara
               terpusat, cepat, dan aman.
             </p>
 
