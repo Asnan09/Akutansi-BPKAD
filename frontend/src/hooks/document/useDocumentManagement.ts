@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   deleteDocument,
   getDocuments,
@@ -17,7 +16,6 @@ type ConfirmDialogState = {
 };
 
 export function useDocumentManagement() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -130,20 +128,11 @@ export function useDocumentManagement() {
     }
 
     const fileUrl = resolveDocumentFileUrl(doc.file_path);
-    const extension =
-      fileUrl.split("?")[0].split(".").pop()?.toLowerCase() || "";
-
-    const previewableFormats = new Set(["pdf", "png", "jpg", "jpeg", "webp"]);
-    const isPreviewable = previewableFormats.has(extension);
-
-    if (isPreviewable) {
-      navigate(
-        `/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`,
-      );
+    const openedWindow = window.open(fileUrl, "_blank", "noopener,noreferrer");
+    if (!openedWindow) {
+      showToast("Popup diblokir browser. Izinkan popup untuk melihat dokumen.", "warning");
       return;
     }
-
-    window.location.assign(fileUrl);
   };
 
   const handleEdit = (id: number | string) => {
