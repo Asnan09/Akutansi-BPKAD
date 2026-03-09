@@ -73,7 +73,7 @@ export default function UploadFileSection({
           aria-label="File Input"
           onChange={onFileInputChange}
           className="hidden"
-          accept=".pdf,.docx,.xlsx,.pptx"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
         />
 
         {selectedFile ? (
@@ -122,7 +122,9 @@ export default function UploadFileSection({
             <p className="text-base font-bold text-gray-800 mb-2">
               Klik untuk mengunggah
             </p>
-            <p className="text-sm text-gray-600">PDF (Maks. 10MB)</p>
+            <p className="text-sm text-gray-600">
+              PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG (Maks. 10MB)
+            </p>
           </div>
         )}
 

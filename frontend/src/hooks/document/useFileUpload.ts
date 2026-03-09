@@ -37,16 +37,38 @@ export function useFileUpload(
   };
 
   const handleFileSelect = (file: File) => {
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    const allowedExtensions = [
+      "pdf",
+      "doc",
+      "docx",
+      "xls",
+      "xlsx",
+      "ppt",
+      "pptx",
+      "jpg",
+      "jpeg",
+      "png",
     ];
 
-    if (!allowedTypes.includes(file.type)) {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "image/jpeg",
+      "image/png",
+    ];
+
+    const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
+    const hasAllowedMimeType = allowedTypes.includes(file.type);
+    const hasAllowedExtension = allowedExtensions.includes(fileExtension);
+
+    if (!hasAllowedMimeType && !hasAllowedExtension) {
       showToast(
-        "Tipe file tidak didukung. Hanya PDF, DOCX, XLSX, dan PPTX yang diperbolehkan.",
+        "Tipe file tidak didukung. Hanya PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, dan PNG yang diperbolehkan.",
         "error",
       );
       return;
