@@ -93,6 +93,29 @@ export function useDocumentManagement() {
     setSelectedDocuments(new Set());
   };
 
+  const resolveDocumentFileUrl = (filePath: string) => {
+    const rawPath = String(filePath || "").trim();
+    const isAbsoluteUrl = /^https?:\/\//i.test(rawPath);
+
+    if (isAbsoluteUrl) {
+      return rawPath;
+    }
+
+    const normalized = rawPath.replace(/\\/g, "/");
+    const uploadsToken = "/uploads/";
+    const uploadsIndex = normalized.toLowerCase().lastIndexOf(uploadsToken);
+
+    let relativePath = normalized;
+    if (uploadsIndex >= 0) {
+      relativePath = normalized.slice(uploadsIndex + uploadsToken.length);
+    } else {
+      relativePath = normalized.replace(/^\/?uploads\/?/i, "");
+    }
+
+    relativePath = relativePath.replace(/^\/+/, "");
+    return `${uploadsBaseUrl}/${relativePath}`;
+  };
+
   const handleView = (id: number | string) => {
     const doc = documents.find((item) => item.id === id);
 
@@ -106,30 +129,9 @@ export function useDocumentManagement() {
       return;
     }
 
-    const rawPath = String(doc.file_path || "").trim();
-    const isAbsoluteUrl = /^https?:\/\//i.test(rawPath);
-
-    let fileUrl = rawPath;
-    let extension = "";
-
-    if (!isAbsoluteUrl) {
-      const normalized = rawPath.replace(/\\/g, "/");
-      const uploadsToken = "/uploads/";
-      const uploadsIndex = normalized.toLowerCase().lastIndexOf(uploadsToken);
-
-      let relativePath = normalized;
-      if (uploadsIndex >= 0) {
-        relativePath = normalized.slice(uploadsIndex + uploadsToken.length);
-      } else {
-        relativePath = normalized.replace(/^\/?uploads\/?/i, "");
-      }
-
-      relativePath = relativePath.replace(/^\/+/, "");
-      fileUrl = `${uploadsBaseUrl}/${relativePath}`;
-      extension = relativePath.split(".").pop()?.toLowerCase() || "";
-    } else {
-      extension = rawPath.split("?")[0].split(".").pop()?.toLowerCase() || "";
-    }
+    const fileUrl = resolveDocumentFileUrl(doc.file_path);
+    const extension =
+      fileUrl.split("?")[0].split(".").pop()?.toLowerCase() || "";
 
     const previewableFormats = new Set(["pdf", "png", "jpg", "jpeg", "webp"]);
     const isPreviewable = previewableFormats.has(extension);
@@ -197,10 +199,72 @@ export function useDocumentManagement() {
   };
 
   const handleDownloadSelected = () => {
-    showToast(
-      `Mengunduh ${selectedDocuments.size} dokumen... (fungsi download belum diimplementasikan)`,
-      "info",
-    );
+    const selectedDocs = documents.filter((doc) => selectedDocuments.has(doc.id));
+
+    if (selectedDocs.length === 0) {
+      showToast("Tidak ada dokumen yang dipilih", "warning");
+      return;
+    }
+
+    const sanitizeFileName = (name: string) =>
+      name.replace(/[\\/:*?"<>|]+/g, "-").trim() || "dokumen";
+
+    const runDownload = async () => {
+      let successCount = 0;
+      let failedCount = 0;
+
+      for (const doc of selectedDocs) {
+        try {
+          if (!doc.file_path) {
+            failedCount += 1;
+            continue;
+          }
+
+          const fileUrl = resolveDocumentFileUrl(doc.file_path);
+          const extension =
+            fileUrl.split("?")[0].split(".").pop()?.toLowerCase() || "";
+          const response = await fetch(fileUrl);
+
+          if (!response.ok) {
+            failedCount += 1;
+            continue;
+          }
+
+          const blob = await response.blob();
+          const objectUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = objectUrl;
+          link.download = extension
+            ? `${sanitizeFileName(doc.nama_sppd)}.${extension}`
+            : sanitizeFileName(doc.nama_sppd);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+
+          successCount += 1;
+        } catch {
+          failedCount += 1;
+        }
+      }
+
+      if (successCount > 0 && failedCount === 0) {
+        showToast(`${successCount} dokumen berhasil diunduh.`, "success");
+        return;
+      }
+
+      if (successCount > 0 && failedCount > 0) {
+        showToast(
+          `${successCount} dokumen berhasil diunduh, ${failedCount} gagal.`,
+          "warning",
+        );
+        return;
+      }
+
+      showToast("Gagal mengunduh dokumen terpilih.", "error");
+    };
+
+    runDownload();
   };
 
   const confirmDelete = async () => {
