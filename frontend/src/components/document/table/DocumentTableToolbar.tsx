@@ -3,6 +3,7 @@ import { SortOrder } from "../../../hooks/document/useDocumentTableState";
 import uploadIcon from "../../../assets/icons/upload.svg";
 import refreshIcon from "../../../assets/icons/refresh.svg";
 import AppTooltip from "../../ui/app-tooltip";
+import { getUser } from "../../../utils/auth";
 
 type DocumentTableToolbarProps = {
   sortOrder: SortOrder;
@@ -17,6 +18,8 @@ export default function DocumentTableToolbar({
   onUploadClick,
   onRefresh,
 }: DocumentTableToolbarProps) {
+  const user = getUser();
+  const canUploadDocument = user?.role === "Admin Akuntansi";
   const [showToast, setShowToast] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -81,17 +84,19 @@ export default function DocumentTableToolbar({
 
         {/* Action buttons */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button
-            onClick={onUploadClick}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 flex-1 sm:flex-none justify-center"
-          >
-            <img
-              src={uploadIcon}
-              className="w-4 h-4 lg:w-5 lg:h-5"
-              alt="Upload"
-            />
-            Unggah Baru
-          </button>
+          {canUploadDocument && (
+            <button
+              onClick={onUploadClick}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 flex-1 sm:flex-none justify-center"
+            >
+              <img
+                src={uploadIcon}
+                className="w-4 h-4 lg:w-5 lg:h-5"
+                alt="Upload"
+              />
+              Unggah Baru
+            </button>
+          )}
 
           <AppTooltip content="Refresh">
             <button

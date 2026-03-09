@@ -71,6 +71,7 @@ router.get("/documents/history", authenticateToken, getUploadHistory);
 router.post(
   "/documents",
   authenticateToken,
+  authorizeRoles("Admin Akuntansi"),
   upload.single("file"),
   createDocument,
 ); // taro middleware multer di sini

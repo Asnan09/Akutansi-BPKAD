@@ -1,17 +1,28 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import type { ReactElement } from "react";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import DocumentManagement from "../pages/DocumentManagement";
 import UploadDocument from "../pages/UploadDocument";
 import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
-import { isAuthenticated } from "../utils/auth";
+import { getUser, isAuthenticated } from "../utils/auth";
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
+function ProtectedRoute({ children }: { children: ReactElement }) {
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
   }
+  return children;
+}
+
+function AdminOnlyRoute({ children }: { children: ReactElement }) {
+  const user = getUser();
+
+  if (!user || user.role !== "Admin Akuntansi") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return children;
 }
 
@@ -47,7 +58,9 @@ export default function AppRoutes() {
         path="/upload"
         element={
           <ProtectedRoute>
-            <UploadDocument />
+            <AdminOnlyRoute>
+              <UploadDocument />
+            </AdminOnlyRoute>
           </ProtectedRoute>
         }
       />

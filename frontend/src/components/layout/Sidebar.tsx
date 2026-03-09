@@ -5,10 +5,13 @@ import dashboardIcon from "../../assets/icons/Dashboard.svg";
 import documentIcon from "../../assets/icons/upload.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 import AppTooltip from "../ui/app-tooltip";
+import { getUser } from "../../utils/auth";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = getUser();
+  const canUploadDocument = user?.role === "Admin Akuntansi";
 
   const isActive = (path: string) => location.pathname === path;
   const handleLogout = () => navigate("/login");
@@ -63,19 +66,21 @@ export default function Sidebar() {
           </button>
         </AppTooltip>
 
-        <AppTooltip content="Upload Document">
-          <button
-            onClick={() => navigate("/upload")}
-            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+        {canUploadDocument && (
+          <AppTooltip content="Upload Document">
+            <button
+              onClick={() => navigate("/upload")}
+              className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
               isActive("/upload")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
-          >
-            <img src={documentIcon} className="w-6 h-6" alt="Upload" />
-          </button>
-        </AppTooltip>
+            >
+              <img src={documentIcon} className="w-6 h-6" alt="Upload" />
+            </button>
+          </AppTooltip>
+        )}
 
         <AppTooltip content="Upload History">
           <button
