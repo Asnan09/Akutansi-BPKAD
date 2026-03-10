@@ -12,6 +12,7 @@ type DocumentTableDesktopProps = {
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
+  pageStartIndex: number;
 };
 
 export default function DocumentTableDesktop({
@@ -24,13 +25,14 @@ export default function DocumentTableDesktop({
   onView,
   onEdit,
   onDelete,
+  pageStartIndex,
 }: DocumentTableDesktopProps) {
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full table-fixed text-sm">
-        <thead className="bg-slate-50 text-gray-950 border-b border-slate-200">
+        <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
           <tr>
-            <th className="text-center align-middle py-4 px-3 font-semibold w-12">
+            <th className="text-center align-middle py-3 px-3 font-semibold w-12 uppercase tracking-wider text-xs text-white">
               <AppTooltip content="Pilih Semua">
                 <input
                   type="checkbox"
@@ -43,21 +45,34 @@ export default function DocumentTableDesktop({
                     }
                   }}
                   onChange={(e) => onSelectAll(e.target.checked)}
-                  className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
+                  className="block mx-auto w-4 h-4 rounded border-white/50 bg-transparent accent-orange-600"
                 />
               </AppTooltip>
             </th>
-            <th className="text-left py-4 px-3 font-semibold w-1/5">Nama</th>
-            <th className="text-center py-4 px-3 font-semibold w-1/5">Kategori</th>
-            <th className="text-center py-4 px-3 font-semibold w-1/5">Format</th>
-            <th className="text-center py-4 px-3 font-semibold w-1/5">Tanggal</th>
-            <th className="text-center py-4 px-3 font-semibold w-1/5">Aksi</th>
+            <th className="text-center align-middle py-3 px-3 font-semibold w-12 uppercase tracking-wider text-xs text-white">
+              No
+            </th>
+            <th className="text-left py-3 px-3 font-semibold uppercase tracking-wider text-xs w-[28%] text-white">
+              Nama
+            </th>
+            <th className="text-center py-3 px-3 font-semibold uppercase tracking-wider text-xs w-[16%] text-white">
+              Kategori
+            </th>
+            <th className="text-center py-3 px-3 font-semibold uppercase tracking-wider text-xs w-[12%] text-white">
+              Format
+            </th>
+            <th className="text-center py-3 px-3 font-semibold uppercase tracking-wider text-xs w-[16%] text-white">
+              Tanggal
+            </th>
+            <th className="text-center py-3 px-3 font-semibold uppercase tracking-wider text-xs w-[16%] text-white">
+              Aksi
+            </th>
           </tr>
         </thead>
 
         <tbody>
           {documents.length > 0 ? (
-            documents.map((doc) => (
+            documents.map((doc, index) => (
               <DocumentRow
                 key={doc.id}
                 doc={doc}
@@ -66,11 +81,12 @@ export default function DocumentTableDesktop({
                 onView={onView}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                rowNumber={pageStartIndex + index}
               />
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="py-12 text-center text-gray-400">
+              <td colSpan={8} className="py-12 text-center text-gray-400">
                 Dokumen kosong.
               </td>
             </tr>

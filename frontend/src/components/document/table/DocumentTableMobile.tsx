@@ -50,21 +50,24 @@ export default function DocumentTableMobile({
   return (
     <div className="md:hidden space-y-3">
       {documents.length > 0 ? (
-        documents.map((doc) => {
+        documents.map((doc, index) => {
           const format = getFileFormat(doc.file_path);
 
           return (
             <div
               key={doc.id}
               data-paginated-item
-              className={`bg-gray-50 rounded-xl p-4 space-y-3 border ${
+              className={`rounded-2xl p-4 space-y-3 border shadow-sm ${
                 selectedDocuments.has(doc.id)
-                  ? "border-orange-300 bg-orange-50"
-                  : "border-gray-100"
+                  ? "border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50"
+                  : "border-slate-100 bg-white"
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
+                  <span className="mt-0.5 inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-orange-100 text-[11px] font-semibold text-orange-700">
+                    {index + 1}
+                  </span>
                   <AppTooltip content="Pilih dokumen">
                     <input
                       type="checkbox"
@@ -100,10 +103,10 @@ export default function DocumentTableMobile({
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2 border-t border-gray-200">
+              <div className="flex gap-2 pt-2 border-t border-slate-200">
                 <button
                   onClick={() => onView?.(doc.id)}
-                  className="flex-1 py-2 rounded-lg bg-blue-50 text-blue-600 text-xs font-medium"
+                  className="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-sky-50 text-blue-600 text-xs font-semibold"
                 >
                   Lihat
                 </button>
@@ -111,13 +114,13 @@ export default function DocumentTableMobile({
                   <>
                     <button
                       onClick={() => onEdit?.(doc.id)}
-                      className="flex-1 py-2 rounded-lg bg-yellow-50 text-yellow-600 text-xs font-medium"
+                      className="flex-1 py-2 rounded-lg bg-gradient-to-r from-yellow-50 to-amber-50 text-amber-700 text-xs font-semibold"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete?.(doc.id)}
-                      className="flex-1 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-medium"
+                      className="flex-1 py-2 rounded-lg bg-gradient-to-r from-red-50 to-rose-50 text-red-600 text-xs font-semibold"
                     >
                       Hapus
                     </button>

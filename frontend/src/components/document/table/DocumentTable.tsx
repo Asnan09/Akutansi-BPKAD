@@ -87,14 +87,18 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 lg:p-6">
+    <div className="rounded-3xl bg-gradient-to-br from-orange-100/70 via-white to-sky-100/60 p-[1px] shadow-sm">
+      <div className="bg-white rounded-3xl p-4 lg:p-6">
       <DocumentTableToolbar
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
         onUploadClick={handleUploadClick}
       />
 
-      <div ref={documentsContentRef} className="overflow-hidden rounded-xl border border-slate-100">
+      <div
+        ref={documentsContentRef}
+        className="overflow-hidden rounded-2xl border border-orange-100 bg-white"
+      >
         <DocumentTableDesktop
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}
@@ -105,6 +109,7 @@ export default function DocumentTable({
           onView={onView}
           onEdit={onEdit}
           onDelete={onDelete}
+          pageStartIndex={(currentPage - 1) * rowsPerPage + 1}
         />
 
         <DocumentTableMobile
@@ -125,6 +130,7 @@ export default function DocumentTable({
         onPageChange={goToPage}
         onRowsPerPageChange={setRowsPerPage}
       />
+      </div>
     </div>
   );
 }
