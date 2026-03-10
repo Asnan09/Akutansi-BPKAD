@@ -45,7 +45,12 @@ const allowedMimeTypes = [
   "application/vnd.ms-powerpoint",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   "image/jpeg",
+  "image/jpg",
+  "image/pjpeg",
+  "image/jfif",
   "image/png",
+  "image/heic",
+  "image/heif",
 ];
 
 const fileFilter = (req: any, file: any, cb: any) => {
