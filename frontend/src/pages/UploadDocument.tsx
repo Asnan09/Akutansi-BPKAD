@@ -40,7 +40,7 @@ export default function UploadDocument() {
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+      <div className="ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Unggah Dokumen" />
 
         <main className="flex-1 p-4 lg:p-8">

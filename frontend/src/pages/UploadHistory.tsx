@@ -89,7 +89,7 @@ export default function UploadHistory() {
     >
       <Sidebar />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col">
+      <div className="ml-64 flex-1 flex flex-col">
         <Header title="Riwayat Unggah" />
 
         <main className="flex-1 p-1 md:p-8" data-history-animate>

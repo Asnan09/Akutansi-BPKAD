@@ -86,28 +86,76 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col">
+      <div className="ml-64 flex-1 flex flex-col">
         <Header title="Dashboard" />
 
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
           <div data-animate-item className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-orange-100 p-5">
-              <p className="text-sm font-medium text-gray-500">Total Dokumen</p>
-              <p className="text-3xl font-bold text-orange-500">
+            <div className="rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 text-white p-5 shadow-lg shadow-orange-500/20">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
+                  Total Dokumen
+                </p>
+                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M7 3h7l5 5v13H7V3z"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <p className="text-4xl font-bold mt-4">
                 <AnimatedStatNumber value={summary.totalDocuments} />
               </p>
+              <p className="text-sm text-white/80 mt-1">Dokumen aktif tersimpan</p>
             </div>
-            <div className="bg-white rounded-2xl border border-blue-100 p-5">
-              <p className="text-sm font-medium text-gray-500">Total User</p>
-              <p className="text-3xl font-bold text-blue-500">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white p-5 shadow-lg shadow-blue-500/20">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
+                  Total Pengguna
+                </p>
+                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M16 11c1.657 0 3-1.567 3-3.5S17.657 4 16 4s-3 1.567-3 3.5S14.343 11 16 11zM8 11c1.657 0 3-1.567 3-3.5S9.657 4 8 4 5 5.567 5 7.5 6.343 11 8 11zM16 14c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zM8 14c-2.761 0-5 1.79-5 4v2h6v-2c0-1.33.402-2.57 1.09-3.62C9.479 14.134 8.76 14 8 14z"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <p className="text-4xl font-bold mt-4">
                 <AnimatedStatNumber value={summary.totalUsers} />
               </p>
+              <p className="text-sm text-white/80 mt-1">User terdaftar sistem</p>
             </div>
-            <div className="bg-white rounded-2xl border border-teal-100 p-5">
-              <p className="text-sm font-medium text-gray-500">Aktivitas Hari Ini</p>
-              <p className="text-3xl font-bold text-teal-500">
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-5 shadow-lg shadow-emerald-500/20">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
+                  Unggah Hari Ini
+                </p>
+                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 5v10m0 0l-4-4m4 4l4-4M5 19h14"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <p className="text-4xl font-bold mt-4">
                 <AnimatedStatNumber value={summary.todayUploadCount} />
               </p>
+              <p className="text-sm text-white/80 mt-1">Aktivitas unggah baru</p>
             </div>
           </div>
 

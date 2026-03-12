@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.sidebar-icon {
+  filter: brightness(0) saturate(100%) invert(39%) sepia(6%) saturate(479%)
+    hue-rotate(178deg) brightness(95%) contrast(90%);
+}
+
+.sidebar-icon-active {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(2490%)
+    hue-rotate(354deg) brightness(99%) contrast(100%);
+}
+
 html,
 body,
 #root {

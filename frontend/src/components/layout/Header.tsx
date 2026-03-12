@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import profileIcon from "../../assets/icons/profile.svg";
+import bpkadLogo from "../../assets/images/logo-bpkad.png";
+import bpkadBuilding from "../../assets/images/bpkad-building.png";
 
 interface HeaderProps {
   title?: string;
@@ -39,26 +40,16 @@ export default function Header({ title }: HeaderProps) {
   const [{ username, role }] = useState<UserInfo>(() => getUserInfoFromToken());
 
   return (
-    <header className="h-16 lg:h-20 bg-white flex items-center justify-between px-4 lg:px-8 shadow-sm">
-
-      <div className="text-2xl font-bold text-gray-800">{title}</div>
-      {/* Profile Section */}
-      <div className="flex items-center gap-3">
-        <div className="text-right">
-          <p className="text-xs lg:text-sm font-semibold capitalize text-gray-800">
-            {username}
-          </p>
-          <p className="text-[10px] lg:text-xs text-gray-500">{role}</p>
-        </div>
-        <div className="relative">
-          <img
-            src={profileIcon}
-            className="w-9 h-9 lg:w-10 lg:h-10 rounded-full border-2 border-gray-200"
-            alt="Profile"
-          />
-          <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-        </div>
+    <header className="h-16 lg:h-20 bg-white flex items-center justify-between px-4 lg:px-8 shadow-sm border-b border-orange-100/50">
+      <div className="text-lg lg:text-2xl font-bold text-gray-800">
+        {title}
       </div>
+
+      <img
+        src={bpkadBuilding}
+        className="h-10 lg:h-12 object-contain"
+        alt="BPKAD Building"
+      />
     </header>
   );
 }
