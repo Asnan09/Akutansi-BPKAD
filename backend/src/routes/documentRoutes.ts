@@ -74,14 +74,28 @@ router.get("/documents", authenticateToken, getAllDocuments);
 router.get(
   "/dashboard/analytics",
   authenticateToken,
-  authorizeRoles("Admin", "Staff", "Admin Akuntansi", "Staff Akuntansi"),
+  authorizeRoles(
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ),
   getDashboardAnalytics,
 );
 router.get("/documents/history", authenticateToken, getUploadHistory);
 router.post(
   "/documents",
   authenticateToken,
-  authorizeRoles("Admin", "Admin Akuntansi"),
+  authorizeRoles(
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ),
   upload.single("file"),
   createDocument,
 ); // taro middleware multer di sini

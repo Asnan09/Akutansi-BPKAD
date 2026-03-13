@@ -26,6 +26,24 @@ function AdminOnlyRoute({ children }: { children: ReactElement }) {
   return children;
 }
 
+function UploaderRoute({ children }: { children: ReactElement }) {
+  const user = getUser();
+  const allowedRoles = [
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ];
+
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
 export default function AppRoutes() {
   const location = useLocation();
 
@@ -58,9 +76,9 @@ export default function AppRoutes() {
         path="/upload"
         element={
           <ProtectedRoute>
-            <AdminOnlyRoute>
+            <UploaderRoute>
               <UploadDocument />
-            </AdminOnlyRoute>
+            </UploaderRoute>
           </ProtectedRoute>
         }
       />

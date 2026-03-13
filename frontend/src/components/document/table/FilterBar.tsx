@@ -59,11 +59,26 @@ export default function FilterBar({
   if (category) {
     activeItems.push(`Kategori: ${category}`);
   }
+  const formatDateRangeLabel = (value: string) => {
+    if (!value) return "";
+    const [year, month, day] = value.split("-");
+    if (!year || !month || !day) return value;
+    return `${day}/${month}/${year}`;
+  };
+
   if (startDate || endDate) {
     if (startDate && endDate) {
-      activeItems.push(`Tanggal: ${startDate} - ${endDate}`);
+      if (startDate === endDate) {
+        activeItems.push(`Tanggal: ${formatDateRangeLabel(startDate)}`);
+      } else {
+        activeItems.push(
+          `Tanggal: ${formatDateRangeLabel(startDate)} - ${formatDateRangeLabel(endDate)}`,
+        );
+      }
     } else {
-      activeItems.push(`Tanggal: ${startDate || endDate}`);
+      activeItems.push(
+        `Tanggal: ${formatDateRangeLabel(startDate || endDate)}`,
+      );
     }
   }
 

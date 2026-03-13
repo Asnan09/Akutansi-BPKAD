@@ -19,8 +19,14 @@ export default function DocumentTableToolbar({
   onRefresh,
 }: DocumentTableToolbarProps) {
   const user = getUser();
-  const canUploadDocument =
-    user?.role === "Admin" || user?.role === "Admin Akuntansi";
+  const canUploadDocument = [
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ].includes(user?.role ?? "");
   const [showToast, setShowToast] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
 
