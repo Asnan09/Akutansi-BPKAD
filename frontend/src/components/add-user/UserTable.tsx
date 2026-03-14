@@ -1,4 +1,4 @@
-import type { UserItem } from "../../pages/AddUser.types";
+import type { UserItem } from "../../hooks/add-user/types";
 import editIcon from "../../assets/icons/edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 
@@ -27,7 +27,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 bg-slate-50">
+      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white bg-gradient-to-r from-orange-500 to-orange-600">
         <span>Profil</span>
         <span>Identitas</span>
         <span>Bidang</span>

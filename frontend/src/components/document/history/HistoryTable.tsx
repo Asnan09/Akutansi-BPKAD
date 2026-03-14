@@ -129,27 +129,27 @@ export default function HistoryTable({
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
           </colgroup>
-          <thead className="bg-gradient-to-r from-orange-500 to-orange-600">
+          <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
             <tr>
               <th className="px-3 py-3 text-center">
                 <input
                   type="checkbox"
                   checked={allRestorableSelected}
                   onChange={(event) => onToggleSelectAll(event.target.checked)}
-                  className="h-4 w-4 rounded border-white/50 bg-transparent accent-orange-600"
+                  className="h-4 w-4 rounded border-white/60 bg-transparent accent-orange-400"
                   aria-label="Pilih semua dokumen terhapus"
                 />
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 Nama Dokumen
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 Tanggal Upload
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 Informasi
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
+              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 Status
               </th>
             </tr>
@@ -159,7 +159,10 @@ export default function HistoryTable({
               const status = getHistoryStatus(item);
 
               return (
-                <tr key={item.id}>
+                <tr
+                  key={item.id}
+                  className="border-b border-slate-100 hover:bg-slate-50 transition-colors odd:bg-white even:bg-slate-50/40"
+                >
                   <td className="px-3 py-4 text-center align-top">
                     <input
                       type="checkbox"
@@ -168,7 +171,7 @@ export default function HistoryTable({
                       onChange={(event) =>
                         onToggleSelect(item.id, event.target.checked)
                       }
-                      className="h-4 w-4 rounded border-gray-300 accent-orange-600 disabled:opacity-40"
+                      className="h-4 w-4 rounded border-gray-300 accent-orange-500 disabled:opacity-40"
                       aria-label={`Pilih dokumen ${item.documentName}`}
                     />
                   </td>

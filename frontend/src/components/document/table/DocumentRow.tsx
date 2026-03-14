@@ -56,8 +56,8 @@ export default function DocumentRow({
   return (
     <tr
       data-paginated-item
-      className={`border-b border-orange-100/70 hover:bg-orange-50/40 transition-colors odd:bg-white even:bg-orange-50/20 ${
-        isSelected ? "bg-orange-50" : ""
+      className={`border-b border-slate-100 hover:bg-slate-50 transition-colors odd:bg-white even:bg-slate-50/40 ${
+        isSelected ? "bg-amber-50/60" : ""
       }`}
     >
       <td className="py-4 px-3 w-12 text-center align-middle">
@@ -70,7 +70,7 @@ export default function DocumentRow({
         />
       </td>
 
-      <td className="py-4 px-3 w-12 text-center align-middle text-xs font-semibold text-orange-700">
+      <td className="py-4 px-3 w-12 text-center align-middle text-xs font-semibold text-amber-600">
         {rowNumber}
       </td>
 
@@ -88,7 +88,7 @@ export default function DocumentRow({
         <span
           className={`inline-flex min-w-[52px] justify-center px-3 py-1 ${getFormatStyle(
             doc.file_path,
-          )} rounded-full text-xs font-semibold ring-1 ring-orange-100`}
+          )} rounded-full text-xs font-semibold ring-1 ring-amber-100`}
         >
           {format.toUpperCase()}
         </span>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import bpkadLogo from "../../assets/images/logo-bpkad.png";
 import bpkadBuilding from "../../assets/images/bpkad-building.png";
 
 interface HeaderProps {
@@ -38,10 +37,12 @@ function getUserInfoFromToken(): UserInfo {
 }
 
 export default function Header({ title, onMenuClick }: HeaderProps) {
-  const [{ username, role }] = useState<UserInfo>(() => getUserInfoFromToken());
+  useState<UserInfo>(() => getUserInfoFromToken());
 
   return (
-    <header className="h-16 lg:h-20 bg-white flex items-center justify-between px-4 lg:px-8 shadow-sm border-b border-orange-100/50">
+    <header className="relative h-16 lg:h-20 bg-white/95 backdrop-blur flex items-center justify-between px-4 lg:px-8 shadow-sm">
+      <div className="pointer-events-none absolute inset-x-0 -bottom-[1px] h-[2px] bg-gradient-to-r from-transparent via-slate-200/80 to-transparent blur-[1px]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-200/80" />
       <div className="flex items-center gap-3">
         {onMenuClick && (
           <button
