@@ -17,6 +17,7 @@ export default function AddUser() {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [editingUser, setEditingUser] = useState<UserItem | null>(null);
+  const [editingPassword, setEditingPassword] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [form, setForm] = useState<AddUserFormValues>({
     username: "",
@@ -58,9 +59,14 @@ export default function AddUser() {
 
   const handleOpenEdit = (user: UserItem) => {
     setEditingUser({ ...user, role: normalizeRole(user.role) });
+    setEditingPassword("");
   };
 
+  const hasFetchedRef = useRef(false);
+
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     let isMounted = true;
     const fetchUsers = async () => {
       try {
@@ -140,6 +146,7 @@ export default function AddUser() {
         const result = await updateUser(editingUser.id, {
           username: editingUser.username,
           role: normalizeRole(editingUser.role),
+          ...(editingPassword.trim() ? { password: editingPassword } : {}),
         });
         if (result.user) {
           const updated = toUserItem(result.user);
@@ -151,6 +158,7 @@ export default function AddUser() {
           setUsers(data.map(toUserItem));
         }
         setEditingUser(null);
+        setEditingPassword("");
         showToast("Pengguna berhasil diperbarui.", "success");
       } catch (error: any) {
         const message =
@@ -188,6 +196,10 @@ export default function AddUser() {
 
   const handleEditRole = (value: UserRole) => {
     setEditingUser((prev) => (prev ? { ...prev, role: value } : prev));
+  };
+
+  const handleEditPassword = (value: string) => {
+    setEditingPassword(value);
   };
 
   return (
@@ -246,9 +258,11 @@ export default function AddUser() {
       {editingUser && (
         <EditUserModal
           user={editingUser}
+          password={editingPassword}
           onClose={() => setEditingUser(null)}
           onSave={handleSaveEdit}
           onChangeUsername={handleEditUsername}
+          onChangePassword={handleEditPassword}
           onChangeRole={handleEditRole}
         />
       )}

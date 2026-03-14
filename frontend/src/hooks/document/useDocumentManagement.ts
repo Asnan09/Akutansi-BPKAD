@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
   deleteDocument,
   getDocuments,
@@ -16,6 +16,7 @@ type ConfirmDialogState = {
 };
 
 export function useDocumentManagement() {
+  const hasFetchedRef = useRef(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -66,6 +67,8 @@ export function useDocumentManagement() {
   }, [setDocuments, setFilteredDocuments]);
 
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     fetchDocuments();
   }, [fetchDocuments]);
 
