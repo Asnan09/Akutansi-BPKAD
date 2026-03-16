@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import type { ChartOptions, ScriptableContext } from "chart.js";
+import type { ChartData, ChartOptions, ScriptableContext } from "chart.js";
 import {
   Select,
   SelectContent,
@@ -34,17 +34,7 @@ type Props = {
 
 type DistributionCanvasProps = {
   chartKey: string;
-  chartData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string[];
-      borderRadius: number;
-      borderSkipped: boolean;
-      maxBarThickness: number;
-    }[];
-  };
+  chartData: ChartData<"bar">;
   options: ChartOptions<"bar">;
 };
 

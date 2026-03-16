@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
-import type { ChartOptions, ScriptableContext } from "chart.js";
+import type { ChartData, ChartOptions, ScriptableContext } from "chart.js";
 import {
   Select,
   SelectContent,
@@ -39,22 +39,7 @@ const TREND_LINE_COLOR = "#6366F1";
 
 type TrendCanvasProps = {
   chartKey: string;
-  chartData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-      pointBackgroundColor: string;
-      pointBorderColor: string;
-      pointBorderWidth: number;
-      pointRadius: number;
-      pointHoverRadius: number;
-      fill: boolean;
-      tension: number;
-    }[];
-  };
+  chartData: ChartData<"line">;
   options: ChartOptions<"line">;
 };
 

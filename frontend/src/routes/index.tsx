@@ -7,6 +7,7 @@ import DocumentManagement from "../pages/DocumentManagement";
 import UploadDocument from "../pages/UploadDocument";
 import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
+import AddUser from "../pages/AddUser";
 import { getUser, isAuthenticated } from "../utils/auth";
 
 function ProtectedRoute({ children }: { children: ReactElement }) {
@@ -116,4 +117,3 @@ export default function AppRoutes() {
     </Routes>
   );
 }
-import AddUser from "../pages/AddUser";

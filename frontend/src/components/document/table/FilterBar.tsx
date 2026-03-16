@@ -15,9 +15,9 @@ export default function FilterBar({
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const onSearchRef = useRef<typeof onSearch>();
-  const onCategoryRef = useRef<typeof onCategoryChange>();
-  const onDateRangeRef = useRef<typeof onDateRangeChange>();
+  const onSearchRef = useRef<typeof onSearch | undefined>(undefined);
+  const onCategoryRef = useRef<typeof onCategoryChange | undefined>(undefined);
+  const onDateRangeRef = useRef<typeof onDateRangeChange | undefined>(undefined);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
