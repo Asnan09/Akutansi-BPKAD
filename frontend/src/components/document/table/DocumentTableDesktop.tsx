@@ -28,10 +28,12 @@ export default function DocumentTableDesktop({
   pageStartIndex,
 }: DocumentTableDesktopProps) {
   return (
-    <div className="hidden md:block overflow-x-auto">
-      <table className="w-full table-fixed text-sm">
-        <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
-          <tr>
+    <div className="hidden md:block overflow-x-auto bg-white dark:bg-slate-900">
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-14 rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600" />
+        <table className="relative z-10 w-full min-w-full table-fixed border-collapse border-spacing-0 text-sm">
+          <thead className="rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
+            <tr>
             <th className="text-center align-middle py-4 px-3 font-semibold w-12 uppercase tracking-[0.2em] text-xs text-white">
               <AppTooltip content="Pilih Semua">
                 <input
@@ -67,32 +69,33 @@ export default function DocumentTableDesktop({
             <th className="text-center py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[16%] text-white">
               Aksi
             </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {documents.length > 0 ? (
-            documents.map((doc, index) => (
-              <DocumentRow
-                key={doc.id}
-                doc={doc}
-                isSelected={selectedDocuments.has(doc.id)}
-                onSelect={onSelectDocument}
-                onView={onView}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                rowNumber={pageStartIndex + index}
-              />
-            ))
-          ) : (
-            <tr>
-              <td colSpan={8} className="py-12 text-center text-gray-400">
-                Dokumen kosong.
-              </td>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="bg-white dark:bg-slate-900">
+            {documents.length > 0 ? (
+              documents.map((doc, index) => (
+                <DocumentRow
+                  key={doc.id}
+                  doc={doc}
+                  isSelected={selectedDocuments.has(doc.id)}
+                  onSelect={onSelectDocument}
+                  onView={onView}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  rowNumber={pageStartIndex + index}
+                />
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="py-12 text-center text-gray-400">
+                  Dokumen kosong.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

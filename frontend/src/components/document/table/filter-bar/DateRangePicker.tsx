@@ -209,7 +209,8 @@ export default function DateRangePicker({
   const yearRange = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i);
   const calendarSelectClass =
     "h-8 rounded-lg border border-gray-200 bg-gray-50 px-2 text-xs font-semibold text-gray-700 " +
-    "focus:ring-0 focus:ring-offset-0 focus:border-orange-400";
+    "focus:ring-0 focus:ring-offset-0 focus:border-orange-400 " +
+    "dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100";
 
   const calendarDays: (Date | null)[] = [
     ...Array(firstDay).fill(null),
@@ -247,7 +248,7 @@ export default function DateRangePicker({
             className={`flex-1 text-xs font-semibold py-1.5 rounded-lg transition-all ${
               mode === "single"
                 ? "bg-white dark:bg-slate-900 text-orange-500 shadow-sm"
-                : "text-gray-400 dark:text-slate-400 hover:text-gray-600"
+                : "text-gray-400 dark:text-slate-300 hover:text-gray-600 dark:hover:text-slate-100"
             }`}
           >
             Tanggal Tunggal
@@ -257,7 +258,7 @@ export default function DateRangePicker({
             className={`flex-1 text-xs font-semibold py-1.5 rounded-lg transition-all ${
               mode === "range"
                 ? "bg-white dark:bg-slate-900 text-orange-500 shadow-sm"
-                : "text-gray-400 dark:text-slate-400 hover:text-gray-600"
+                : "text-gray-400 dark:text-slate-300 hover:text-gray-600 dark:hover:text-slate-100"
             }`}
           >
             Rentang
@@ -301,7 +302,7 @@ export default function DateRangePicker({
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="max-h-48 z-[100000] date-picker-inline-select-content">
+                <SelectContent className="max-h-48 z-[100000] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 date-picker-inline-select-content">
                   {monthNames.map((name, idx) => (
                     <SelectItem key={name} value={String(idx)}>
                       {name}
@@ -325,7 +326,7 @@ export default function DateRangePicker({
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="max-h-48 z-[100000] date-picker-inline-select-content">
+                <SelectContent className="max-h-48 z-[100000] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 date-picker-inline-select-content">
                   {yearRange.map((optionYear) => (
                     <SelectItem key={optionYear} value={String(optionYear)}>
                       {optionYear}
@@ -392,7 +393,7 @@ export default function DateRangePicker({
                   ${start || end ? "bg-orange-500 text-white rounded-lg font-semibold" : ""}
                   ${inRange ? "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-200" : ""}
                   ${!start && !end && !inRange ? "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-lg" : ""}
-                  ${isToday && !start && !end ? "font-bold text-orange-500 ring-1 ring-orange-400 ring-offset-1 rounded-lg" : ""}
+                  ${isToday && !start && !end ? "font-bold text-orange-500 ring-1 ring-orange-400 ring-offset-1 dark:ring-offset-slate-900 rounded-lg" : ""}
                 `}
               >
                 {day.getDate()}

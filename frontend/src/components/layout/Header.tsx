@@ -48,14 +48,14 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-600 flex items-center justify-center lg:hidden"
+            className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-600 flex items-center justify-center lg:hidden dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
             aria-label="Buka menu"
           >
             <span className="sr-only">Menu</span>
             <div className="space-y-1">
-              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
-              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
-              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600 dark:bg-slate-200"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600 dark:bg-slate-200"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600 dark:bg-slate-200"></span>
             </div>
           </button>
         )}
