@@ -126,7 +126,7 @@ export default function HistoryContentSection({
   }, [statusValue]);
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
+    <section className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 md:p-6 shadow-sm">
       <div className="mb-4">
         <HistoryToolbar
           searchValue={searchValue}

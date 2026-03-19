@@ -152,13 +152,13 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
+    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
+    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-5 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 whitespace-nowrap">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
           Jumlah Dokumen
         </h3>
 

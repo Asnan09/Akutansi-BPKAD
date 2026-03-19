@@ -73,7 +73,7 @@ export default function DocumentTableToolbar({
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "newest"
                 ? "bg-orange-500 text-white shadow-md shadow-orange-500/30 hover:bg-orange-600"
-                : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
+                : "border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-orange-300 hover:text-orange-600 dark:hover:bg-slate-800"
             }`}
           >
             TERBARU
@@ -83,7 +83,7 @@ export default function DocumentTableToolbar({
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "oldest"
                 ? "bg-orange-500 text-white shadow-md shadow-orange-500/30 hover:bg-orange-600"
-                : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
+                : "border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300 hover:border-orange-300 hover:text-orange-600 dark:hover:bg-slate-800"
             }`}
           >
             TERLAMA

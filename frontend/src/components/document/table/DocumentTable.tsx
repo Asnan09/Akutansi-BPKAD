@@ -89,7 +89,7 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-4 lg:p-6">
       <DocumentTableToolbar
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
@@ -99,7 +99,7 @@ export default function DocumentTable({
 
       <div
         ref={documentsContentRef}
-        className="overflow-hidden rounded-2xl border border-slate-100 bg-white"
+        className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900"
       >
         <DocumentTableDesktop
           documents={currentDocuments}

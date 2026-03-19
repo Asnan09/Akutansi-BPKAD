@@ -38,7 +38,7 @@ export default function UploadDocument() {
   } = useFileUpload(showToast);
 
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
@@ -50,7 +50,7 @@ export default function UploadDocument() {
         <main className="flex-1 p-4 lg:p-8">
           <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <form onSubmit={handleSubmit}>
-              <div className="bg-white rounded-3xl p-6 lg:p-10 border border-gray-200 shadow-sm">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 lg:p-10 border border-gray-200 dark:border-slate-800 shadow-sm">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                   <UploadDocumentInfoSection
                     formData={formData}

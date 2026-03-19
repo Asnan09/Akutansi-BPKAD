@@ -191,15 +191,15 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
+    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
+    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
 
   const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 whitespace-nowrap">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
           Perkembangan Upload
         </h3>
 
@@ -250,16 +250,16 @@ function DashboardTrendChart({
       </div>
 
       {canRenderChart && trendMode === "daily" && (
-        <div className="mb-3 text-sm text-slate-600">
+        <div className="mb-3 text-sm text-slate-600 dark:text-slate-300">
           Hari upload: <span className="font-semibold text-slate-800">{trendUploadDays}</span>
           {" | "}
-          Hari kosong: <span className="font-semibold text-slate-800">{trendEmptyDays}</span>
+          Hari kosong: <span className="font-semibold text-slate-800 dark:text-slate-100">{trendEmptyDays}</span>
         </div>
       )}
 
       <div className="h-[260px] sm:h-[300px]">
         {!canRenderChart ? (
-          <div className="h-full rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-sm text-slate-500">
+          <div className="h-full rounded-xl border border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center text-sm text-slate-500 dark:text-slate-400">
             Pilih tahun untuk menampilkan data bulan yang dipilih.
           </div>
         ) : (

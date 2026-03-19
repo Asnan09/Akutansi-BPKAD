@@ -47,7 +47,7 @@ export default function EditModal({
       />
       <div
         ref={modalRef}
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-orange-100"
+        className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-orange-100 dark:border-slate-700"
       >
         <div className="flex items-start justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
@@ -70,8 +70,8 @@ export default function EditModal({
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Edit Dokumen</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Edit Dokumen</h2>
+              <p className="text-sm text-gray-500 dark:text-slate-400">
                 Perbarui informasi dokumen sebelum disimpan.
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function EditModal({
           <button
             type="button"
             onClick={handleCloseWithAnimation}
-            className="h-9 w-9 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+            className="h-9 w-9 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-500 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-100 transition-colors"
             aria-label="Tutup"
           >
             &#10005;

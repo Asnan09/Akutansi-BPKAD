@@ -56,8 +56,8 @@ export default function DocumentRow({
   return (
     <tr
       data-paginated-item
-      className={`border-b border-slate-100 hover:bg-slate-50/60 transition-colors ${
-        isSelected ? "bg-amber-50/60" : ""
+      className={`border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors ${
+        isSelected ? "bg-amber-50/60 dark:bg-amber-500/10" : ""
       }`}
     >
       <td className="py-4 px-3 w-12 text-center align-middle">
@@ -66,21 +66,21 @@ export default function DocumentRow({
           checked={isSelected}
           onChange={() => onSelect(doc.id)}
           aria-label={`Select document ${doc.nama_sppd}`}
-          className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
-        />
+        className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 dark:border-slate-600 rounded cursor-pointer"
+      />
       </td>
 
       <td className="py-4 px-3 w-12 text-center align-middle text-xs font-semibold text-amber-600">
         {rowNumber}
       </td>
 
-      <td className="py-4 px-3 text-sm font-medium text-gray-800 max-w-0">
+      <td className="py-4 px-3 text-sm font-medium text-gray-800 dark:text-slate-100 max-w-0">
         <AppTooltip content={doc.nama_sppd}>
           <span className="block truncate">{doc.nama_sppd}</span>
         </AppTooltip>
       </td>
 
-      <td className="py-4 px-3 text-sm text-center text-gray-700">
+      <td className="py-4 px-3 text-sm text-center text-gray-700 dark:text-slate-200">
         {doc.kategori}
       </td>
 
@@ -94,7 +94,7 @@ export default function DocumentRow({
         </span>
       </td>
 
-      <td className="py-4 px-3 text-center text-sm text-gray-600">
+      <td className="py-4 px-3 text-center text-sm text-gray-600 dark:text-slate-300">
         {formatIndonesianDate(doc.tanggal_sppd)}
       </td>
 

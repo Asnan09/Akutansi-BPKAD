@@ -13,7 +13,7 @@ export default function UploadFormActions({
         type="button"
         onClick={onCancel}
         disabled={isUploading}
-        className="px-8 py-3.5 border-2 border-gray-300 rounded-xl text-gray-700 font-bold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
+        className="px-8 py-3.5 border-2 border-gray-300 dark:border-slate-700 rounded-xl text-gray-700 dark:text-slate-200 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
       >
         Batal
       </button>

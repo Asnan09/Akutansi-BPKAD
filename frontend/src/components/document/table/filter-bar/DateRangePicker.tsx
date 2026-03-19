@@ -239,15 +239,15 @@ export default function DateRangePicker({
           left: dropdownPos.left,
           zIndex: 99999,
         }}
-        className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 w-72"
+        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 p-4 w-72"
       >
-        <div className="flex bg-gray-100 rounded-xl p-1 mb-4">
+        <div className="flex bg-gray-100 dark:bg-slate-800 rounded-xl p-1 mb-4">
           <button
             onClick={() => handleModeChange("single")}
             className={`flex-1 text-xs font-semibold py-1.5 rounded-lg transition-all ${
               mode === "single"
-                ? "bg-white text-orange-500 shadow-sm"
-                : "text-gray-400 hover:text-gray-600"
+                ? "bg-white dark:bg-slate-900 text-orange-500 shadow-sm"
+                : "text-gray-400 dark:text-slate-400 hover:text-gray-600"
             }`}
           >
             Tanggal Tunggal
@@ -256,8 +256,8 @@ export default function DateRangePicker({
             onClick={() => handleModeChange("range")}
             className={`flex-1 text-xs font-semibold py-1.5 rounded-lg transition-all ${
               mode === "range"
-                ? "bg-white text-orange-500 shadow-sm"
-                : "text-gray-400 hover:text-gray-600"
+                ? "bg-white dark:bg-slate-900 text-orange-500 shadow-sm"
+                : "text-gray-400 dark:text-slate-400 hover:text-gray-600"
             }`}
           >
             Rentang
@@ -270,10 +270,10 @@ export default function DateRangePicker({
               onClick={() => setViewDate(new Date(year, month - 1, 1))}
               title=""
               aria-label="Bulan sebelumnya"
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition shrink-0"
             >
               <svg
-                className="w-4 h-4 text-gray-600"
+                className="w-4 h-4 text-gray-600 dark:text-slate-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -341,10 +341,10 @@ export default function DateRangePicker({
               onClick={() => setViewDate(new Date(year, month + 1, 1))}
               title=""
               aria-label="Bulan berikutnya"
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition shrink-0"
             >
               <svg
-                className="w-4 h-4 text-gray-600"
+                className="w-4 h-4 text-gray-600 dark:text-slate-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -364,7 +364,7 @@ export default function DateRangePicker({
           {dayNames.map((dayName) => (
             <div
               key={dayName}
-              className="text-center text-xs font-semibold text-gray-400 py-1"
+              className="text-center text-xs font-semibold text-gray-400 dark:text-slate-500 py-1"
             >
               {dayName}
             </div>
@@ -390,8 +390,8 @@ export default function DateRangePicker({
                 className={`
                   relative text-center text-xs py-1.5 cursor-pointer transition-all select-none
                   ${start || end ? "bg-orange-500 text-white rounded-lg font-semibold" : ""}
-                  ${inRange ? "bg-orange-100 text-orange-700" : ""}
-                  ${!start && !end && !inRange ? "hover:bg-gray-100 text-gray-700 rounded-lg" : ""}
+                  ${inRange ? "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-200" : ""}
+                  ${!start && !end && !inRange ? "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200 rounded-lg" : ""}
                   ${isToday && !start && !end ? "font-bold text-orange-500 ring-1 ring-orange-400 ring-offset-1 rounded-lg" : ""}
                 `}
               >
@@ -401,14 +401,14 @@ export default function DateRangePicker({
           })}
         </div>
 
-        <div className="mt-3 text-xs text-gray-500 text-center bg-gray-50 rounded-lg py-2">
+        <div className="mt-3 text-xs text-gray-500 dark:text-slate-400 text-center bg-gray-50 dark:bg-slate-800 rounded-lg py-2">
           {infoText()}
         </div>
 
         <div className="flex gap-2 mt-4">
           <button
             onClick={handleClear}
-            className="flex-1 py-2 text-xs font-semibold text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition"
+            className="flex-1 py-2 text-xs font-semibold text-gray-500 dark:text-slate-300 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition"
           >
             Hapus
           </button>
@@ -426,16 +426,16 @@ export default function DateRangePicker({
 
   return (
     <div className="relative">
-      <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
+      <label className="text-xs lg:text-sm font-semibold text-gray-600 dark:text-slate-300 mb-2 block">
         Rentang Tanggal
       </label>
       <div
         ref={triggerRef}
         onClick={handleOpen}
-        className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 cursor-pointer hover:border-orange-400 transition min-w-[220px]"
+        className="flex items-center bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 cursor-pointer hover:border-orange-400 transition min-w-[220px]"
       >
         <svg
-          className="w-4 h-4 mr-3 opacity-50 shrink-0"
+          className="w-4 h-4 mr-3 opacity-50 shrink-0 text-slate-500 dark:text-slate-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -449,7 +449,9 @@ export default function DateRangePicker({
         </svg>
         <span
           className={`text-xs lg:text-sm ${
-            displayValue ? "text-gray-700" : "text-gray-400"
+            displayValue
+              ? "text-gray-700 dark:text-slate-100"
+              : "text-gray-400 dark:text-slate-500"
           }`}
         >
           {displayValue || "Pilih rentang tanggal"}

@@ -28,7 +28,7 @@ export default function AddUserForm({
 
   return (
     <form onSubmit={onSubmit}>
-      <div className="bg-white rounded-3xl p-6 lg:p-8 border border-orange-100/60 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 lg:p-8 border border-orange-100/60 dark:border-slate-700 shadow-sm">
         <div className="mb-6 flex items-center gap-3">
           <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30">
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
@@ -42,27 +42,27 @@ export default function AddUserForm({
             </svg>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-800">Tambah Pengguna</h2>
-            <p className="text-sm text-gray-500">Lengkapi data pengguna baru.</p>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-slate-100">Tambah Pengguna</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Lengkapi data pengguna baru.</p>
           </div>
         </div>
 
         <div className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Nama Pengguna</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2">Nama Pengguna</label>
             <input
               type="text"
               name="username"
               value={form.username}
               onChange={onChange}
               placeholder="Masukkan username"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+              className="w-full border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Kata Sandi</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2">Kata Sandi</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -70,13 +70,13 @@ export default function AddUserForm({
                 value={form.password}
                 onChange={onChange}
                 placeholder="Masukkan kata sandi"
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-11 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-3 pr-11 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:text-orange-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 dark:text-slate-400 transition-colors hover:text-orange-600"
                 aria-label={showPassword ? "Sembunyikan kata sandi" : "Lihat kata sandi"}
               >
                 {showPassword ? (
@@ -89,15 +89,15 @@ export default function AddUserForm({
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Peran</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-slate-200 mb-2">Peran</label>
             <Select
               value={form.role}
               onValueChange={(value) => onRoleChange(value as AddUserFormValues["role"])}
             >
-              <SelectTrigger className="h-11 w-full rounded-xl border border-gray-300 bg-white px-4 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+              <SelectTrigger className="h-11 w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 text-sm font-medium text-gray-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500/20">
                 <SelectValue placeholder="Pilih peran" />
               </SelectTrigger>
-              <SelectContent className="max-h-60">
+              <SelectContent className="max-h-60 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100">
                 <SelectItem value="Staff">Staff</SelectItem>
                 <SelectItem value="Admin">Admin</SelectItem>
                 <SelectItem value="Anak Magang">Anak Magang</SelectItem>
@@ -111,7 +111,7 @@ export default function AddUserForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-bold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
+            className="px-6 py-3 border-2 border-gray-300 dark:border-slate-600 rounded-xl text-gray-700 dark:text-slate-200 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500 transition-all duration-300"
           >
             Batal
           </button>

@@ -40,9 +40,9 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
   useState<UserInfo>(() => getUserInfoFromToken());
 
   return (
-    <header className="relative h-16 lg:h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shadow-sm">
-      <div className="pointer-events-none absolute inset-x-0 -bottom-[1px] h-[2px] bg-gradient-to-r from-transparent via-slate-200/80 to-transparent blur-[1px]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-200/80" />
+    <header className="relative h-16 lg:h-20 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 shadow-sm">
+      <div className="pointer-events-none absolute inset-x-0 -bottom-[1px] h-[2px] bg-gradient-to-r from-transparent via-slate-200/80 to-transparent blur-[1px] dark:via-slate-800/80" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-200/80 dark:bg-slate-800/80" />
       <div className="flex items-center gap-3">
         {onMenuClick && (
           <button
@@ -59,15 +59,15 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
             </div>
           </button>
         )}
-        <div className="text-lg lg:text-2xl font-bold text-gray-800">
+        <div className="text-lg lg:text-2xl font-bold text-gray-800 dark:text-slate-100">
           {title}
         </div>
       </div>
 
       <img
         src={bpkadBuilding}
-        className="h-10 lg:h-12 object-contain"
-        alt="BPKAD Building"
+        className="h-9 lg:h-11 object-contain"
+        alt="BPKAD Kota Samarinda"
       />
     </header>
   );

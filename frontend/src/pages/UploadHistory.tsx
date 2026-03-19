@@ -86,7 +86,7 @@ export default function UploadHistory() {
   return (
     <div
       ref={pageRef}
-      className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]"
+      className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]"
     >
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
