@@ -1,4 +1,5 @@
 import React from "react";
+import { FaUsers, FaUserShield, FaUserTie, FaUserGraduate } from "react-icons/fa";
 
 type UserStatsProps = {
   total: number;
@@ -45,67 +46,74 @@ export default function UserStats({
   pklCount,
 }: UserStatsProps) {
   const cardBase =
-    "rounded-2xl p-4 shadow-sm text-center text-white " +
-    "transition-transform duration-200 hover:-translate-y-1 hover:shadow-md " +
+    "relative overflow-hidden rounded-3xl px-6 py-6 min-h-[120px] " +
+    "shadow-[0_14px_26px_rgba(0,0,0,0.14)] text-center text-white " +
+    "transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_18px_32px_rgba(0,0,0,0.16)] " +
     "animate-[statIn_0.55s_ease-out_var(--stat-delay)_both]";
+
+  const cards = [
+    {
+      label: "Total Pengguna",
+      value: total,
+      gradient: "from-orange-500 to-orange-700",
+      icon: FaUsers,
+      delay: "0ms",
+    },
+    {
+      label: "Admin",
+      value: adminCount,
+      gradient: "from-sky-500 to-blue-700",
+      icon: FaUserShield,
+      delay: "70ms",
+    },
+    {
+      label: "Staff",
+      value: staffCount,
+      gradient: "from-emerald-500 to-emerald-700",
+      icon: FaUserTie,
+      delay: "140ms",
+    },
+    {
+      label: "Anak Magang",
+      value: magangCount,
+      gradient: "from-amber-500 to-orange-600",
+      icon: FaUserGraduate,
+      delay: "210ms",
+    },
+    {
+      label: "Anak PKL",
+      value: pklCount,
+      gradient: "from-violet-500 to-purple-700",
+      icon: FaUserGraduate,
+      delay: "280ms",
+    },
+  ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
-      <div
-        className={`${cardBase} bg-gradient-to-br from-orange-500 to-orange-700`}
-        style={{ "--stat-delay": "0ms" } as React.CSSProperties}
-      >
-        <p className="text-2xl font-bold">
-          <AnimatedNumber value={total} />
-        </p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/80 mt-2">
-          Total Pengguna
-        </p>
-      </div>
-      <div
-        className={`${cardBase} bg-gradient-to-br from-sky-500 to-blue-700`}
-        style={{ "--stat-delay": "70ms" } as React.CSSProperties}
-      >
-        <p className="text-2xl font-bold">
-          <AnimatedNumber value={adminCount} />
-        </p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/80 mt-2">
-          Admin
-        </p>
-      </div>
-      <div
-        className={`${cardBase} bg-gradient-to-br from-emerald-500 to-emerald-700`}
-        style={{ "--stat-delay": "140ms" } as React.CSSProperties}
-      >
-        <p className="text-2xl font-bold">
-          <AnimatedNumber value={staffCount} />
-        </p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/80 mt-2">
-          Staff
-        </p>
-      </div>
-      <div
-        className={`${cardBase} bg-gradient-to-br from-amber-500 to-orange-600`}
-        style={{ "--stat-delay": "210ms" } as React.CSSProperties}
-      >
-        <p className="text-2xl font-bold">
-          <AnimatedNumber value={magangCount} />
-        </p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/80 mt-2">
-          Anak Magang
-        </p>
-      </div>
-      <div
-        className={`${cardBase} bg-gradient-to-br from-violet-500 to-purple-700`}
-        style={{ "--stat-delay": "280ms" } as React.CSSProperties}
-      >
-        <p className="text-2xl font-bold">
-          <AnimatedNumber value={pklCount} />
-        </p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/80 mt-2">
-          Anak PKL
-        </p>
-      </div>
+      {cards.map((card) => {
+        const Icon = card.icon;
+        return (
+          <div
+            key={card.label}
+            className={`${cardBase} bg-gradient-to-r ${card.gradient}`}
+            style={{ "--stat-delay": card.delay } as React.CSSProperties}
+          >
+            <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/15" />
+            <span className="absolute right-6 top-10 h-16 w-16 rounded-full bg-white/10" />
+            <div className="absolute right-4 top-4 h-10 w-10 rounded-2xl bg-white/20 flex items-center justify-center">
+              <Icon className="text-white/90" size={18} />
+            </div>
+
+            <p className="text-4xl font-bold leading-none">
+              <AnimatedNumber value={card.value} />
+            </p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85 mt-3">
+              {card.label}
+            </p>
+          </div>
+        );
+      })}
     </div>
   );
 }
