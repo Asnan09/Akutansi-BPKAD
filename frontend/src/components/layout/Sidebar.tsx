@@ -21,9 +21,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined") return false;
     const saved = window.localStorage.getItem("theme");
-    const prefersDark =
-      window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
-    return saved ? saved === "dark" : prefersDark;
+    return saved ? saved === "dark" : false;
   });
   const canUploadDocument = [
     "Admin",

@@ -54,9 +54,9 @@ const resolveBaseUrl = (): string => {
   }
 
   if (typeof window !== "undefined") {
-    const { protocol, hostname } = window.location;
-    if (import.meta.env.DEV) {
-      return "http://localhost:3001/api";
+    const { protocol, host, hostname } = window.location;
+    if (envBase.startsWith("/")) {
+      return `${protocol}//${host}${envBase}`;
     }
     if (hostname) {
       return `${protocol}//${hostname}:3001${envBase}`;
