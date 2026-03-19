@@ -56,7 +56,7 @@ export default function DocumentRow({
   return (
     <tr
       data-paginated-item
-      className={`border-b border-slate-100 hover:bg-slate-50 transition-colors odd:bg-white even:bg-slate-50/40 ${
+      className={`border-b border-slate-100 hover:bg-slate-50/60 transition-colors ${
         isSelected ? "bg-amber-50/60" : ""
       }`}
     >

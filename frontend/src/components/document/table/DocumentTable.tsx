@@ -89,8 +89,7 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-orange-100/70 via-white to-sky-100/60 p-[1px] shadow-sm">
-      <div className="bg-white rounded-3xl p-4 lg:p-6">
+    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 lg:p-6">
       <DocumentTableToolbar
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
@@ -100,7 +99,7 @@ export default function DocumentTable({
 
       <div
         ref={documentsContentRef}
-        className="overflow-hidden rounded-2xl border border-orange-100 bg-white"
+        className="overflow-hidden rounded-2xl border border-slate-100 bg-white"
       >
         <DocumentTableDesktop
           documents={currentDocuments}
@@ -133,7 +132,6 @@ export default function DocumentTable({
         onPageChange={goToPage}
         onRowsPerPageChange={setRowsPerPage}
       />
-      </div>
     </div>
   );
 }

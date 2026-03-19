@@ -52,6 +52,7 @@ export default function DocumentTableToolbar({
         }
         .spin-once {
           animation: spin-once 0.6s ease-in-out;
+          transform-origin: 50% 50%;
         }
       `}</style>
 
@@ -72,7 +73,7 @@ export default function DocumentTableToolbar({
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "newest"
                 ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md shadow-orange-500/30"
-                : "border border-slate-200 text-slate-500 hover:border-orange-200 hover:text-orange-600"
+                : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
             }`}
           >
             TERBARU
@@ -82,7 +83,7 @@ export default function DocumentTableToolbar({
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "oldest"
                 ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md shadow-orange-500/30"
-                : "border border-slate-200 text-slate-500 hover:border-orange-200 hover:text-orange-600"
+                : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
             }`}
           >
             TERLAMA
@@ -94,7 +95,7 @@ export default function DocumentTableToolbar({
           {canUploadDocument && (
             <button
               onClick={onUploadClick}
-              className="bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 flex-1 sm:flex-none justify-center"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 flex-1 sm:flex-none justify-center"
             >
               <img
                 src={uploadIcon}
@@ -109,14 +110,15 @@ export default function DocumentTableToolbar({
             <button
               onClick={handleRefresh}
               disabled={isSpinning}
-              className="bg-gradient-to-br from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 disabled:opacity-80"
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 disabled:opacity-80"
             >
-              <img
-                src={refreshIcon}
-                key={isSpinning ? "spinning" : "idle"}
-                className={`w-4 h-4 lg:w-5 lg:h-5 ${isSpinning ? "spin-once" : ""}`}
-                alt="refresh"
-              />
+              <span className={`inline-flex ${isSpinning ? "spin-once" : ""}`}>
+                <img
+                  src={refreshIcon}
+                  className="w-4 h-4 lg:w-5 lg:h-5"
+                  alt="refresh"
+                />
+              </span>
             </button>
           </AppTooltip>
         </div>

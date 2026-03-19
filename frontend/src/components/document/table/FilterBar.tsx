@@ -85,16 +85,13 @@ export default function FilterBar({
   const isActive = activeItems.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+    <div className="p-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-3 lg:gap-4 items-center">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
 
         <DateRangePicker onChange={handleDateChange} resetSignal={resetSignal} />
 
-        <CategoryFilterSelect
-          value={category}
-          onChange={handleCategoryChange}
-        />
+        <CategoryFilterSelect value={category} onChange={handleCategoryChange} />
       </div>
 
       {isActive && <ActiveFilterIndicator items={activeItems} />}

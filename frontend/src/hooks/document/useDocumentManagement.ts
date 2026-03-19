@@ -53,8 +53,10 @@ export function useDocumentManagement() {
     handleRefresh: baseHandleRefresh,
   } = useDocumentFilters([], showToast);
 
-  const fetchDocuments = useCallback(async () => {
-    setLoading(true);
+  const fetchDocuments = useCallback(async (options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setLoading(true);
+    }
     try {
       const data = await getDocuments();
       setDocuments(data);
@@ -62,7 +64,9 @@ export function useDocumentManagement() {
     } catch {
       showToast("Gagal mengambil data dokumen", "error");
     } finally {
-      setLoading(false);
+      if (!options?.silent) {
+        setLoading(false);
+      }
     }
   }, [setDocuments, setFilteredDocuments]);
 
@@ -75,7 +79,7 @@ export function useDocumentManagement() {
   const handleRefresh = () => {
     baseHandleRefresh();
     setSelectedDocuments(new Set());
-    fetchDocuments();
+    fetchDocuments({ silent: true });
   };
 
   const handleSelectDocument = (id: number | string) => {
@@ -270,12 +274,12 @@ export function useDocumentManagement() {
       if (confirmDialog.isMultiple) {
         const idsToDelete = Array.from(selectedDocuments);
         await Promise.all(idsToDelete.map((id) => deleteDocument(id)));
-        await fetchDocuments();
+        await fetchDocuments({ silent: true });
         setSelectedDocuments(new Set());
         showToast(`${idsToDelete.length} dokumen dipindahkan ke riwayat!`, "success");
       } else if (confirmDialog.documentId) {
         await deleteDocument(confirmDialog.documentId);
-        await fetchDocuments();
+        await fetchDocuments({ silent: true });
 
         const newSelected = new Set(selectedDocuments);
         newSelected.delete(confirmDialog.documentId);
