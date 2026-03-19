@@ -43,10 +43,31 @@ type DocumentApiItem = {
   created_at?: string;
 };
 
+const resolveBaseUrl = (): string => {
+  const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (!envBase || envBase.trim().length === 0) {
+    return "http://localhost:3001/api";
+  }
+
+  if (envBase.startsWith("http://") || envBase.startsWith("https://")) {
+    return envBase;
+  }
+
+  if (typeof window !== "undefined") {
+    const { protocol, hostname } = window.location;
+    if (import.meta.env.DEV) {
+      return "http://localhost:3001/api";
+    }
+    if (hostname) {
+      return `${protocol}//${hostname}:3001${envBase}`;
+    }
+  }
+
+  return envBase;
+};
+
 const apiClient = axios.create({
-  baseURL:
-    (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-    "http://localhost:3001/api",
+  baseURL: resolveBaseUrl(),
   timeout: 15000,
 });
 
@@ -301,9 +322,10 @@ export const getDashboardAnalytics = async (): Promise<DashboardAnalyticsRespons
   return response.data;
 };
 
-export const getUsers = async (): Promise<UserApiItem[]> => {
+export const getUsers = async (signal?: AbortSignal): Promise<UserApiItem[]> => {
   const response = await apiClient.get<UserApiItem[]>("/users", {
     params: { _t: Date.now() },
+    signal,
   });
   return response.data;
 };

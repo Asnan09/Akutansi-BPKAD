@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import { Toast } from "../components/snackbar";
@@ -16,6 +16,7 @@ export default function AddUser() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [editingUser, setEditingUser] = useState<UserItem | null>(null);
   const [editingPassword, setEditingPassword] = useState("");
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -62,36 +63,46 @@ export default function AddUser() {
     setEditingPassword("");
   };
 
-  const hasFetchedRef = useRef(false);
-
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
-    let isMounted = true;
+    const controller = new AbortController();
     const fetchUsers = async () => {
+      setLoadError(null);
+      setIsLoadingUsers(true);
+      const timeoutId = window.setTimeout(() => {
+        if (controller.signal.aborted) return;
+        setIsLoadingUsers(false);
+        setLoadError(
+          "Tidak bisa terhubung ke server. Pastikan backend berjalan dan Anda login sebagai Admin.",
+        );
+      }, 12000);
       try {
-        const data = await getUsers();
-        if (!isMounted) return;
-        setUsers(data.map(toUserItem));
+        const data = await getUsers(controller.signal);
+        if (controller.signal.aborted) return;
+        const list = Array.isArray(data) ? data : [];
+        setUsers(list.map(toUserItem));
+        setIsLoadingUsers(false);
       } catch (error) {
+        if (controller.signal.aborted) return;
         console.error("Get users error:", error);
-        if (isMounted) {
+        if (!controller.signal.aborted) {
           const status = (error as any)?.response?.status;
           const message =
             (error as any)?.response?.data?.message ??
             (status === 403
               ? "Akses ditolak. Pastikan login sebagai Admin."
               : "Gagal mengambil data pengguna.");
+          setLoadError(message);
           showToast(message, "error");
         }
       } finally {
-        if (isMounted) setIsLoadingUsers(false);
+        window.clearTimeout(timeoutId);
+        if (!controller.signal.aborted) setIsLoadingUsers(false);
       }
     };
 
     fetchUsers();
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, []);
 
@@ -236,9 +247,13 @@ export default function AddUser() {
             />
 
             <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
-              {isLoadingUsers ? (
+              {isLoadingUsers && users.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-slate-500">
                   Memuat data pengguna...
+                </div>
+              ) : loadError && users.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-rose-100 p-8 text-center text-rose-500">
+                  {loadError}
                 </div>
               ) : (
                 <UserTable
