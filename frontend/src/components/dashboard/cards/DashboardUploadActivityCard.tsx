@@ -48,7 +48,7 @@ export default function DashboardUploadActivityCard({
             className={`overflow-x-auto ${todayShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-slate-50">
+              <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
@@ -86,7 +86,7 @@ export default function DashboardUploadActivityCard({
             className={`overflow-x-auto ${latestShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-slate-50">
+              <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
