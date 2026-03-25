@@ -27,17 +27,6 @@ function AdminOnlyRoute({ children }: { children: ReactElement }) {
   return children;
 }
 
-function StaffOrAdminRoute({ children }: { children: ReactElement }) {
-  const user = getUser();
-  const allowedRoles = ["Admin", "Admin Akuntansi", "Staff", "Staff Akuntansi"];
-
-  if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return children;
-}
-
 function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
   const user = getUser();
   const allowedRoles = [
