@@ -7,6 +7,7 @@ import {
 } from "../../services/api";
 import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
+import { indonesianDateToISO } from "../../utils/documentdateutils";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -211,6 +212,27 @@ export function useDocumentManagement() {
     const sanitizeFileName = (name: string) =>
       name.replace(/[\\/:*?"<>|]+/g, "-").trim() || "dokumen";
 
+    const normalizeDateForFilename = (value?: string) => {
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+
+      const isoDateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoDateOnly) return isoDateOnly[0];
+
+      const isoDateTime = raw.match(/^(\d{4}-\d{2}-\d{2})[ T]/);
+      if (isoDateTime) return isoDateTime[1];
+
+      const indoToIso = indonesianDateToISO(raw);
+      if (indoToIso) return indoToIso;
+
+      const parsed = new Date(raw.replace(" ", "T"));
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toISOString().slice(0, 10);
+      }
+
+      return "";
+    };
+
     const runDownload = async () => {
       let successCount = 0;
       let failedCount = 0;
@@ -236,9 +258,14 @@ export function useDocumentManagement() {
           const objectUrl = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = objectUrl;
+          const datePart = normalizeDateForFilename(
+            doc.tanggal_sppd || doc.created_at,
+          );
+          const baseName = sanitizeFileName(doc.nama_sppd);
+          const fileNameBase = datePart ? `${baseName}_${datePart}` : baseName;
           link.download = extension
-            ? `${sanitizeFileName(doc.nama_sppd)}.${extension}`
-            : sanitizeFileName(doc.nama_sppd);
+            ? `${fileNameBase}.${extension}`
+            : fileNameBase;
           document.body.appendChild(link);
           link.click();
           link.remove();
