@@ -184,9 +184,7 @@ export function useDashboardAnalytics() {
         value: 0,
       }));
 
-      uploads.forEach((r) => {
-        const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
-        if (!categoryMatch) return;
+      filteredUploads.forEach((r) => {
         const [yearText, monthText, dayText] = r.uploadedAt.split("-");
         const yearValue = Number(yearText);
         const monthValue = Number(monthText);
@@ -207,19 +205,15 @@ export function useDashboardAnalytics() {
       value: 0,
     }));
 
-    uploads.forEach((r) => {
-      const [yearText, monthText] = r.uploadedAt.split("-");
-      const yearValue = Number(yearText);
+    filteredUploads.forEach((r) => {
+      const [, monthText] = r.uploadedAt.split("-");
       const monthValue = Number(monthText);
-      const yearMatch = selectedYear === 0 || yearValue === selectedYear;
-      const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
-      if (!yearMatch || !categoryMatch) return;
       if (monthValue < 1 || monthValue > 12) return;
       base[monthValue - 1].value += 1;
     });
 
     return base;
-  }, [uploads, selectedYear, selectedMonth, selectedCategory]);
+  }, [filteredUploads, selectedYear, selectedMonth]);
 
   const trendMode: TrendMode =
     selectedYear !== 0 && selectedMonth !== 0 ? "daily" : "monthly";
@@ -236,22 +230,10 @@ export function useDashboardAnalytics() {
 
   const trendUploadCount = useMemo(() => {
     if (trendMode !== "daily") return 0;
-
-    return uploads.filter((r) => {
-      const [yearText, monthText] = r.uploadedAt.split("-");
-      const yearValue = Number(yearText);
-      const monthValue = Number(monthText);
-      const yearMatch = yearValue === selectedYear;
-      const monthMatch = monthValue === selectedMonth;
-      const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
-      return yearMatch && monthMatch && categoryMatch;
-    }).length;
+    return filteredUploads.length;
   }, [
     trendMode,
-    uploads,
-    selectedYear,
-    selectedMonth,
-    selectedCategory,
+    filteredUploads,
   ]);
 
   const filteredLogins = useMemo(() => {

@@ -218,7 +218,11 @@ export function useDocumentManagement() {
       if (!raw) return "";
 
       const localDateOnly = toLocalDateOnly(raw);
-      if (localDateOnly) return localDateOnly;
+      if (localDateOnly) {
+        const [year, month, day] = localDateOnly.split("-");
+        if (year && month && day) return `${day}-${month}-${year}`;
+        return localDateOnly;
+      }
 
       const formatLocalDate = (date: Date) => {
         const year = date.getFullYear();
