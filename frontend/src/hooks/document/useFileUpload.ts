@@ -143,6 +143,23 @@ export function useFileUpload(
       return;
     }
 
+    const selectedDate = new Date(`${formData.date}T00:00:00`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (Number.isNaN(selectedDate.getTime())) {
+      showToast("Tanggal dokumen tidak valid.", "error");
+      return;
+    }
+
+    if (selectedDate > today) {
+      showToast(
+        "Tanggal dokumen tidak boleh melebihi tanggal hari ini.",
+        "warning",
+      );
+      return;
+    }
+
     setIsUploading(true);
 
     try {

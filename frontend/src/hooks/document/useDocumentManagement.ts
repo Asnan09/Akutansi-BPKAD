@@ -8,6 +8,7 @@ import {
 import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
 import { indonesianDateToISO } from "../../utils/documentdateutils";
+import { toLocalDateOnly } from "../../utils/localDate";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -216,18 +217,46 @@ export function useDocumentManagement() {
       const raw = String(value || "").trim();
       if (!raw) return "";
 
+      const localDateOnly = toLocalDateOnly(raw);
+      if (localDateOnly) return localDateOnly;
+
+      const formatLocalDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
       const isoDateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
       if (isoDateOnly) return isoDateOnly[0];
 
       const isoDateTime = raw.match(/^(\d{4}-\d{2}-\d{2})[ T]/);
       if (isoDateTime) return isoDateTime[1];
 
+      const isoDateSlash = raw.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+      if (isoDateSlash) {
+        const [, year, month, day] = isoDateSlash;
+        return `${year}-${month}-${day}`;
+      }
+
+      const dmyDash = raw.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+      if (dmyDash) {
+        const [, day, month, year] = dmyDash;
+        return `${year}-${month}-${day}`;
+      }
+
+      const dmySlash = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (dmySlash) {
+        const [, day, month, year] = dmySlash;
+        return `${year}-${month}-${day}`;
+      }
+
       const indoToIso = indonesianDateToISO(raw);
       if (indoToIso) return indoToIso;
 
       const parsed = new Date(raw.replace(" ", "T"));
-      if (!Number.isNaN(parsed.getTime())) {
-        return parsed.toISOString().slice(0, 10);
+      if (!Number.isNaN(parsed.getTime()) && /[T:]/.test(raw)) {
+        return formatLocalDate(parsed);
       }
 
       return "";

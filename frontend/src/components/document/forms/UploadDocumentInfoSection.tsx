@@ -252,9 +252,11 @@ export default function UploadDocumentInfoSection({
                 month={viewMonth}
                 onMonthChange={(month) => setViewMonth(month)}
                 captionLayout="label"
+                disabled={{ after: today }}
                 selected={selectedDate}
                 onSelect={(selected) => {
                   if (!selected) return;
+                  if (selected > today) return;
                   emitFieldChange("date", format(selected, "yyyy-MM-dd"));
                   setIsCalendarOpen(false);
                 }}

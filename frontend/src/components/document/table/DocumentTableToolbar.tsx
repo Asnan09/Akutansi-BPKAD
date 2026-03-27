@@ -37,7 +37,7 @@ export default function DocumentTableToolbar({
     setTimeout(() => setIsSpinning(false), 600);
 
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 2500);
+    setTimeout(() => setShowToast(false), 1400);
 
     onRefresh?.();
   };
