@@ -94,7 +94,11 @@ export default function HistoryTable({
                       {status}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">{item.fileSize}</p>
+                  {item.fileSize && item.fileSize !== "-" && (
+                    <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
+                      {item.fileSize}
+                    </p>
+                  )}
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-slate-300">
                     <div>
                       <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">
@@ -181,9 +185,11 @@ export default function HistoryTable({
                         {item.documentName}
                       </div>
                     </AppTooltip>
-                    <div className="mt-1 block w-full truncate text-xs text-gray-500 dark:text-slate-400">
-                      {item.fileSize}
-                    </div>
+                    {item.fileSize && item.fileSize !== "-" && (
+                      <div className="mt-1 block w-full truncate text-xs text-gray-500 dark:text-slate-400">
+                        {item.fileSize}
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-700 dark:text-slate-200 align-top">
                     {formatDate(item.uploadedAt)}

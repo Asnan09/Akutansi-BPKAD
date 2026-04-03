@@ -35,7 +35,7 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
     await ensureSoftDeleteColumns();
 
     const [documentRows] = await db.query(
-      `SELECT id, nama_sppd, kategori, tanggal_sppd, created_at
+      `SELECT id, nama_sppd, kategori, tanggal_sppd, created_at, uploaded_by
        FROM documents
        WHERE is_deleted = 0
        ORDER BY created_at DESC, id DESC`,

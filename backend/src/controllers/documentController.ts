@@ -7,6 +7,7 @@ import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
 const allowedDefinitions: { [key: string]: string } = {
   is_deleted: "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
   deleted_at: "deleted_at DATETIME NULL",
+  uploaded_by: "uploaded_by VARCHAR(255) NULL",
 };
 
 const ensureColumnExists = async (
@@ -38,6 +39,7 @@ const ensureColumnExists = async (
 const ensureSoftDeleteColumns = async () => {
   await ensureColumnExists("is_deleted");
   await ensureColumnExists("deleted_at");
+  await ensureColumnExists("uploaded_by");
 };
 
 const getDocumentName = (row: Record<string, any>): string => {
@@ -77,6 +79,8 @@ export const createDocument = async (req: Request, res: Response) => {
     await ensureSoftDeleteColumns();
 
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
+    const uploaderName =
+      (req as any)?.user?.username || (req as any)?.user?.role || null;
 
     if ((req as any).fileValidationError) {
       return res.status(400).json({ message: (req as any).fileValidationError });
@@ -107,8 +111,8 @@ export const createDocument = async (req: Request, res: Response) => {
     }
 
     const [result] = await db.execute(
-      "INSERT INTO documents (nama_sppd, tanggal_sppd, kategori, file_path) VALUES (?, ?, ?, ?)",
-      [nama_sppd, tanggal_sppd, kategori, file_path],
+      "INSERT INTO documents (nama_sppd, tanggal_sppd, kategori, file_path, uploaded_by) VALUES (?, ?, ?, ?, ?)",
+      [nama_sppd, tanggal_sppd, kategori, file_path, uploaderName],
     );
 
     res

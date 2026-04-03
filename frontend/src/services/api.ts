@@ -19,6 +19,7 @@ export interface DashboardApiDocument {
   kategori: string;
   tanggal_sppd?: string | null;
   created_at?: string | null;
+  uploaded_by?: string | null;
 }
 
 export interface DashboardApiLoginActivity {
@@ -41,6 +42,7 @@ type DocumentApiItem = {
   kategori: string;
   file_path: string;
   created_at?: string;
+  uploaded_by?: string;
 };
 
 const resolveBaseUrl = (): string => {
@@ -114,6 +116,7 @@ export const getDocuments = async (): Promise<Document[]> => {
     kategori: item.kategori,
     file_path: item.file_path,
     created_at: item.created_at,
+    uploaded_by: item.uploaded_by,
   }));
 };
 

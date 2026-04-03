@@ -50,8 +50,8 @@ export default function DashboardUploadActivityCard({
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
                 </tr>
               </thead>
@@ -88,8 +88,8 @@ export default function DashboardUploadActivityCard({
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
                 </tr>
               </thead>

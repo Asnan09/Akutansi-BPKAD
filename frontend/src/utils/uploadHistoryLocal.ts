@@ -35,7 +35,7 @@ const toUploadHistory = (document: Document): UploadHistory => ({
   id: document.id,
   documentName: document.nama_sppd,
   uploadedAt: document.created_at || document.tanggal_sppd || "",
-  uploadedBy: "-",
+  uploadedBy: document.uploaded_by || "-",
   fileSize: "-",
   filePath: document.file_path,
 });

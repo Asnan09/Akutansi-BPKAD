@@ -5,6 +5,7 @@ export interface Document {
   kategori: string;
   file_path: string;
   created_at?: string;
+  uploaded_by?: string;
 }
 
 export interface ToastState {

@@ -25,27 +25,8 @@ import {
 const LOGIN_RESET_MODE: LoginResetMode = "daily";
 type TrendMode = "daily" | "monthly";
 
-let dashboardAnalyticsCache: DashboardAnalyticsResponse | null = null;
-let dashboardAnalyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
-
 async function loadAnalyticsShared() {
-  if (dashboardAnalyticsCache) {
-    return dashboardAnalyticsCache;
-  }
-
-  if (!dashboardAnalyticsPromise) {
-    dashboardAnalyticsPromise = getDashboardAnalytics()
-      .then((payload) => {
-        dashboardAnalyticsCache = payload;
-        return payload;
-      })
-      .catch((error) => {
-        dashboardAnalyticsPromise = null;
-        throw error;
-      });
-  }
-
-  return dashboardAnalyticsPromise;
+  return getDashboardAnalytics();
 }
 
 export function useDashboardAnalytics() {
@@ -103,6 +84,7 @@ export function useDashboardAnalytics() {
               kategori: toDashboardCategory(doc.kategori),
               uploadedAt: dateOnly,
               createdAt: createdAtOnly || dateOnly,
+              uploadedBy: doc.uploaded_by || "-",
             };
           })
           .filter((item): item is NormalizedUpload => item !== null);
@@ -138,6 +120,7 @@ export function useDashboardAnalytics() {
                   kategori: toDashboardCategory(doc.kategori),
                   uploadedAt: dateOnly,
                   createdAt: normalizeDateOnly(doc.created_at) || dateOnly,
+                  uploadedBy: "-",
                 };
               })
               .filter((item): item is NormalizedUpload => item !== null);
@@ -266,15 +249,38 @@ export function useDashboardAnalytics() {
 
   const todayUploadRows = useMemo(() => {
     const todayIso = toIsoDate(new Date());
-    return uploads
+    const grouped = new Map<
+      string,
+      { count: number; date: string; names: string[] }
+    >();
+    uploads
       .filter((record) => record.createdAt === todayIso)
-      .sort((a, b) => (a.id < b.id ? 1 : -1))
-      .map((record) => ({
-        id: record.id,
-        name: record.name,
-        kategori: record.kategori,
-        tanggal: formatDateLabel(record.createdAt),
-      }));
+      .forEach((record) => {
+        const key = record.uploadedBy || "-";
+        const existing = grouped.get(key);
+        if (existing) {
+          existing.count += 1;
+          if (existing.names.length < 3) {
+            existing.names.push(record.name);
+          }
+        } else {
+          grouped.set(key, {
+            count: 1,
+            date: record.createdAt,
+            names: [record.name],
+          });
+        }
+      });
+
+    return Array.from(grouped.entries()).map(([uploader, info], idx) => ({
+      id: idx + 1,
+      name: uploader,
+      kategori:
+        info.count === 1
+          ? info.names[0]
+          : `${info.count} dokumen`,
+      tanggal: formatDateLabel(info.date),
+    }));
   }, [uploads]);
 
   const latestUploadRows = useMemo(() => {
@@ -289,15 +295,43 @@ export function useDashboardAnalytics() {
       return parsed >= cutoff;
     };
 
-    return [...uploads]
+    const grouped = new Map<
+      string,
+      { uploader: string; date: string; count: number; names: string[] }
+    >();
+    uploads
       .filter((record) => isWithinLastTwoDays(record.createdAt))
-      .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
+      .forEach((record) => {
+        const dateKey = record.createdAt;
+        const uploader = record.uploadedBy || "-";
+        const key = `${dateKey}::${uploader}`;
+        const existing = grouped.get(key);
+        if (existing) {
+          existing.count += 1;
+          if (existing.names.length < 3) {
+            existing.names.push(record.name);
+          }
+        } else {
+          grouped.set(key, {
+            uploader,
+            date: dateKey,
+            count: 1,
+            names: [record.name],
+          });
+        }
+      });
+
+    return Array.from(grouped.values())
+      .sort((a, b) => (a.date < b.date ? 1 : -1))
       .slice(0, 7)
-      .map((record) => ({
-        id: record.id,
-        name: record.name,
-        kategori: record.kategori,
-        tanggal: formatDateLabel(record.uploadedAt),
+      .map((row, idx) => ({
+        id: idx + 1,
+        name: row.uploader,
+        kategori:
+          row.count === 1
+            ? row.names[0]
+            : `${row.count} dokumen`,
+        tanggal: formatDateLabel(row.date),
       }));
   }, [uploads]);
 
