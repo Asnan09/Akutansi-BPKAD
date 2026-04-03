@@ -1,7 +1,13 @@
 type LoginRow = {
   id: number;
   username: string;
-  role: "Admin" | "Staff";
+  role:
+    | "Admin"
+    | "Staff"
+    | "Anak Magang"
+    | "Anak PKL"
+    | "Admin Akuntansi"
+    | "Staff Akuntansi";
   loginAt: string;
 };
 
@@ -49,8 +55,10 @@ export default function DashboardLoginActivity({ data }: Props) {
                 <td className="px-4 py-3">
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-                      row.role === "Admin"
+                      row.role === "Admin" || row.role === "Admin Akuntansi"
                         ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200"
+                        : row.role === "Anak Magang" || row.role === "Anak PKL"
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200"
                         : "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
                     }`}
                   >

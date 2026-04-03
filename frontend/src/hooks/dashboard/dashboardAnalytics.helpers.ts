@@ -17,7 +17,7 @@ export type NormalizedUpload = {
 export type NormalizedLogin = {
   id: number;
   username: string;
-  role: "Admin" | "Staff";
+  role: "Admin" | "Staff" | "Anak Magang" | "Anak PKL" | "Admin Akuntansi" | "Staff Akuntansi";
   loginAt: string; // YYYY-MM-DD HH:mm
 };
 
@@ -172,8 +172,15 @@ export function toDashboardCategory(category: string): DashboardCategory {
   return "STS";
 }
 
-export function normalizeRole(role: string): "Admin" | "Staff" {
-  const normalizedRole = role.trim().toLowerCase();
+export function normalizeRole(
+  role: string,
+): "Admin" | "Staff" | "Anak Magang" | "Anak PKL" | "Admin Akuntansi" | "Staff Akuntansi" {
+  const normalizedRole = String(role || "").trim().toLowerCase();
+  if (!normalizedRole) return "Staff";
+  if (normalizedRole.includes("admin akuntansi")) return "Admin Akuntansi";
+  if (normalizedRole.includes("staff akuntansi")) return "Staff Akuntansi";
+  if (normalizedRole.includes("magang")) return "Anak Magang";
+  if (normalizedRole.includes("pkl")) return "Anak PKL";
   if (normalizedRole.includes("admin")) return "Admin";
   return "Staff";
 }

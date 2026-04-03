@@ -278,7 +278,19 @@ export function useDashboardAnalytics() {
   }, [uploads]);
 
   const latestUploadRows = useMemo(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const cutoff = new Date(now);
+    cutoff.setDate(now.getDate() - 1); // tampilkan hanya 2 hari terakhir (hari ini + kemarin)
+
+    const isWithinLastTwoDays = (value: string) => {
+      const parsed = new Date(value.replace(" ", "T"));
+      if (Number.isNaN(parsed.getTime())) return false;
+      return parsed >= cutoff;
+    };
+
     return [...uploads]
+      .filter((record) => isWithinLastTwoDays(record.createdAt))
       .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
       .slice(0, 7)
       .map((record) => ({
