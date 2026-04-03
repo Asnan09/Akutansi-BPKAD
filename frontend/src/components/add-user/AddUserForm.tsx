@@ -55,7 +55,7 @@ export default function AddUserForm({
               name="username"
               value={form.username}
               onChange={onChange}
-              placeholder="Masukkan username"
+              placeholder="Masukkan NIP atau username"
               className="w-full border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
               required
             />
